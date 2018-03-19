@@ -1,5 +1,6 @@
 # Timeline
 
+**Work in progress! Expected to be released in two weeks 😅. Thanks for your patience.**
 
 > 🔥 Create timeline and playback based animations in React
 
