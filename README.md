@@ -1,6 +1,6 @@
 # Timeline
 
-<br/>
+
 > 🔥 Create timeline and playback based animations in React
 
 <br/><br/><br/>
