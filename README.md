@@ -34,6 +34,20 @@
 
 > ***focus on declarative relationships between inputs and outputs, with configurable transforms in between, and simple start/stop methods to control time-based animation execution.***
 
+Along with `start` and `stop` methods it also provides -
+
+* `restart` - To replay the animation
+
+* `reset` - To reset animation timeline
+
+* `reverse` - To reverse the animation
+
+* `seek` - An interactive way to control the animation throughout it's progress.
+
+It also provides lifecycle hooks that gets executed during different phases of an animation. Read more [here]()
+
+Besides the library usage, `Timeline` aims to amplify the usage of interaction design in our development process and also encourages to create interactive tools on top of the API that it already provides to create animations.
+
 ## Browser support
 
 | Chrome        | Safari        | IE / EDGE  | Firefox  | Opera |
