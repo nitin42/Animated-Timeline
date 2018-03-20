@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Get props Get callback props from the main instance 1`] = `
+Object {
+  "began": undefined,
+  "completed": undefined,
+  "controller": Object {
+    "pause": undefined,
+    "play": undefined,
+    "reset": undefined,
+    "restart": undefined,
+    "reverse": undefined,
+  },
+  "currentTime": undefined,
+  "duration": undefined,
+  "paused": undefined,
+  "progress": undefined,
+  "remaining": undefined,
+  "reversed": undefined,
+}
+`;

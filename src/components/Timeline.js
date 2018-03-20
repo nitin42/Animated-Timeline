@@ -4,26 +4,24 @@ import invariant from 'invariant'
 
 import { appendLifecycleHooks } from '../utils/lifecycle'
 import { noop } from '../utils/noop'
+import { getPropsFromMain } from '../utils/getProps'
 
 export class Timeline {
   constructor(attributes) {
-    this.options = attributes || {}
-    invariant(
-      typeof this.options.attributes === 'object',
-      `Expected 'attributes' to be an object instead got a ${typeof this.options
-        .attributes}.`
-    )
+    this.attributes = attributes || {}
 
-    // We use .play() to start the animation, so disable autoplay!
-    if (!this.options.attributes.autoplay) {
-      this.options.attributes.autoplay = false
+    // We use .play() to start the animation, so disable autoplay.
+    if (!this.attributes.autoplay) {
+      this.attributes.autoplay = false
     }
 
-    this.inst = Engine.timeline({ ...this.options.attributes })
+    this.inst = Engine.timeline({ ...this.attributes })
   }
 
   createTimelineSyncComp = () => {
     const main = this.inst
+
+    const props = getPropsFromMain(main)
 
     // This components represents the current timeline of an animation.
     // It is used to control the animation (play, pause, reverse, restart).
@@ -36,14 +34,14 @@ export class Timeline {
         restart: false,
         reverse: false,
 
-        seek: ctrl => ctrl.default(1),
+        seek: ctrl => ctrl.default(noop),
 
         lifecycle: {
           update: noop,
           start: noop,
           complete: noop,
-          frame: noop
-        }
+          frame: noop,
+        },
       }
 
       componentDidMount = () => {
@@ -63,7 +61,7 @@ export class Timeline {
 
         if (this.props.seek) {
           const config = {
-            // By default we sync the animation progress with the user defined value.
+            // By default we sync the animation progress value with the user defined value.
             default: value => main.seek(main.duration * (value / 100)),
             custom: callback => {
               invariant(
@@ -71,7 +69,7 @@ export class Timeline {
                 `Expected callback to be a function instead got a ${typeof callback}.`
               )
               // Also pass the animation engine instance to the user defined callback
-              main.seek(callback(main))
+              main.seek(callback(props))
             },
           }
 
@@ -81,7 +79,7 @@ export class Timeline {
       }
 
       render = () => {
-        // TimelineSync component can be present at anywhere in the tree, so either render nothing or wrap the childrens.
+        // TimelineSync component can be present anywhere in the tree, so either render nothing or wrap the childrens.
         return this.props.children || null
       }
     }

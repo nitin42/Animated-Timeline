@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Keyframes Should return array of frames 1`] = `
+Array [
+  Object {
+    "duration": 3000,
+    "elasticity": 900,
+    "value": 500,
+  },
+  Object {
+    "duration": 1000,
+    "value": 1000,
+  },
+  Object {
+    "duration": 3000,
+    "elasticity": 900,
+    "value": 500,
+  },
+  Object {
+    "duration": 1000,
+    "value": 1000,
+  },
+]
+`;
