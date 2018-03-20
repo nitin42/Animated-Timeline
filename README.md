@@ -1,9 +1,10 @@
 # Timeline
 
+**Work in progress! Expected to be released in two weeks 😅. Thanks for your patience.**
+
 > 🔥 Create timeline and playback based animations in React
 
-<p styalign="center">
-  <img src="https://i.gyazo.com/f1073cbd8c9cbc9071181c3e06ef069d.gif" />
+<br/><br/><br/>
+<p align="center">
+  <img src="https://i.gyazo.com/92335601b07bd758f45bb64ca8bac912.gif" />
 </p>
-
-Coming soon 😅
