@@ -8,3 +8,9 @@
 <p align="center">
   <img src="https://i.gyazo.com/92335601b07bd758f45bb64ca8bac912.gif" />
 </p>
+
+## Browser support
+
+| Chrome        | Safari        | IE / EDGE  | Firefox  | Opera |
+| ------------- |:-------------:| -----: | -----: | -----: |
+| 24+    | 6+ | 10+ | 32+ | 15+
