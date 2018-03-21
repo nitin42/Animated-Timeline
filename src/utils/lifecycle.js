@@ -26,8 +26,8 @@
 
 //   // Controller to start, stop, reverse and restart the animation again
 //   controller: {
-//     play: Function
-//     pause: Function,
+//     start: Function
+//     stop: Function,
 //     restart: Function,
 //     reset: Function,
 //     reverse: Function
@@ -36,24 +36,25 @@
 
 // Append animation lifecycle hooks to the main instance of animation engine.
 export const appendLifecycleHooks = (instance, lifecycle) => {
-  if (lifecycle.start) {
+  if (lifecycle.onStart) {
     // Invoked when the animation has started
     // If there is any delay, it will be invoked after that delay timeout
-    instance.begin = lifecycle.start
+    instance.begin = lifecycle.onStart
   }
 
-  if (lifecycle.frame) {
+  if (lifecycle.tick) {
     // This is called in each frame
-    instance.run = lifecycle.frame
+    // Like game loop
+    instance.run = lifecycle.tick
   }
 
-  if (lifecycle.update) {
+  if (lifecycle.onUpdate) {
     // This is invoked whenever a new update is performed. Eg - Using 'seek' or 'events' or 'state updates'
-    instance.update = lifecycle.update
+    instance.update = lifecycle.onUpdate
   }
 
-  if (lifecycle.complete) {
+  if (lifecycle.onComplete) {
     // This is fired when the animation is completed
-    instance.complete = lifecycle.complete
+    instance.complete = lifecycle.onComplete
   }
 }

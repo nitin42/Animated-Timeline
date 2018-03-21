@@ -1,25 +1,40 @@
 import React from 'react'
-import Engine from 'engine-fork'
+import engine from 'engine-fork'
 import invariant from 'invariant'
 
 import { appendLifecycleHooks } from '../utils/lifecycle'
 import { noop } from '../utils/noop'
 import { getPropsFromMain } from '../utils/getProps'
+import { createSeekConfig } from '../utils/seek'
 
 export class Timeline {
   constructor(attributes) {
     this.attributes = attributes || {}
+
+    // Changes animation speed for all the elements
+    this.speed = this.attributes.speed || 1
 
     // We use .play() to start the animation, so disable autoplay.
     if (!this.attributes.autoplay) {
       this.attributes.autoplay = false
     }
 
-    this.inst = Engine.timeline({ ...this.attributes })
+    this.inst = engine.timeline({ ...this.attributes })
+
+    this.inst.speed = this.speed
+
+    this.assignProps()
+  }
+
+  assignProps = () => {
+    // We still reuse the old properties in `engine-fork` dependency so it isn't safe to delete them.
+    this.inst['value'] = this.inst['add']
+    this.inst['start'] = this.inst['play']
+    this.inst['stop'] = this.inst['pause']
   }
 
   createTimelineSyncComp = () => {
-    const main = this.inst
+    let main = this.inst
 
     const props = getPropsFromMain(main)
 
@@ -28,52 +43,46 @@ export class Timeline {
     // We can also manage the animation lifecycle using this component.
     class TimelineSync extends React.Component {
       static defaultProps = {
-        // These values are also available via the main animation engine instance.
-        play: false,
-        pause: false,
-        restart: false,
-        reverse: false,
-
+        // These values also exists on the main Animate instance as methods
         seek: ctrl => ctrl.default(noop),
 
         lifecycle: {
-          update: noop,
-          start: noop,
-          complete: noop,
-          frame: noop,
+          onUpdate: noop,
+          onStart: noop,
+          onComplete: noop,
+          tick: noop,
         },
       }
 
       componentDidMount = () => {
+        const { start, stop, reset, restart, reverse } = this.props
+
+        start && main.start()
+        stop && main.stop()
+        reset && main.reset()
+        restart && main.restart()
+        reverse && main.reverse()
+
         if (this.props.lifecycle) {
           appendLifecycleHooks(main, this.props.lifecycle)
         }
       }
 
-      componentDidUpdate = () => {
-        if (this.props.play) main.play()
+      componentDidUpdate() {
+        // These utilities are usable only when the input is updated.
+        // But they are also available as methods on the main instance.
+        // Invoking them early (or in componentDidMount) won't have any effect because we haven't collected the elements to animate.
+        const { start, stop, reset, restart, reverse } = this.props
 
-        if (this.props.pause) main.pause()
-
-        if (this.props.restart) main.restart()
-
-        if (this.props.reverse) main.reverse()
+        start && main.start()
+        stop && main.stop()
+        reset && main.reset()
+        restart && main.restart()
+        reverse && main.reverse()
 
         if (this.props.seek) {
-          const config = {
-            // By default we sync the animation progress value with the user defined value.
-            default: value => main.seek(main.duration * (value / 100)),
-            custom: callback => {
-              invariant(
-                typeof callback === 'function',
-                `Expected callback to be a function instead got a ${typeof callback}.`
-              )
-              // Also pass the animation engine instance to the user defined callback
-              main.seek(callback(props))
-            },
-          }
+          const config = createSeekConfig(main, props)
 
-          // Invoke the seek callback.
           this.props.seek(config)
         }
       }
@@ -88,14 +97,12 @@ export class Timeline {
   }
 
   init = () => {
-    this.inst['values'] = this.inst['add']
-
     return {
       // Animate is the main object which will collect values for animating the nodes
       // Properties supported on Animate - (play, pause, restart, reverse)
-      Animate: this.inst,
+      Animated: this.inst,
       // React component that represents the animation timeline
-      Timeline: this.createTimelineSyncComp(),
+      AnimationTimeline: this.createTimelineSyncComp(),
     }
   }
 }

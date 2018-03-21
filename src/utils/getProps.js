@@ -16,8 +16,8 @@ export const getPropsFromMain = (main) => {
   } = main
 
   const controller = {
-    play,
-    pause,
+    start: play,
+    stop: pause,
     restart,
     reverse,
     reset,

@@ -5,11 +5,11 @@ Object {
   "began": undefined,
   "completed": undefined,
   "controller": Object {
-    "pause": undefined,
-    "play": undefined,
     "reset": undefined,
     "restart": undefined,
     "reverse": undefined,
+    "start": undefined,
+    "stop": undefined,
   },
   "currentTime": undefined,
   "duration": undefined,

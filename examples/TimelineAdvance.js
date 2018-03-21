@@ -1,48 +1,47 @@
 import React, { Component } from 'react'
 
-import { Animated } from '../src'
+import { Timeline, Keyframes, helpers } from '../src'
+import { boxStyles } from './styles'
 
-const boxStyles = { width: '200px', height: '200px', backgroundColor: 'pink' }
+const { createCurve, start, hx } = helpers
 
-// Create a custom bezier curve with a curve name
+// Creates a custom bezier curve with a curve name
 // Get your control points from here - https://matthewlein.com/tools/ceaser
-Animated.createCurve('ReactCurve', [0.05, -0.33, 0.15, -0.38])
+const SampleCurve = createCurve('SampleCurve', [0.05, -0.33, 0.15, -0.98])
 
-const attributes = {
+const timeline = new Timeline({
   direction: 'alternate',
   // Use our custom easing curve created above
-  easing: 'ReactCurve',
+  easing: SampleCurve,
   duration: 4000,
-  loop: 2,
-  delay: 1000,
-}
+  loop: true,
+  speed: 0.2
+})
 
-const timeline = new Animated.Timeline(attributes)
-
-const { Animate, Timeline } = timeline.init()
+const { Animated, AnimationTimeline } = timeline.init()
 
 export class TimelineAdvance extends Component {
   componentDidMount() {
-    Animate.values({
-      nodes: this.one,
-      translateX: Animated.start({ from: 500, to: 20 }),
-      opacity: Animated.start({ from: 0.4, to: 0.9 }),
-      backgroundColor: Animated.start({
-        from: Animated.hx('cyan'),
-        to: Animated.hx('red'),
+    Animated.value({
+      elements: this.one,
+      translateX: start({ from: 500, to: 20 }),
+      opacity: start({ from: 0.4, to: 0.9 }),
+      backgroundColor: start({
+        from: hx('cyan'),
+        to: hx('red'),
       }),
       rotate: {
         value: 360,
         duration: 1800,
         easing: 'easeInOutSine',
       },
-    }).play()
+    }).start()
   }
 
   render() {
     return (
       <React.Fragment>
-        <Timeline />
+        <AnimationTimeline />
         <div ref={one => (this.one = one)} style={boxStyles} />
       </React.Fragment>
     )

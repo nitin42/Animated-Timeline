@@ -1,54 +1,63 @@
 import React, { Component } from 'react'
 
-import { Animated } from '../src'
+import { Timeline, helpers } from '../src'
+import { boxStyles } from './styles'
 
-const boxStyles = { width: '20px', height: '20px', backgroundColor: 'pink' }
+const { hx, start, startBefore } = helpers
 
-const attributes = {
+const timeline = new Timeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
-  duration: 2000,
-  loop: 2,
-}
+  loop: true,
+  speed: 0.2
+})
 
-const timeline = new Animated.Timeline(attributes)
-
-const { Animate, Timeline } = timeline.init()
+const { Animated, AnimationTimeline } = timeline.init()
 
 export class TimelineOffset extends Component {
+  state = { stop: false, value: 30 }
+
   componentDidMount() {
-    Animate.values({
-      nodes: this.one,
-      translateX: Animated.start({ from: 500, to: 20 }),
-      opacity: Animated.start({ from: 0.4, to: 0.9 }),
-      backgroundColor: Animated.start({
-        from: Animated.hx('cyan'),
-        to: Animated.hx('red'),
+    Animated.value({
+      elements: this.one,
+      translateX: start({ from: 500, to: 20 }),
+      opacity: start({ from: 0.4, to: 0.9 }),
+      backgroundColor: start({
+        from: hx('cyan'),
+        to: hx('red'),
       }),
       rotate: {
         value: 360,
         easing: 'easeInOutSine',
       },
-    }).values({
-      nodes: this.two,
+    })
+
+    Animated.value({
+      elements: this.two,
       translateY: 300,
       elasticity: 900,
-      offset: Animated.startBefore(2300)
+      rotate: {
+        value: 360,
+        easing: 'easeInOutSine',
+      },
+      // Start animating this before the previous animation ends
+      offset: startBefore(1300),
     })
-    .play() // Start the animation
+
+    Animated.start()
   }
 
   render() {
     return (
       <React.Fragment>
-        <Timeline
+        <AnimationTimeline
           lifecycle={{
-            complete: ({ completed }) => {
-              console.log('Done: ' + completed)
-            }
+            onUpdate: ({ progress }) => {
+              progress = this.state.value
+            },
           }}
         />
-        <div ref={one => (this.one = one)} style={boxStyles} />
+        <div className="one" ref={one => (this.one = one)} style={boxStyles} />
         <div ref={two => (this.two = two)} style={boxStyles} />
       </React.Fragment>
     )

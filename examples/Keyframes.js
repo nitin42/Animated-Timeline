@@ -1,80 +1,75 @@
 import React, { Component } from 'react'
 
-import { Animated } from '../src'
+import { Timeline, Keyframes, helpers} from '../src'
+import { boxStyles } from './styles'
 
-const boxStyles = { width: '20px', height: '20px', backgroundColor: 'pink' }
+const { hx, start, startAfter } = helpers
 
-const attributes = {
+const timeline = new Timeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
-  duration: 2000,
-  loop: 2,
-}
+  loop: true,
+  speed: 0.7
+})
 
-const timeline = new Animated.Timeline(attributes)
+const { Animated, AnimationTimeline } = timeline.init()
 
-const { Animate, Timeline } = timeline.init()
-
-const x = new Animated.Keyframes().add({
+const x = new Keyframes().value({
   value: 500,
   duration: 3000,
   elasticity: 900,
-}).add(
+}).value(
   { value: 1000, duration: 1000 }
-).add({
+).value({
   value: 500,
   duration: 3000,
   elasticity: 900,
-}).add(
+}).value(
   { value: 1000, duration: 1000 }
 )
 
-const y = new Animated.Keyframes().add({
+const y = new Keyframes().value({
   value: 200,
   duration: 3000,
   elasticity: 900,
-}).add(
-  { value: 1000, duration: 1000 }
-).add({
-  value: 30,
-  duration: 3000,
-  elasticity: 900,
-}).add(
+}).value(
   { value: 20, duration: 1000 }
 )
 
 export class TimelineKeyframes extends Component {
   componentDidMount() {
-    Animate.values({
-      nodes: this.one,
-      translateX: Animated.start({ from: 500, to: 20 }),
-      opacity: Animated.start({ from: 0.4, to: 0.9 }),
-      backgroundColor: Animated.start({
-        from: Animated.hx('cyan'),
-        to: Animated.hx('red'),
+    Animated.value({
+      elements: this.one,
+      translateX: start({ from: 500, to: 20 }),
+      opacity: start({ from: 0.4, to: 0.9 }),
+      backgroundColor: start({
+        from: hx('cyan'),
+        to: hx('red'),
       }),
       rotate: {
         value: 360,
         easing: 'easeInOutSine',
       },
     })
-      .values({
-        nodes: this.two,
+
+    Animated.value({
+        elements: this.two,
         translateX: x.frames,
         translateY: y.frames,
-        offset: Animated.startAfter(1800),
-        backgroundColor: Animated.start({
-          from: Animated.hx('mistyrose'),
-          to: Animated.hx('green'),
+        offset: startAfter(1800),
+        backgroundColor: start({
+          from: hx('mistyrose'),
+          to: hx('green'),
         })
       })
-      .play() // Start the animation
+
+    Animated.start() // Start the animation
   }
 
   render() {
     return (
       <React.Fragment>
-        <Timeline
+        <AnimationTimeline
           lifecycle={{
             complete: ({ completed }) => {
               console.log('Done: ' + completed)
@@ -82,8 +77,7 @@ export class TimelineKeyframes extends Component {
           }}
         />
         <div ref={one => (this.one = one)} style={boxStyles} />
-        <br />
-        <div ref={two => (this.two = two)} style={boxStyles} />
+        <div ref={two => (this.two = two)} style={{ marginTop: '30px', ...boxStyles}} />
       </React.Fragment>
     )
   }

@@ -1,50 +1,40 @@
 import React, { Component } from 'react'
 
-import { Animated } from '../src'
+import { Timeline, Keyframes, helpers} from '../src'
+import { boxStyles } from './styles'
 
-const boxStyles = { width: '20px', height: '20px', backgroundColor: 'pink' }
+const { start, hx } = helpers
 
-// Animation attributes
-const attributes = {
+const timeline = new Timeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
-  duration: 2000,
-  loop: 2,
-}
+  loop: true,
+  speed: 0.2
+})
 
-// Create the timeline instance with animation attributes
-const timeline = new Animated.Timeline(attributes)
-
-// Initialise
-// Returns the main animate instance which is used to animate the elements
-// And a Timeline component which represents the timeline of an animation (use this to play, pause, performing interrupts, reverse and restarting the animation)
-const { Animate, Timeline } = timeline.init()
+const { Animated, AnimationTimeline } = timeline.init()
 
 export class TimelineBasic extends Component {
   componentDidMount() {
-    // Add values for animating the node (this.one)
-    Animate.values({
-      // Pass a ref to the node, or a className like '.one' or an id '#one'
-      // or an array of elements like [this.one, '.one', '#one']
-      nodes: this.one,
-      translateX: Animated.start({ from: 500, to: 20 }),
-      opacity: Animated.start({ from: 0.4, to: 0.9 }),
-      backgroundColor: Animated.start({
-        from: Animated.hx('cyan'),
-        to: Animated.hx('red'),
+    Animated.value({
+      elements: this.one,
+      translateX: start({ from: 500, to: 10 }),
+      opacity: start({ from: 0.4, to: 0.9 }),
+      backgroundColor: start({
+        from: hx('cyan'),
+        to: hx('red'),
       }),
       rotate: {
         value: 360,
         easing: 'easeInOutSine',
       },
-    }).play() // Start the animation
+    }).start()
   }
 
   render() {
     return (
       <React.Fragment>
-        <Timeline
-          // Animation lifecycle
+        <AnimationTimeline
           lifecycle={{
             complete: ({ completed }) => {
               console.log('Done: ' + completed)

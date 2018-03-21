@@ -1,4 +1,4 @@
-import Engine from 'engine-fork'
+import engine from 'engine-fork'
 import invariant from 'invariant'
 
 // Creates a custome easing function using the bezier curve control points
@@ -14,5 +14,7 @@ export function createCurve(name, points) {
     `Expected points to be an array instead got a ${typeof points}.`
   )
 
-  Engine.easings[name] = Engine.bezier(points[0], points[1], points[2], points[3])
+  engine.easings[name] = engine.bezier(points[0], points[1], points[2], points[3])
+
+  return name
 }

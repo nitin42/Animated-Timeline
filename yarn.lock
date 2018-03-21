@@ -1756,9 +1756,9 @@ encoding@^0.1.11:
   dependencies:
     iconv-lite "~0.4.13"
 
-engine-fork@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/engine-fork/-/engine-fork-3.0.2.tgz#a9a42b273b24019fda54f6c0be359dcc2b843477"
+engine-fork@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/engine-fork/-/engine-fork-3.0.6.tgz#f8726e13583287db13dec11a69d684158d7b2dde"
 
 entities@^1.1.1, entities@~1.1.1:
   version "1.1.1"

@@ -4,7 +4,7 @@
   "description": "Timeline based animations in React",
   "main": "index.js",
   "scripts": {
-    "start": "parcel demo/index.html"
+    "start": "./node_modules/.bin/parcel demo/index.html"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
   "license": "ISC",
@@ -24,7 +24,7 @@
   "dependencies": {
     "animejs": "^2.2.0",
     "colornames": "^1.1.1",
-    "engine-fork": "^3.0.2",
+    "engine-fork": "^3.0.6",
     "invariant": "^2.2.4"
   }
 }
