@@ -1,9 +1,15 @@
+// @flow
+
 import engine from 'engine-fork'
 import invariant from 'invariant'
 
+type name = 'string'
+
+type points = Array<number> | Array<string>
+
 // Creates a custome easing function using the bezier curve control points
 // https://github.com/gre/bezier-easing
-export function createCurve(name, points) {
+export function createCurve(name: name, points: points): name {
   invariant(
     typeof name === 'string',
     `Expected easing curve name to be a string instead got a ${typeof name}.`

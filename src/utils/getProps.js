@@ -1,4 +1,8 @@
-export const getPropsFromMain = (main) => {
+// @flow
+
+import type { AnimationEngine, lifecycleHookProps } from '../types'
+
+export const getPropsFromMain = (main: AnimationEngine): lifecycleHookProps => {
   const {
     completed,
     progress,

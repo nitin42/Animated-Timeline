@@ -1,3 +1,7 @@
+// @flow
+
+import type { AnimationEngine, lifecycle } from '../types'
+
 // Below are the props that a lifecycle hook receives:
 // {
 //   // Animation completed or not
@@ -35,7 +39,7 @@
 // }
 
 // Append animation lifecycle hooks to the main instance of animation engine.
-export const appendLifecycleHooks = (instance, lifecycle) => {
+export const appendLifecycleHooks = (instance: AnimationEngine, lifecycle: lifecycle): void => {
   if (lifecycle.onStart) {
     // Invoked when the animation has started
     // If there is any delay, it will be invoked after that delay timeout
