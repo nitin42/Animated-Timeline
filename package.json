@@ -4,7 +4,8 @@
   "description": "Timeline based animations in React",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/parcel demo/index.html"
+    "start": "./node_modules/.bin/parcel demo/index.html",
+    "flow": "flow"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
   "license": "ISC",
@@ -14,7 +15,9 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
+    "flow-bin": "^0.68.0",
     "jest": "^22.4.2",
     "parcel-bundler": "^1.6.2",
     "prop-types": "^15.6.1",
@@ -22,9 +25,8 @@
     "react-dom": "^16.2.0"
   },
   "dependencies": {
-    "animejs": "^2.2.0",
     "colornames": "^1.1.1",
-    "engine-fork": "^3.0.6",
+    "engine-fork": "^3.1.0",
     "invariant": "^2.2.4"
   }
 }
