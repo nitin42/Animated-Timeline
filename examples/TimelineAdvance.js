@@ -18,7 +18,7 @@ const timeline = new Timeline({
   speed: 0.2
 })
 
-const { Animated, AnimationTimeline } = timeline.init()
+const { Animated } = timeline.init()
 
 export class TimelineAdvance extends Component {
   componentDidMount() {
@@ -39,11 +39,6 @@ export class TimelineAdvance extends Component {
   }
 
   render() {
-    return (
-      <React.Fragment>
-        <AnimationTimeline />
-        <div ref={one => (this.one = one)} style={boxStyles} />
-      </React.Fragment>
-    )
+    return <div ref={one => (this.one = one)} style={boxStyles} />
   }
 }

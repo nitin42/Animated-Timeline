@@ -3,16 +3,16 @@ import React, { Component } from 'react'
 import { Timeline, helpers } from '../src'
 import { boxStyles } from './styles'
 
-const { hx, start, startBefore } = helpers
+const { hx, start, startBefore, random, currentValue } = helpers
 
 const timeline = new Timeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
-  loop: true,
+  loop: 1,
   speed: 0.2
 })
 
-const { Animated, AnimationTimeline } = timeline.init()
+const { Animated } = timeline.init()
 
 export class TimelineOffset extends Component {
   state = { stop: false, value: 30 }
@@ -27,8 +27,7 @@ export class TimelineOffset extends Component {
         to: hx('red'),
       }),
       rotate: {
-        value: 360,
-        easing: 'easeInOutSine',
+        value: random(0, 400),
       },
     })
 
@@ -41,7 +40,7 @@ export class TimelineOffset extends Component {
         easing: 'easeInOutSine',
       },
       // Start animating this before the previous animation ends
-      offset: startBefore(1300),
+      offset: startBefore(1100),
     })
 
     Animated.start()
@@ -50,13 +49,6 @@ export class TimelineOffset extends Component {
   render() {
     return (
       <React.Fragment>
-        <AnimationTimeline
-          lifecycle={{
-            onUpdate: ({ progress }) => {
-              progress = this.state.value
-            },
-          }}
-        />
         <div className="one" ref={one => (this.one = one)} style={boxStyles} />
         <div ref={two => (this.two = two)} style={boxStyles} />
       </React.Fragment>

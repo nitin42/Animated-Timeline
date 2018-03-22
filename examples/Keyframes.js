@@ -12,7 +12,7 @@ const timeline = new Timeline({
   speed: 0.7
 })
 
-const { Animated, AnimationTimeline } = timeline.init()
+const { Animated } = timeline.init()
 
 const x = new Keyframes().value({
   value: 500,
@@ -69,13 +69,6 @@ export class TimelineKeyframes extends Component {
   render() {
     return (
       <React.Fragment>
-        <AnimationTimeline
-          lifecycle={{
-            complete: ({ completed }) => {
-              console.log('Done: ' + completed)
-            }
-          }}
-        />
         <div ref={one => (this.one = one)} style={boxStyles} />
         <div ref={two => (this.two = two)} style={{ marginTop: '30px', ...boxStyles}} />
       </React.Fragment>
