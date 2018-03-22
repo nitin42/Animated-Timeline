@@ -42,10 +42,17 @@ type TimelineProps = {
   lifecycle: lifecycle,
 }
 
-// Timeline component is used to create sequencing animations with control time-based execution capabilities. The Timeline class takes the animation attributes and instantiates a new timeline object which provides two helpers, 'Animated' and 'AnimationTimeline'. 'Animated' is the main instance which collects all the values to animate a single or a group elements. It also provides simple start/stop, reverse, reset and restart methods to control time-based execution of animation. It supports chaining of values when animating multiple elements via .value({}).
+// Timeline component is used to create sequencing animations with control time-based execution
+// capabilities. The Timeline class takes the animation attributes and instantiates a new timeline
+// object which provides two helpers, 'Animated' and 'AnimationTimeline'. 'Animated' is the main
+// instance which collects all the values to animate a single or a group elements. It also provides
+// simple start/stop, reverse, reset and restart methods to control time-based execution of animation.
+// It supports chaining of values when animating multiple elements via .value({}).
 
-On the other hand, 'AnimationTimeline' is a React component which represents the timeline of an animation. It is used to manage the lifecycle of the current animation and also accepts props to dynamically start, stop, reverse, reset, restart and change the animation's current time.
-*/
+// On the other hand, 'AnimationTimeline' is a React component which represents the timeline of an
+// animation. It is used to manage the lifecycle of the current animation and also accepts props to
+// dynamically start, stop, reverse, reset, restart and change the animation's current time.
+
 export class Timeline {
   attributes: attributes
   speed: number | string
