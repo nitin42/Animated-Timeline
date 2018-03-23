@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 
+import hx from 'colornames'
+
 import { Timeline, helpers } from '../src'
 import { boxStyles } from './styles'
 
-const rgbHex = require('rgb-hex');
-
-const { hx, start, startBefore, getEasings } = helpers
+const { start, startBefore, getEasings } = helpers
 
 const timeline = new Timeline({
   direction: 'alternate',

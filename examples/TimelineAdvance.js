@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import hx from 'colornames'
 
 import { Timeline, Keyframes, helpers } from '../src'
 import { boxStyles } from './styles'
 
-const { createCurve, start, hx } = helpers
+const { createCurve, start } = helpers
 
 // Creates a custom bezier curve with a curve name
 // Get your control points from here - https://matthewlein.com/tools/ceaser

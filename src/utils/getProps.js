@@ -12,16 +12,16 @@ export const getPropsFromMain = (main: AnimationEngine): lifecycleHookProps => {
     currentTime,
     began,
     paused,
-    play,
-    pause,
+    start,
+    stop,
     restart,
     reverse,
     reset,
   } = main
 
   const controller = {
-    start: play,
-    stop: pause,
+    start,
+    stop,
     restart,
     reverse,
     reset,

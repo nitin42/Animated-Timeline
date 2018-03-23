@@ -1,6 +1,6 @@
 // @flow
 
-import engine from 'engine-fork'
+import { bezier, easings } from '../core'
 import invariant from 'invariant'
 
 type name = 'string'
@@ -20,7 +20,7 @@ export function createCurve(name: name, points: points): name {
     `Expected points to be an array instead got a ${typeof points}.`
   )
 
-  engine.easings[name] = engine.bezier(points[0], points[1], points[2], points[3])
+  easings[name] = bezier(points[0], points[1], points[2], points[3])
 
   return name
 }

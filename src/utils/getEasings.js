@@ -1,9 +1,9 @@
-import engine from 'engine-fork'
+import { easings } from '../core'
 
 export const getEasings = () => {
-  const easings = []
+  const names = []
 
-  Object.keys(engine.easings).forEach(easing => easings.push(easing))
+  Object.keys(easings).forEach(easing => names.push(easing))
 
-  return easings
+  return names
 }

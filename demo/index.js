@@ -14,7 +14,7 @@ class App extends React.Component {
       <React.Fragment>
         <h1>Offset Example</h1>
         <TimelineOffset />
-        {/* <h1>Basic Timeline</h1>
+        <h1>Basic Timeline</h1>
         <TimelineBasic />
         <h1>Advance Timeline</h1>
         <TimelineAdvance />
@@ -23,7 +23,7 @@ class App extends React.Component {
         <h1>Timeline Lifecycle</h1>
         <TimelineLifecycle />
         <h1>Dyanmic progress</h1>
-        <DynamicProgress /> */}
+        <DynamicProgress />
       </React.Fragment>
     )
   }

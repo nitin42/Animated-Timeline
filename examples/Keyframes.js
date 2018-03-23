@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import hx from 'colornames'
 
-import { Timeline, Keyframes, helpers} from '../src'
+import { Timeline, Keyframes, helpers } from '../src'
 import { boxStyles } from './styles'
 
-const { hx, start, startAfter } = helpers
+const { start, startAfter } = helpers
 
 const timeline = new Timeline({
   direction: 'alternate',

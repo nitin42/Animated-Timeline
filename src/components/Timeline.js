@@ -2,7 +2,8 @@
 
 import * as React from 'react'
 
-import engine from 'engine-fork'
+import { createTimeline, animated } from '../core'
+
 import invariant from 'invariant'
 
 import { appendLifecycleHooks } from '../utils/lifecycle'
@@ -42,14 +43,17 @@ type TimelineProps = {
   lifecycle: lifecycle,
 }
 
-/**
-Timeline component is used to create sequencing animations with control time-based execution capabilities.
-The Timeline class takes the animation attributes and instantiates a new timeline object which provides two helpers, 'Animated' and 'AnimationTimeline'.
+// Timeline component is used to create sequencing animations with control time-based execution
+// capabilities. The Timeline class takes the animation attributes and instantiates a new timeline
+// object which when instantiated return two helpers, 'Animated' and 'AnimationTimeline'. 'Animated' is the main
+// instance which collects all the values to animate a single or a group elements. It also provides
+// simple start/stop, reverse, reset and restart methods to control time-based execution of animation.
+// It supports chaining of values when animating multiple elements via .value({}).
 
-'Animated' is the main instance which collects all the values to animate a single or a group elements. It also provides simple start/stop, reverse, reset and restart methods to control time-based execution of animation. It supports chaining of values when animating multiple elements via .value({}).
+// On the other hand, 'AnimationTimeline' is a React component which represents the timeline of an
+// animation. It is used to manage the lifecycle of the current animation and also accepts props to
+// dynamically start, stop, reverse, reset, restart and change the animation's current time.
 
-On the other hand, 'AnimationTimeline' is a React component which represents the timeline of an animation. It is used to manage the lifecycle of the current animation and also accepts props to dynamically start, stop, reverse, reset, restart and change the animation's current time.
-*/
 export class Timeline {
   attributes: attributes
   speed: number | string
@@ -61,28 +65,14 @@ export class Timeline {
     // Changes animation speed for all the elements
     this.speed = this.attributes.speed || 1
 
-    // We use .play() to start the animation, so disable autoplay.
-    if (!this.attributes.autoplay) {
-      this.attributes.autoplay = false
-    }
-
-    this.inst = engine.timeline({ ...this.attributes })
+    this.inst = createTimeline({ ...this.attributes })
 
     // We calculate the engine time by using the speed coefficient and hence set the animation instance time in the 'frame' loop
     this.inst.speed = this.speed
-
-    this.assignProps()
-  }
-
-  assignProps = () => {
-    // We still reuse the old properties in `engine-fork` dependency so it isn't safe to delete them.
-    this.inst['value'] = this.inst['add']
-    this.inst['start'] = this.inst['play']
-    this.inst['stop'] = this.inst['pause']
   }
 
   createTimelineSyncComp = () => {
-    let main = this.inst
+    const main = this.inst
 
     const props = getPropsFromMain(main)
 
@@ -113,7 +103,7 @@ export class Timeline {
       componentDidUpdate = () => {
         // These utilities are usable only when the inputs are updated.
         // But they are also available as methods on the main instance.
-        // Invoking them early (or in componentDidMount) won't have any effect because we haven't collected the elements to animate (children length is 'zero')
+        // Invoking them early won't have any effect because we haven't collected the elements to animate (children length is 'zero')
         if (this.props.start) {
           main.start()
         }
@@ -155,7 +145,7 @@ export class Timeline {
       }
 
       render = () => {
-        // TimelineSync component can be present anywhere in the tree, so either render nothing or wrap the childrens.
+        // TimelineSync component can be present anywhere in the tree, so either render nothing or wrap the children
         return this.props.children || null
       }
     }
@@ -163,9 +153,10 @@ export class Timeline {
     return TimelineSync
   }
 
+  // Initialise the timeline
   init = () => {
     return {
-      // Animate is the main object which will collect values for animating the nodes
+      // Animate is the main object which is used to collect values for animating the elements using refs or selectors
       // Properties supported on Animate - (play, pause, restart, reverse)
       Animated: this.inst,
       // React component that represents the animation timeline

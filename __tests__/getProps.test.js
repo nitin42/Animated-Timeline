@@ -1,10 +1,10 @@
-import mockInstance from 'engine-fork'
+import { animated } from '../src/core'
 
 import { getPropsFromMain } from '../src/utils/getProps'
 
 describe('Get props', () => {
   it('Get callback props from the main instance', () => {
-    const props = getPropsFromMain(mockInstance)
+    const props = getPropsFromMain(animated)
 
     expect(typeof props).toBe('object')
     expect(Object.keys(props).length).toBe(9)
