@@ -7,6 +7,7 @@ import { TimelineOffset } from '../examples/TimelineOffset'
 import { TimelineKeyframes } from '../examples/Keyframes'
 import { TimelineLifecycle } from '../examples/TimelineLifecycle'
 import { DynamicProgress } from '../examples/DynamicProgress'
+import { AnimatedBasic } from '../examples/AnimatedBasic'
 
 class App extends React.Component {
   render() {
@@ -24,6 +25,8 @@ class App extends React.Component {
         <TimelineLifecycle />
         <h1>Dyanmic progress</h1>
         <DynamicProgress />
+        <h1>Animated basic</h1>
+        <AnimatedBasic />
       </React.Fragment>
     )
   }

@@ -9,13 +9,13 @@ const hooks = {
   onStart: noop,
   onComplete: noop,
   onUpdate: noop,
-  tick: noop
+  callFrame: noop
 }
 
 describe('Append lifecycle hooks', () => {
   it('should add lifecycle hooks to the main instance', () => {
     appendLifecycleHooks(mockInst, hooks)
-    
+
     const { onStart, onUpdate, onComplete, callFrame } = mockInst
 
     expect(typeof onStart).toBe('function')

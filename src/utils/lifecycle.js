@@ -49,10 +49,10 @@ export const appendLifecycleHooks = (
     instance.onStart = lifecycle.onStart
   }
 
-  if (lifecycle.tick) {
+  if (lifecycle.callFrame) {
     // This is called in each frame
     // Like game loop
-    instance.callFrame = lifecycle.tick
+    instance.callFrame = lifecycle.callFrame
   }
 
   if (lifecycle.onUpdate) {

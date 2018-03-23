@@ -3,7 +3,7 @@
  * Most of the code is copied from https://github.com/juliangarnier/anime but there are **some** differences:
  *
  * 1. Lifecycle hooks are refactored and parameters received are modified.
- * 2. Animation speed is now configured via different instances rather than relying on the singleton instance.
+ * 2. Animation speed is now configured via different instances and via params passed to the main instance rather than relying on the singleton instance.
  * 3. Removed unused properties (`version`, `remove`, `setDashoffset`).
  * 4. Serialised values for performing **from** - **to** animations (implemented in utils/fromTo.js).
  * 5. Dropped support for motion path, drawing lines and SVG path
@@ -68,8 +68,6 @@ const validTransforms = [
 ]
 
 let transformString
-
-// Units
 
 const getUnit = val => {
   const split = /([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(
@@ -664,9 +662,18 @@ function animated(params = {}) {
   }
 
   instance.frameLoop = function(t) {
+    let speedInParams = false
+
     now = t
     if (!startTime) startTime = now
-    const engineTime = (lastTime + now - startTime) * instance.speed || 1
+
+    if (params.speed) {
+      speedInParams = true
+    }
+
+    const speedCoefficient = () => speedInParams ? params.speed : instance.speed
+
+    const engineTime = (lastTime + now - startTime) * speedCoefficient() || 1
     setInstanceProgress(engineTime)
   }
 

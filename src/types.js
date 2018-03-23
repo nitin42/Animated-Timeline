@@ -37,7 +37,7 @@ export type fn = (props: lifecycleHookProps) => void
 // Animation lifecycle hooks
 export type lifecycle = {
   onStart: fn,
-  tick: fn,
+  callFrame: fn,
   onUpdate: fn,
   onComplete: fn,
 }

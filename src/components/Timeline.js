@@ -90,7 +90,7 @@ export class Timeline {
           onUpdate: noop,
           onStart: noop,
           onComplete: noop,
-          tick: noop,
+          callFrame: noop,
         },
       }
 
@@ -98,6 +98,10 @@ export class Timeline {
         if (this.props.lifecycle) {
           appendLifecycleHooks(main, this.props.lifecycle)
         }
+
+        if (this.props.start) main.start()
+
+        if (this.props.stop) main.stop()
       }
 
       componentDidUpdate = () => {
