@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import hx from "colornames";
 
 import { Timeline, helpers } from "../src";
-import { boxStyles } from "./styles";
 
-const { start, startBefore, startAfter, random } = helpers;
+const { start, startBefore, startAfter } = helpers;
 
 const timeline = new Timeline({
   direction: "alternate",
@@ -16,8 +14,6 @@ const timeline = new Timeline({
 const { Animated } = timeline.init();
 
 export class TimelineOffset extends Component {
-  state = { stop: false, value: 30 };
-
   componentDidMount() {
     Animated.value({
       elements: this.one,
@@ -29,7 +25,7 @@ export class TimelineOffset extends Component {
     })
       .value({
         elements: this.two,
-        translateX: 300,
+        translateX: start({ from: 10, to: 600 }),
         elasticity: 900,
         rotate: {
           value: 360,
@@ -50,21 +46,22 @@ export class TimelineOffset extends Component {
   }
 
   render() {
+    const boxStyles = {
+      width: "20px",
+      height: "20px",
+      backgroundColor: "mistyrose",
+      marginTop: 10
+    };
+
     return (
       <React.Fragment>
         <div ref={one => (this.one = one)} style={boxStyles}>
           A
         </div>
-        <div
-          ref={two => (this.two = two)}
-          style={{ ...boxStyles, marginTop: 20 }}
-        >
+        <div ref={two => (this.two = two)} style={boxStyles}>
           B
         </div>
-        <div
-          ref={three => (this.three = three)}
-          style={{ ...boxStyles, marginTop: 30 }}
-        >
+        <div ref={three => (this.three = three)} style={boxStyles}>
           C
         </div>
       </React.Fragment>

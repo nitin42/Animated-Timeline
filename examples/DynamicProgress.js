@@ -1,20 +1,20 @@
-import React, { Component } from 'react'
-import hx from 'colornames'
+import React, { Component } from "react";
+import hx from "colornames";
 
-import { Timeline, helpers } from '../src'
-import { boxStyles } from './styles'
+import { Timeline, helpers } from "../src";
+import { boxStyles } from "./styles";
 
-const { start, startBefore } = helpers
+const { start, startBefore } = helpers;
 
 const timeline = new Timeline({
-  direction: 'alternate',
+  direction: "alternate",
   reversed: true,
-  easing: 'linear',
+  easing: "linear",
   duration: 2000,
   loop: true
-})
+});
 
-const { Animated, AnimationTimeline } = timeline.init()
+const { Animated, AnimationTimeline } = timeline.init();
 
 export class DynamicProgress extends Component {
   state = {
@@ -22,8 +22,8 @@ export class DynamicProgress extends Component {
     playing: false,
     reset: false,
     reverse: false,
-    restart: false,
-  }
+    restart: false
+  };
 
   componentDidMount() {
     Animated.value({
@@ -31,17 +31,17 @@ export class DynamicProgress extends Component {
       translateX: start({ from: 0, to: 600 }),
       opacity: 0.8,
       backgroundColor: start({
-        from: hx('cyan'),
-        to: hx('red'),
+        from: hx("cyan"),
+        to: hx("red")
       }),
       rotate: {
         value: 360,
-        easing: 'easeInOutSine',
-      },
-    })
+        easing: "easeInOutSine"
+      }
+    });
   }
 
-  handleChange = e => this.setState({ value: e.target.value })
+  handleChange = e => this.setState({ value: e.target.value });
 
   render() {
     return (
@@ -49,15 +49,15 @@ export class DynamicProgress extends Component {
         <AnimationTimeline
           lifecycle={{
             onUpdate: ({ progress }) => {
-              this.state.value = isNaN(progress) ? this.state.value : progress
-            },
+              this.state.value = isNaN(progress) ? this.state.value : progress;
+            }
           }}
           start={this.state.playing}
           stop={!this.state.playing}
           reset={this.state.reset}
           reverse={this.state.reverse}
           restart={this.state.restart}
-          seek={ctrl => ctrl.default(this.state.value)}
+          seek={ctrl => ctrl.custom(({ progress }) => this.state.value)}
         />
         <div className="one" ref={one => (this.one = one)} style={boxStyles} />
         <input
@@ -70,7 +70,7 @@ export class DynamicProgress extends Component {
         <button
           onClick={e => this.setState(state => ({ playing: !state.playing }))}
         >
-          {this.state.playing ? 'Stop' : 'Start'}
+          {this.state.playing ? "Stop" : "Start"}
         </button>
         <button
           onClick={e => this.setState(state => ({ reset: !state.reset }))}
@@ -88,6 +88,6 @@ export class DynamicProgress extends Component {
           Restart
         </button>
       </React.Fragment>
-    )
+    );
   }
 }

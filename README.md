@@ -44,6 +44,16 @@ It also provides lifecycle hooks that gets executed during different phases of a
 
 Besides the library usage, **Timeline** aims to amplify the usage of interaction design in our development process and also encourages to create interactive tools on top of the API that it already provides to create animations.
 
+## Features
+
+* Provides controls for time-based execution of an animation
+
+* Let's you create sequence based animations
+
+* Provides lifecycle hooks which gets executed in different phases of an animation
+
+* Dynamically change the animation progress or sync the animation progress (or duration) value with an input value
+
 ## Install
 
 ```
@@ -186,7 +196,7 @@ Animated.value({
 })
 ```
 
-`Animated.Value` can bind to style properties, and can also be chained for performing sequence based animations (we will look into this later). A single `Animated.Value` can drive any number of properties (similar to [React Native]())
+`Animated.value` can bind to style properties, and can also be chained for performing sequence based animations (we will look into this later). A single `Animated.value` can drive any number of properties (similar to [React Native]())
 
 Now to start the animation, call `.start()` on Animated.
 
@@ -336,7 +346,116 @@ class App extends Component {
   <img src="./media/basic-6.gif" />
 </p>
 
-### Dynamically changing the animation progress
+#### Timing based animations
+
+You can also define timing based animations by using the `helpers` utilities from `animated-timeline`. We will be using `start`, `startAfter` and `startBefore` methods from `helpers` to create timing based animations.
+
+> See a list of available methods on `helpers` [here]()
+
+* `start()` - This method is used to perform `from-to` based animations i.e transition from one value to another
+
+* `startAfter(time)` - This method is used to start the animation at a specified time in seconds after the previous animation ends.
+
+* `startBefore(time)` - This method is used to start the animation at a specified time in seconds before the previous animation ends.
+
+Let's take an example -
+
+```js
+import React, { Component } from "react";
+
+import { Timeline, helpers } from "animated-timeline";
+
+const { start, startBefore, startAfter } = helpers;
+
+const timeline = new Timeline({
+  direction: "alternate",
+  easing: "easeInOutSine",
+  loop: true,
+  speed: 0.5
+});
+
+const { Animated } = timeline.init();
+
+export class TimelineOffset extends Component {
+  componentDidMount() {
+    Animated.value({
+      elements: this.one,
+      translateX: start({ from: 500, to: 20 }),
+      opacity: start({ from: 0.4, to: 0.9 }),
+      rotate: {
+        value: 180
+      }
+    })
+      .value({
+        elements: this.two,
+        translateX: start({ from: 10, to: 600 }),
+        elasticity: 900,
+        rotate: {
+          value: 360,
+          easing: "easeInOutSine"
+        },
+        // Start animating this 1.2s before the previous animation ends
+        offset: startBefore(1200)
+      })
+      .value({
+        elements: this.three,
+        translateX: 500,
+        elasticity: 1000,
+        // Start animating this 1.1s after the previous animation ends
+        offset: startAfter(100)
+      });
+
+    Animated.start();
+  }
+
+  render() {
+    const boxStyles = {
+      width: "20px",
+      height: "20px",
+      backgroundColor: "mistyrose",
+      marginTop: 10
+    };
+
+    return (
+      <React.Fragment>
+        <div ref={one => (this.one = one)} style={boxStyles}>
+          A
+        </div>
+        <div ref={two => (this.two = two)} style={boxStyles}>
+          B
+        </div>
+        <div ref={three => (this.three = three)} style={boxStyles}>
+          C
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+```
+
+<p align="center">
+  <img src="./media/basic-7.gif">
+</p>
+
+The `helpers` utilities provides the following methods -
+
+* `start()` - This method is used to perform `from-to` based animations i.e transition from one value to another
+
+* `startAfter(time)` - This method is used to start the animation at a specified time in seconds after the previous animation ends.
+
+* `startBefore(time)` - This method is used to start the animation at a specified time in seconds before the previous animation ends.
+
+* `random(a, b)` - Returns a random number between `a` and `b`
+
+* `getEasings()` - Returns the available easing values
+
+* `createCurve(curveName, controlPoints)` - Takes a curve name and array of four control points, and creates a new easing curve.
+
+* `times(number)` - Starts the animation at a specified (number) `times` the previous animation's duration.
+
+#### Changing the animation progress
+
+You can also dynamically change the animation progress (or duration) value using the `AnimationTimeline` component.
 
 ```js
 import React, { Component } from "react";
@@ -401,7 +520,34 @@ class App extends Component {
   <img src="./media/basic-3.gif" />
 </p>
 
-### Lifecycle hooks
+`seek` prop accepts a function with an argument `ctrl`. `ctrl` is an object which is used to sync the animation progress value with the input value, in our case `this.state.value`. It provides two methods - `default` and `custom`.
+
+* `default` - The default method accepts an input value which will be synced with the animation progress value. This is the built-in, so you don't need to worry about it.
+
+* `custom` - In some cases, you will need to sync the animation progress with a different offset. In those cases, you can pass a callback to the `custom` method like so -
+
+```js
+function callback({ progress }) {
+  const value = 50
+  const offset = 5
+
+  return ((value * offset) * (progress / 100))
+}
+
+<AnimationTimeline seek={ctrl => ctrl.custom(callback)}>
+```
+
+<p align="center">
+  <img src="./media/basic-8.gif" />
+</p>
+
+**Note** - The callback function should return a number value.
+
+The callback function receives [these parameters]().
+
+#### Lifecycle hooks
+
+You can also manage the animation lifecycle and execute some logic in different phases of your animation. For example - After an animation has been completed, we will reverse it direction and restart the animation again.
 
 ```js
 import React, { Component } from "react";
@@ -436,16 +582,6 @@ export class App extends Component {
       <React.Fragment>
         <AnimationTimeline
           lifecycle={{
-            // Called when the animation starts
-            // If there is any delay, then it will be invoked after that delay timeout
-            onStart: ({ duration }) => {},
-            // Invoked whenever there is any new update (state updates, events)
-            // Avoiding calling setState here because React limits the number of nested updates to prevent infinite loops.
-            // You can sync the animation progress with the input value here
-            onUpdate: ({ progress }) => {},
-            // Frame loop (called every frame)
-            callFrame: ({ remaining }) => {},
-            // Invoked when the animation is done
             onComplete: ({ completed }) => {
               console.log("Completed: " + completed);
               console.log("Starting again...");
@@ -453,7 +589,8 @@ export class App extends Component {
               if (completed) {
                 // Reverse the direction
                 Animated.reverse();
-                // Restart the animation again
+
+                // Restart the animation
                 Animated.restart();
               }
             }
@@ -477,91 +614,7 @@ export class App extends Component {
   <img src="./media/basic-4.gif" />
 </p>
 
-The above examples addressed only single elements and were not showing sequence based animations. Let's see how we can create sequence based animations using the API.
-
-### Using chaining to perform sequencing animations
-
-```js
-import React, { Component } from "react";
-
-import { Timeline, helpers } from "animated-timeline";
-
-const { start, startBefore, startAfter } = helpers;
-
-const timeline = new Timeline({
-  direction: "alternate",
-  easing: "easeInOutSine",
-  loop: true,
-  speed: 0.5
-});
-
-const { Animated } = timeline.init();
-
-const boxStyles = {
-  width: "20px",
-  height: "20px",
-  backgroundColor: "pink"
-};
-
-class App extends Component {
-  componentDidMount() {
-    Animated.value({
-      elements: this.one,
-      translateX: start({ from: 500, to: 20 }),
-      opacity: start({ from: 0.4, to: 0.9 }),
-      rotate: {
-        value: 180
-      }
-    })
-      .value({
-        elements: this.two,
-        translateX: 300,
-        elasticity: 900,
-        rotate: {
-          value: 360,
-          easing: "easeInOutSine"
-        },
-        // Start animating this 1.2s before the previous animation ends
-        offset: startBefore(1200)
-      })
-      .value({
-        elements: this.three,
-        translateX: 500,
-        elasticity: 1000,
-        // Start animating this 1.1s after the previous animation ends
-        offset: startAfter(100)
-      });
-
-    Animated.start();
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <div ref={one => (this.one = one)} style={boxStyles}>
-          A
-        </div>
-        <div
-          ref={two => (this.two = two)}
-          style={{ ...boxStyles, marginTop: 20 }}
-        >
-          B
-        </div>
-        <div
-          ref={three => (this.three = three)}
-          style={{ ...boxStyles, marginTop: 30 }}
-        >
-          C
-        </div>
-      </React.Fragment>
-    );
-  }
-}
-```
-
-<p align="center">
-  <img src="./media/basic-5.gif" />
-</p>
+[Learn more animation lifecycle hooks]()
 
 ## Browser support
 
