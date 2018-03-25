@@ -1,19 +1,17 @@
-import React, { Component } from 'react'
-import hx from 'colornames'
+import React, { Component } from "react";
 
-import { Timeline, helpers } from '../src'
-import { boxStyles } from './styles'
+import { Timeline, helpers } from "../src";
 
-const { start } = helpers
+const { start } = helpers;
 
 const timeline = new Timeline({
-  direction: 'alternate',
-  easing: 'easeInOutSine',
+  direction: "alternate",
+  easing: "easeInOutSine",
   loop: true,
-  duration: 4000,
-})
+  duration: 4000
+});
 
-const { Animated } = timeline.init()
+const { Animated } = timeline.init();
 
 export class TimelineBasic extends Component {
   componentDidMount() {
@@ -21,35 +19,23 @@ export class TimelineBasic extends Component {
       elements: this.one,
       translateX: start({ from: 500, to: 10 }),
       opacity: start({ from: 0.4, to: 0.9 }),
-      backgroundColor: start({
-        from: hx('cyan'),
-        to: hx('red'),
-      }),
       rotate: {
         value: 360,
-        easing: 'easeInOutSine',
-      },
-    }).value({
-      elements: this.two,
-      translateX: start({ from: 500, to: 10 }),
-      opacity: start({ from: 0.4, to: 0.9 }),
-      backgroundColor: start({
-        from: hx('cyan'),
-        to: hx('red'),
-      }),
-      rotate: {
-        value: 360,
-        easing: 'easeInOutSine',
-      },
-    }).start()
+        easing: "easeInOutSine"
+      }
+    }).start();
   }
 
   render() {
     return (
-      <React.Fragment>
-        <div ref={one => (this.one = one)} style={boxStyles} /><br/>
-        <div ref={two => (this.two = two)} style={boxStyles} />
-      </React.Fragment>
-    )
+      <div
+        ref={one => (this.one = one)}
+        style={{
+          width: "20px",
+          height: "20px",
+          backgroundColor: "pink"
+        }}
+      />
+    );
   }
 }

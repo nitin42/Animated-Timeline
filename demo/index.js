@@ -14,11 +14,13 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <h1>Offset Example</h1>
+        <br />
+        <br />
+        {/* <h1>Offset Example</h1>
         <TimelineOffset />
-        <h1>Basic Timeline</h1>
+        <h1>Basic Timeline</h1> */}
         <TimelineBasic />
-        <h1>Advance Timeline</h1>
+        {/* <h1>Advance Timeline</h1>
         <TimelineAdvance />
         <h1>Keyframes Timeline</h1>
         <TimelineKeyframes />
@@ -29,7 +31,7 @@ class App extends React.Component {
         <h1>Animated basic</h1>
         <AnimatedBasic />
         <h1>Animated Advance</h1>
-        <AnimatedAdvance />
+        <AnimatedAdvance /> */}
       </React.Fragment>
     );
   }

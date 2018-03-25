@@ -10,14 +10,14 @@ import { appendLifecycleHooks } from "../utils/lifecycle";
 import { noop } from "../utils/noop";
 import { getPropsFromMain } from "../utils/getProps";
 import { timeBasedExecMethods } from "../utils/methods";
-import { defaultCommonProps } from "../props";
+import { defaultCommonProps, defaultPropTypes } from "../props";
 
 import type { attributes, AnimationEngine, TimelineProps } from "../types";
 
-// Timeline component is used to create sequencing animations with control time-based execution
+// Timeline component is used to create sequencing animations with controls for time-based execution
 // capabilities. The Timeline class takes the animation attributes and instantiates a new timeline
-// object which when instantiated return two helpers, 'Animated' and 'AnimationTimeline'. 'Animated' is the main
-// instance which collects all the values to animate a single or a group elements. It also provides
+// object which returns two helpers, 'Animated' and 'AnimationTimeline', when calling the instance method init() on i.
+// 'Animated' is the main instance which collects all the values to animate a single or a group elements. It also provides
 // simple start/stop, reverse, reset and restart methods to control time-based execution of animation.
 // It supports chaining of values when animating multiple elements via .value({}).
 
@@ -50,6 +50,10 @@ export class Timeline {
     class TimelineSync extends React.Component<TimelineProps> {
       static defaultProps = {
         ...defaultCommonProps()
+      };
+
+      static propTypes = {
+        ...defaultPropTypes()
       };
 
       componentDidMount = () => {

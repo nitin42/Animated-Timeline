@@ -1,22 +1,22 @@
-import React, { Component } from 'react'
-import hx from 'colornames'
+import React, { Component } from "react";
+import hx from "colornames";
 
-import { Timeline, helpers } from '../src'
-import { boxStyles } from './styles'
+import { Timeline, helpers } from "../src";
+import { boxStyles } from "./styles";
 
-const { start, startBefore, random, currentValue } = helpers
+const { start, startBefore, random, currentValue } = helpers;
 
 const timeline = new Timeline({
-  direction: 'alternate',
-  easing: 'easeInOutSine',
+  direction: "alternate",
+  easing: "easeInOutSine",
   loop: 1,
   speed: 0.2
-})
+});
 
-const { Animated } = timeline.init()
+const { Animated } = timeline.init();
 
 export class TimelineOffset extends Component {
-  state = { stop: false, value: 30 }
+  state = { stop: false, value: 30 };
 
   componentDidMount() {
     Animated.value({
@@ -24,13 +24,13 @@ export class TimelineOffset extends Component {
       translateX: start({ from: 500, to: 20 }),
       opacity: start({ from: 0.4, to: 0.9 }),
       backgroundColor: start({
-        from: hx('cyan'),
-        to: hx('red'),
+        from: hx("cyan"),
+        to: hx("red")
       }),
       rotate: {
-        value: random(0, 400),
-      },
-    })
+        value: random(0, 800)
+      }
+    });
 
     Animated.value({
       elements: this.two,
@@ -38,13 +38,13 @@ export class TimelineOffset extends Component {
       elasticity: 900,
       rotate: {
         value: 360,
-        easing: 'easeInOutSine',
+        easing: "easeInOutSine"
       },
       // Start animating this before the previous animation ends
-      offset: startBefore(1100),
-    })
+      offset: startBefore(1100)
+    });
 
-    Animated.start()
+    Animated.start();
   }
 
   render() {
@@ -53,6 +53,6 @@ export class TimelineOffset extends Component {
         <div className="one" ref={one => (this.one = one)} style={boxStyles} />
         <div ref={two => (this.two = two)} style={boxStyles} />
       </React.Fragment>
-    )
+    );
   }
 }

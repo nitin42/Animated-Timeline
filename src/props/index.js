@@ -1,5 +1,7 @@
 // @flow
 
+import PropTypes from "prop-types";
+
 import { noop } from "../utils/noop";
 
 import type { seekCtrl } from "../types";
@@ -21,4 +23,21 @@ export const defaultCommonProps = () => ({
     onComplete: noop,
     callFrame: noop
   }
+});
+
+export const defaultPropTypes = () => ({
+  start: PropTypes.bool,
+  stop: PropTypes.bool,
+  reverse: PropTypes.bool,
+  reset: PropTypes.bool,
+  restart: PropTypes.bool,
+
+  seek: PropTypes.func,
+
+  lifecycle: PropTypes.shape({
+    onUpdate: PropTypes.func,
+    onStart: PropTypes.func,
+    onComplete: PropTypes.func,
+    callFrame: PropTypes.func
+  })
 });

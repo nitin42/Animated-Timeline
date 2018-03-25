@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { animated } from "../core";
 import { timeBasedExecMethods } from "../utils/methods";
 import { getPropsFromMain } from "../utils/getProps";
-import { defaultCommonProps } from "../props";
+import { defaultCommonProps, defaultPropTypes } from "../props";
 
 export class Basic extends React.Component {
   // Animated instance
@@ -15,6 +16,11 @@ export class Basic extends React.Component {
   static defaultProps = {
     ...defaultCommonProps(),
     autoplay: true
+  };
+
+  static propTypes = {
+    autoplay: PropTypes.bool,
+    ...defaultPropTypes()
   };
 
   componentDidMount() {
