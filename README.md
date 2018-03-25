@@ -120,7 +120,7 @@ class App extends Component {
   <img src="./media/basic.gif" />
 </p>
 
-In the above example, we created a `timeline` instance by passing an object of animation attributes to the `Timeline` class. The animation attributes are used to configure an animation timeline so you can decide what should be `direction`, `easing`, `duration` value etc, throughout the animation timeline.
+In the above example, we created a `timeline` instance by passing an object of animation attributes to the `Timeline` class constructor. The animation attributes are used to configure an animation timeline so you can decide what should be `direction`, `easing`, `duration` value etc, throughout the animation timeline.
 
 > Note - Defining animation attributes is optional and can be skipped.
 
