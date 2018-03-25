@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "./node_modules/.bin/parcel demo/index.html",
-    "flow": "flow"
+    "flow": "flow",
+    "precommit": "pretty-quick --staged"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
   "license": "ISC",
@@ -19,11 +20,14 @@
     "babel-preset-react": "^6.24.1",
     "colornames": "^1.1.1",
     "flow-bin": "^0.68.0",
+    "husky": "^0.14.3",
     "jest": "^22.4.2",
     "parcel-bundler": "^1.6.2",
+    "pretty-quick": "^1.4.1",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "react-test-renderer": "^16.2.0"
   },
   "dependencies": {
     "invariant": "^2.2.4"

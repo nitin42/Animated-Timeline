@@ -1,47 +1,18 @@
 // @flow
 
-import * as React from 'react'
+import * as React from "react";
 
-import { createTimeline, animated } from '../core'
+import { createTimeline, animated } from "../core";
 
-import invariant from 'invariant'
+import invariant from "invariant";
 
-import { appendLifecycleHooks } from '../utils/lifecycle'
-import { noop } from '../utils/noop'
-import { getPropsFromMain } from '../utils/getProps'
+import { appendLifecycleHooks } from "../utils/lifecycle";
+import { noop } from "../utils/noop";
+import { getPropsFromMain } from "../utils/getProps";
+import { timeBasedExecMethods } from "../utils/methods";
+import { defaultCommonProps } from "../props";
 
-import type { attributes, AnimationEngine, lifecycle } from '../types'
-
-// User defined callback that receives the instance of animation engine and returns a number input for seek method.
-type callback = (engine: AnimationEngine) => number
-
-// Default function for synchronizing the animation progress and input value.
-type defaultFn = (value: number | string) => void
-
-// Custom method (user defined) to change animation duration or progress value.
-type customFn = (cb: callback) => void
-
-// Seek config (for changing the animation progress or duration time)
-type seekCtrl = {
-  default: defaultFn,
-  custom: customFn,
-}
-
-// Seek function as prop on Timeline component
-type seekFn = (ctrl: seekCtrl) => void
-
-// Timeline component props
-type TimelineProps = {
-  start: boolean,
-  stop: boolean,
-  reset: boolean,
-  restart: boolean,
-  reverse: boolean,
-  // Can be used to wrap children (optional) or placed anywhere in the tree.
-  children?: React.Node,
-  seek: seekFn,
-  lifecycle: lifecycle,
-}
+import type { attributes, AnimationEngine, TimelineProps } from "../types";
 
 // Timeline component is used to create sequencing animations with control time-based execution
 // capabilities. The Timeline class takes the animation attributes and instantiates a new timeline
@@ -55,107 +26,53 @@ type TimelineProps = {
 // dynamically start, stop, reverse, reset, restart and change the animation's current time.
 
 export class Timeline {
-  attributes: attributes
-  speed: number | string
-  inst: AnimationEngine
+  attributes: attributes;
+  speed: number | string;
+  inst: AnimationEngine;
 
   constructor(attributes: attributes) {
-    this.attributes = attributes || {}
+    this.attributes = attributes || {};
 
-    // Changes animation speed for all the elements
-    this.speed = this.attributes.speed || 1
+    // Changes the animation speed for all the elements bounded to the same instance
+    this.speed = this.attributes.speed || 1;
 
-    this.inst = createTimeline({ ...this.attributes })
+    this.inst = createTimeline({ ...this.attributes });
 
     // We calculate the engine time by using the speed coefficient and hence set the animation instance time in the 'frame' loop
-    this.inst.speed = this.speed
+    this.inst.speed = this.speed;
   }
 
   createTimelineSyncComp = () => {
-    const main = this.inst
+    const main = this.inst;
 
-    const props = getPropsFromMain(main)
+    const callbackProps = getPropsFromMain(main);
 
     class TimelineSync extends React.Component<TimelineProps> {
       static defaultProps = {
-        start: false,
-        stop: false,
-        reset: false,
-        restart: false,
-        reverse: false,
-
-        seek: (ctrl: seekCtrl) => ctrl.default(1),
-
-        lifecycle: {
-          onUpdate: noop,
-          onStart: noop,
-          onComplete: noop,
-          callFrame: noop,
-        },
-      }
+        ...defaultCommonProps()
+      };
 
       componentDidMount = () => {
         if (this.props.lifecycle) {
-          appendLifecycleHooks(main, this.props.lifecycle)
+          appendLifecycleHooks(main, this.props.lifecycle);
         }
 
-        if (this.props.start) main.start()
-
-        if (this.props.stop) main.stop()
-      }
+        timeBasedExecMethods(main, this.props, callbackProps, { init: true });
+      };
 
       componentDidUpdate = () => {
-        // These utilities are usable only when the inputs are updated.
-        // But they are also available as methods on the main instance.
-        // Invoking them early won't have any effect because we haven't collected the elements to animate (children length is 'zero')
-        if (this.props.start) {
-          main.start()
-        }
-
-        if (this.props.stop) {
-          main.stop()
-        }
-
-        if (this.props.reset) {
-          main.reset()
-        }
-
-        if (this.props.restart) {
-          main.restart()
-        }
-
-        if (this.props.reverse) {
-          main.reverse()
-        }
-
-        if (this.props.seek) {
-          const config = {
-            // By default we sync the animation progress value with the user defined value.
-            // TODO: There is a bug when synchronizing the engine time with the varying speed. We loose the current animation progress and hence animation starts again from the start point. So 'seek' will work though with varying speed but it won't synchronize with the current animation progress when speed coefficient's value is not 1.
-            default: (value: number | string) =>
-              main.seek(main.duration * (Number(value) / 100)),
-            custom: (callback: Function) => {
-              invariant(
-                typeof callback === 'function',
-                `Expected callback to be a function instead got a ${typeof callback}.`
-              )
-              // Also pass the animation engine instance to the user defined callback
-              main.seek(callback(props))
-            },
-          }
-
-          this.props.seek(config)
-        }
-      }
+        // Invoke controls for time-based execution methods
+        timeBasedExecMethods(main, this.props, callbackProps, { init: false });
+      };
 
       render = () => {
         // TimelineSync component can be present anywhere in the tree, so either render nothing or wrap the children
-        return this.props.children || null
-      }
+        return this.props.children || null;
+      };
     }
 
-    return TimelineSync
-  }
+    return TimelineSync;
+  };
 
   // Initialise the timeline
   init = () => {
@@ -164,7 +81,7 @@ export class Timeline {
       // Properties supported on Animate - (play, pause, restart, reverse)
       Animated: this.inst,
       // React component that represents the animation timeline
-      AnimationTimeline: this.createTimelineSyncComp(),
-    }
-  }
+      AnimationTimeline: this.createTimelineSyncComp()
+    };
+  };
 }

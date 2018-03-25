@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import hx from 'colornames'
+import hx from "colornames";
 
-import { Timeline, helpers } from '../src'
-import { boxStyles } from './styles'
+import { Timeline, helpers } from "../src";
+import { boxStyles } from "./styles";
 
-const { start, startBefore, getEasings } = helpers
+const { start, startBefore, getEasings } = helpers;
 
 const timeline = new Timeline({
-  direction: 'alternate',
-  easing: 'easeInOutSine',
-  speed: 0.2
-})
+  direction: "alternate",
+  easing: "easeInOutSine",
+  speed: 0.09
+});
 
-const { Animated, AnimationTimeline } = timeline.init()
+const { Animated, AnimationTimeline } = timeline.init();
 
 export class TimelineLifecycle extends Component {
   componentDidMount() {
@@ -22,14 +22,14 @@ export class TimelineLifecycle extends Component {
       translateX: start({ from: 500, to: 20 }),
       opacity: 0.8,
       backgroundColor: start({
-        from: hx('cyan'),
-        to: hx('red'),
+        from: hx("cyan"),
+        to: hx("red")
       }),
       rotate: {
         value: 360,
-        easing: 'easeInOutSine',
-      },
-    }).start()
+        easing: "easeInOutSine"
+      }
+    }).start();
   }
 
   render() {
@@ -39,7 +39,7 @@ export class TimelineLifecycle extends Component {
           lifecycle={{
             // Called when the animation starts
             // If there is any delay, then it will be invoked after that delay timeout
-            onStart: (obj) => {
+            onStart: obj => {
               console.log("Started...");
             },
             // Invoked whenever there is any new update (state updates, events)
@@ -49,7 +49,7 @@ export class TimelineLifecycle extends Component {
               // console.log("Updating...");
             },
             // Frame loop (called every frame)
-            tick: (obj) => {
+            tick: obj => {
               // console.log("Loop...");
             },
             // Invoked when the animation is done
@@ -58,15 +58,20 @@ export class TimelineLifecycle extends Component {
               // console.log('Starting again...');
               if (completed) {
                 // Reverse the direction
-                Animated.reverse()
+                Animated.reverse();
                 // Restart the animation again
-                Animated.restart()
+                Animated.restart();
               }
             }
           }}
         />
-        <div className="one" ref={one => (this.one = one)} style={{ ...boxStyles}} />
+        <div
+          className="one"
+          id="one"
+          ref={one => (this.one = one)}
+          style={{ ...boxStyles }}
+        />
       </React.Fragment>
-    )
+    );
   }
 }

@@ -1,13 +1,14 @@
-import React from 'react'
-import { render } from 'react-dom'
+import React from "react";
+import { render } from "react-dom";
 
-import { TimelineBasic } from '../examples/TimelineBasic'
-import { TimelineAdvance } from '../examples/TimelineAdvance'
-import { TimelineOffset } from '../examples/TimelineOffset'
-import { TimelineKeyframes } from '../examples/Keyframes'
-import { TimelineLifecycle } from '../examples/TimelineLifecycle'
-import { DynamicProgress } from '../examples/DynamicProgress'
-import { AnimatedBasic } from '../examples/AnimatedBasic'
+import { TimelineBasic } from "../examples/TimelineBasic";
+import { TimelineAdvance } from "../examples/TimelineAdvance";
+import { TimelineOffset } from "../examples/TimelineOffset";
+import { TimelineKeyframes } from "../examples/Keyframes";
+import { TimelineLifecycle } from "../examples/TimelineLifecycle";
+import { DynamicProgress } from "../examples/DynamicProgress";
+import { AnimatedBasic } from "../examples/AnimatedBasic";
+import { AnimatedAdvance } from "../examples/AnimatedAdvance";
 
 class App extends React.Component {
   render() {
@@ -27,9 +28,11 @@ class App extends React.Component {
         <DynamicProgress />
         <h1>Animated basic</h1>
         <AnimatedBasic />
+        <h1>Animated Advance</h1>
+        <AnimatedAdvance />
       </React.Fragment>
-    )
+    );
   }
 }
 
-render(<App />, document.getElementById('root'))
+render(<App />, document.getElementById("root"));

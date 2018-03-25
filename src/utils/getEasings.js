@@ -1,9 +1,15 @@
-import { easings } from '../core'
+// @flow
 
-export const getEasings = () => {
-  const names = []
+import { easings } from "../core";
 
-  Object.keys(easings).forEach(easing => names.push(easing))
+type easing = string;
 
-  return names
-}
+type easingNames = Array<easing>;
+
+export const getEasings = (): easingNames => {
+  const names = [];
+
+  Object.keys(easings).forEach((easing: easing) => names.push(easing));
+
+  return names;
+};
