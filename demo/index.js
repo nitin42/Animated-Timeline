@@ -19,7 +19,7 @@ class App extends React.Component {
         {/* <h1>Offset Example</h1>
         <TimelineOffset />
         <h1>Basic Timeline</h1> */}
-        <TimelineBasic />
+        <TimelineLifecycle />
         {/* <h1>Advance Timeline</h1>
         <TimelineAdvance />
         <h1>Keyframes Timeline</h1>

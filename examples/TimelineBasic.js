@@ -8,7 +8,7 @@ const timeline = new Timeline({
   direction: "alternate",
   easing: "easeInOutSine",
   loop: true,
-  duration: 2000
+  duration: 4000
 });
 
 const { Animated } = timeline.init();
