@@ -8,7 +8,7 @@ const { transition } = helpers;
 
 const Animated = Timeline({
   direction: "alternate",
-  loop: 1
+  loop: true
 });
 
 export class Basic extends Component {
@@ -17,7 +17,7 @@ export class Basic extends Component {
       elements: this.one,
       opacity: transition({ from: 0.2, to: 0.8 }),
       rotate: {
-        value: 360
+        value: transition({ from: 360, to: 180 })
       }
     }).start();
   }
@@ -26,8 +26,7 @@ export class Basic extends Component {
     return (
       <div
         ref={one => (this.one = one)}
-        style={boxStyles}
-        onClick={e => Animated.restart()}
+        style={{ margin: "0 auto", width: "50%", ...boxStyles }}
       />
     );
   }
