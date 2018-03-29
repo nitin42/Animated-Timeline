@@ -9,14 +9,17 @@ type fromTo = {
 
 type values = Array<value>;
 
-// Serialize the values for animation engine
-// Start an animation from a certain end
-export const start = ({ from, to }: { from: value, to: value }): values => [
+// Serialize the values
+// Used for transition from one state to another state
+export const transition = ({
   from,
   to
-];
+}: {
+  from: value,
+  to: value
+}): values => [from, to];
 
-// Multiple the original value
+// Multiplies the original value
 export const times = (val: value): string => `*=${val}`;
 
 // Start at a part. time after the previous animation

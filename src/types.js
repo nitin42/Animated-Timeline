@@ -39,7 +39,6 @@ export type fn = (props: lifecycleHookProps) => void;
 // Animation lifecycle hooks
 export type lifecycle = {
   onStart: fn,
-  callFrame: fn,
   onUpdate: fn,
   onComplete: fn
 };
@@ -53,15 +52,6 @@ export type defaultFn = (value: number | string) => void;
 // Custom method (user defined) to change animation duration or progress value.
 export type customFn = (cb: callback) => void;
 
-// Seek config (for changing the animation progress or duration time)
-export type seekCtrl = {
-  default: defaultFn,
-  custom: customFn
-};
-
-// Main seek function passed via props
-export type seekFn = (ctrl: seekCtrl) => void;
-
 // Timeline component props
 export type TimelineProps = {
   start: boolean,
@@ -70,7 +60,6 @@ export type TimelineProps = {
   restart: boolean,
   reverse: boolean,
   children?: React.Node,
-  seek: seekFn,
   lifecycle: lifecycle
 };
 
@@ -79,16 +68,27 @@ export type init = {
   init: boolean
 };
 
-// Basic component props
-export type BasicCompProps = {
+// Basic animation component
+export type Basic = {
+  // Animation status flags
   start: boolean,
   stop: boolean,
   reset: boolean,
   restart: boolean,
   reverse: boolean,
+
+  // Children nodes
   children?: React.Node,
-  seek: seekFn,
+
+  // Change animation time dynamically
+  setTime: (number | string) | customFn,
+
+  // Animation lifecycle
   lifecycle: lifecycle,
+
+  // Autoplay the animation
   autoplay: boolean,
+
+  // Animation attributes
   attributes: Object
 };

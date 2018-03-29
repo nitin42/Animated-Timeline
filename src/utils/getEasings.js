@@ -1,6 +1,6 @@
 // @flow
 
-import { easings } from "../core";
+import { easings } from "../core/easing";
 
 type easing = string;
 

@@ -49,12 +49,6 @@ export const appendLifecycleHooks = (
     instance.onStart = lifecycle.onStart;
   }
 
-  if (lifecycle.callFrame) {
-    // This is called in each frame
-    // Like game loop
-    instance.callFrame = lifecycle.callFrame;
-  }
-
   if (lifecycle.onUpdate) {
     // This is invoked whenever a new update is performed. Eg - Using 'seek' or 'events' or 'state updates'
     instance.onUpdate = lifecycle.onUpdate;

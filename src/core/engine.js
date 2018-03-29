@@ -1,559 +1,622 @@
 /**
  * This is the core animation engine for this library.
- * Most of the code is copied from https://github.com/juliangarnier/anime but there are **some** differences:
+ * Most of the code is taken from https://github.com/juliangarnier/anime
  *
- * 1. Lifecycle hooks are refactored and parameters received are modified.
- * 2. Animation speed is now configured via different instances and via params passed to the main instance rather than relying on the singleton instance.
- * 3. Removed unused properties (`version`, `remove`, `setDashoffset`).
+ * Modifications -
+ *
+ * 1. Lifecycle hooks
+ * 2. Animation speed is now configured via different instances and via params passed to the main instance rather than relying on the singleton instance
+ * 3. Minimal API
  * 4. Serialised values for performing **from** - **to** animations (implemented in utils/fromTo.js).
- * 5. Dropped support for motion path, drawing lines and SVG path
- * 6. Disable autoplay since we rely on control time-based execution methods
+ * 5. New defaults for instance and tweens parameters.
+ * 6. Lifecycle hooks can no longer be passed through parameters. They are available as instance methods
  *
- * Julian Garnier 👏👏
+ * New additions -
+ *
+ * 1. Style reads and writes are now batched so as to avoid layout calc. in each frame ✅
+ * 2. Use 'will-change' prop to let the browser know that a new layer has to be created for a transform ✅
+   (don't use 'will-change' for all the properties so as to avoid memory consumption)
+ * 3. APIs for getting information out of an animaton
+ * 4. Declarative API for Timeline component for React
+ *
+ * Tradeoffs -
+ *
+ * 1. Complex layout animations (?)
+ * 2. Motion path, SVGs ?
+ * 3. Function values for updating animation attributes
+ *
+ ** /
  */
 
- import {
-   is,
-   stringContains,
-   stringToHyphens,
-   selectString,
-   filterArray,
-   toArray,
-   arrayContains,
-   flattenArray,
-   cloneObject,
-   mergeObjects,
-   replaceObjectProps,
-   rgbToRgba,
-   hexToRgba,
-   hslToRgba,
-   colorToRgb
- } from './utils'
-import { easings } from './easing'
+import fastdom from "fastdom";
+import invariant from "invariant";
+import {
+  isArray,
+  isObject,
+  isSVG,
+  isDOM,
+  isString,
+  isFunc,
+  isUnd,
+  isHex,
+  isPath,
+  isRgb,
+  isHsl,
+  isCol,
+  stringContains,
+  stringToHyphens,
+  selectString,
+  filterArray,
+  toArray,
+  arrayContains,
+  flattenArray,
+  clone,
+  mergeObjects,
+  replaceObjectProps,
+  rgbToRgba,
+  hexToRgba,
+  hslToRgba,
+  colorToRgb,
+  getRelativeValue,
+  getUnit
+} from "./utils";
+import { easings } from "./easing";
+import { bezier } from "./bezier";
+import { getDefaultTweensParams, getDefaultInstanceParams } from "./defaults";
+import {
+  getTransformUnit,
+  getTransformValue,
+  validTransforms
+} from "./transforms";
 
-const defaultInstanceSettings = {
-  onUpdate: undefined,
-  onStart: undefined,
-  callFrame: undefined,
-  onComplete: undefined,
-  loop: 1,
-  direction: 'normal',
-  autoplay: false,
-  offset: 0,
-}
+// Debug reads and style mutations
+let debugBatching = false;
 
-const defaultTweenSettings = {
-  duration: 1000,
-  delay: 0,
-  easing: 'easeOutElastic',
-  elasticity: 500,
-  round: 0,
-}
+let animationStarted = false;
 
-const validTransforms = [
-  'translateX',
-  'translateY',
-  'translateZ',
-  'rotate',
-  'rotateX',
-  'rotateY',
-  'rotateZ',
-  'scale',
-  'scaleX',
-  'scaleY',
-  'scaleZ',
-  'skewX',
-  'skewY',
-  'perspective',
-]
+// Style updates
+let writeId = null;
 
-let transformString
+// Style reads
+let readId = null;
 
-const getUnit = val => {
-  const split = /([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(
-    val
-  )
-  if (split) return split[2]
-}
+let transformString;
 
-const getTransformUnit = propName => {
-  if (stringContains(propName, 'translate') || propName === 'perspective')
-    return 'px'
-  if (stringContains(propName, 'rotate') || stringContains(propName, 'skew'))
-    return 'deg'
-}
+const minMaxValue = (val, min, max) => Math.min(Math.max(val, min), max);
 
-const minMaxValue = (val, min, max) => {
-  return Math.min(Math.max(val, min), max)
-}
+const log = args => console.log(args);
 
-const getFunctionValue = (val, animatable) => {
-  if (!is.fnc(val)) return val
-  return val(animatable.target, animatable.id, animatable.total)
-}
+// Check if the prop value is a function
+const isFunctionValue = (val, prop) => {
+  invariant(
+    typeof val !== "function",
+    `Animation property value for '${prop}' cannot be a function.`
+  );
+  return val;
+};
 
+const debugMutation = (prop, value) => {
+  log(`Batched style mutation: ${prop}\n`);
+  log(`Result: ${value}`);
+};
+
+// Batch style mutations
+const batchMutation = (mutation, prop, value) => {
+  return mutation();
+  // writeId = fastdom.mutate(() => {
+  //   debugBatching &&
+  //   animationStarted &&
+  //   (prop !== undefined && value !== undefined)
+  //     ? debugMutation(prop, value)
+  //     : null
+  //   return mutation()
+  // })
+  //
+  // return writeId
+};
+
+// Batch style reads
+// Queues are emptied at the turn of next frame using rAF
+const batchRead = (reads, prop) => {
+  return reads();
+  // readId = fastdom.measure(() => {
+  //   debugBatching ? log('Batched style read: ' + prop) : null
+  //   return reads()
+  // })
+  //
+  // return writeId
+};
+
+const exceptions = () => {
+  fastdom.catch = error => {
+    console.log(error);
+  };
+};
+
+const emptyScheduledJobs = () => {
+  // fastdom.clear(readId)
+  // fastdom.clear(writeId)
+};
+
+// Get the CSS property value (opacity, backgroundColor, ..., etc)
 const getCSSValue = (el, prop) => {
   if (prop in el.style) {
-    return getComputedStyle(el).getPropertyValue(stringToHyphens(prop)) || '0'
+    return getComputedStyle(el).getPropertyValue(stringToHyphens(prop)) || "0";
   }
-}
+};
 
+// Get the animation type (transform, css or attribute)
 const getAnimationType = (el, prop) => {
-  if (is.dom(el) && arrayContains(validTransforms, prop)) return 'transform'
-  if (is.dom(el) && (el.getAttribute(prop) || (is.svg(el) && el[prop])))
-    return 'attribute'
-  if (is.dom(el) && (prop !== 'transform' && getCSSValue(el, prop)))
-    return 'css'
-  if (el[prop] != null) return 'object'
-}
+  // Check if the prop is a valid transform name
+  if (isDOM(el) && arrayContains(validTransforms, prop)) return "transform";
+  // Check if its a valid attribute for a DOM node
+  if (isDOM(el) && (el.getAttribute(prop) || (isSVG(el) && el[prop])))
+    return "attribute";
+  // Check if the prop returns a valid CSS transform value
+  if (isDOM(el) && (prop !== "transform" && getCSSValue(el, prop)))
+    return "css";
+  // { value: '', duration: 2000 }
+  if (el[prop] != null) return "object";
+};
 
-const getTransformValue = (el, propName) => {
-  const defaultUnit = getTransformUnit(propName)
-  const defaultVal = stringContains(propName, 'scale') ? 1 : 0 + defaultUnit
-  const str = el.style.transform
-  if (!str) return defaultVal
-  let match = []
-  let props = []
-  let values = []
-  const rgx = /(\w+)\((.+?)\)/g
-  while ((match = rgx.exec(str))) {
-    props.push(match[1])
-    values.push(match[2])
-  }
-  const value = filterArray(values, (val, i) => props[i] === propName)
-  return value.length ? value[0] : defaultVal
-}
-
+// Get the animation value for the element
 const getOriginalTargetValue = (target, propName) => {
   switch (getAnimationType(target, propName)) {
-    case 'transform':
-      return getTransformValue(target, propName)
-    case 'css':
-      return getCSSValue(target, propName)
-    case 'attribute':
-      return target.getAttribute(propName)
+    case "transform":
+      return getTransformValue(target, propName);
+    case "css":
+      return getCSSValue(target, propName);
+    case "attribute":
+      return target.getAttribute(propName);
   }
-  return target[propName] || 0
-}
 
-const getRelativeValue = (to, from) => {
-  const operator = /^(\*=|\+=|-=)/.exec(to)
-  if (!operator) return to
-  const u = getUnit(to) || 0
-  const x = parseFloat(from)
-  const y = parseFloat(to.replace(operator[0], ''))
-  switch (operator[0][0]) {
-    case '+':
-      return x + y + u
-    case '-':
-      return x - y + u
-    case '*':
-      return x * y + u
-  }
-}
+  return target[propName] || 0;
+};
 
+// Validates and returns the value like 20px, 360deg, 0.4
 const validateValue = (val, unit) => {
-  if (is.col(val)) {
-    return colorToRgb(val)
+  if (isCol(val)) {
+    return colorToRgb(val);
   }
 
-  const originalUnit = getUnit(val)
+  const originalUnit = getUnit(val);
   const unitLess = originalUnit
     ? val.substr(0, val.length - originalUnit.length)
-    : val
-  return unit && !/\s/g.test(val) ? unitLess + unit : unitLess
-}
+    : val;
+  return unit && !/\s/g.test(val) ? unitLess + unit : unitLess;
+};
 
-// getTotalLength() equivalent for circle, rect, polyline, polygon and line shapes.
-// adapted from https://gist.github.com/SebLambla/3e0550c496c236709744
-
-const getDistance = (p1, p2) => {
-  return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2))
-}
-
-const getCircleLength = el => {
-  return 2 * Math.PI * el.getAttribute('r')
-}
-
-const getRectLength = el => {
-  return el.getAttribute('width') * 2 + el.getAttribute('height') * 2
-}
-
-const getLineLength = el => {
-  return getDistance(
-    { x: el.getAttribute('x1'), y: el.getAttribute('y1') },
-    { x: el.getAttribute('x2'), y: el.getAttribute('y2') }
-  )
-}
-
-const getPolylineLength = el => {
-  const points = el.points
-  let totalLength = 0
-  let previousPos
-  for (let i = 0; i < points.numberOfItems; i++) {
-    const currentPos = points.getItem(i)
-    if (i > 0) totalLength += getDistance(previousPos, currentPos)
-    previousPos = currentPos
-  }
-  return totalLength
-}
-
-const getPolygonLength = el => {
-  const points = el.points
-  return (
-    getPolylineLength(el) +
-    getDistance(points.getItem(points.numberOfItems - 1), points.getItem(0))
-  )
-}
-
-// Path animation
-
-const getTotalLength = el => {
-  if (el.getTotalLength) return el.getTotalLength()
-  switch (el.tagName.toLowerCase()) {
-    case 'circle':
-      return getCircleLength(el)
-    case 'rect':
-      return getRectLength(el)
-    case 'line':
-      return getLineLength(el)
-    case 'polyline':
-      return getPolylineLength(el)
-    case 'polygon':
-      return getPolygonLength(el)
-  }
-}
-
+// Creates an object of value 500px => { original: "500", numbers: [500], strings: ["", "px"] }
 const decomposeValue = (val, unit) => {
-  const rgx = /-?\d*\.?\d+/g
-  const value = validateValue(is.pth(val) ? val.totalLength : val, unit) + ''
+  const rgx = /-?\d*\.?\d+/g;
+  const value = validateValue(isPath(val) ? val.totalLength : val, unit) + "";
+
   return {
     original: value,
     numbers: value.match(rgx) ? value.match(rgx).map(Number) : [0],
-    strings: is.str(val) || unit ? value.split(rgx) : [],
-  }
-}
+    strings: isString(val) || unit ? value.split(rgx) : []
+  };
+};
 
+// Parse the elements and returns an array of elements
 const parseElements = elements => {
   const elementsArray = elements
-    ? flattenArray(is.arr(elements) ? elements.map(toArray) : toArray(elements))
-    : []
+    ? flattenArray(
+        isArray(elements) ? elements.map(toArray) : toArray(elements)
+      )
+    : [];
+
   return filterArray(
     elementsArray,
     (item, pos, self) => self.indexOf(item) === pos
-  )
-}
+  );
+};
 
+// Returns an array of elements to be animated
 const getAnimatables = elements => {
-  const parsed = parseElements(elements)
+  const parsed = parseElements(elements);
   return parsed.map((t, i) => {
-    return { target: t, id: i, total: parsed.length }
-  })
-}
+    return { target: t, id: i, total: parsed.length };
+  });
+};
 
+// Normalize tweens and animation properties
 const normalizePropertyTweens = (prop, tweenSettings) => {
-  let settings = cloneObject(tweenSettings)
-  if (is.arr(prop)) {
-    const l = prop.length
-    const isFromTo = l === 2 && !is.obj(prop[0])
+  let settings = clone(tweenSettings);
+  // from > to based prop values
+  if (isArray(prop)) {
+    const l = prop.length;
+    const isFromTo = l === 2 && !isObject(prop[0]);
     if (!isFromTo) {
       // Duration divided by the number of tweens
-      if (!is.fnc(tweenSettings.duration))
-        settings.duration = tweenSettings.duration / l
+      if (!isFunc(tweenSettings.duration))
+        settings.duration = tweenSettings.duration / l;
     } else {
       // Transform [from, to] values shorthand to a valid tween value
-      prop = { value: prop }
+      prop = { value: prop };
     }
   }
+
   return toArray(prop)
     .map((v, i) => {
       // Default delay value should be applied only on the first tween
-      const delay = !i ? tweenSettings.delay : 0
+      const delay = !i ? tweenSettings.delay : 0;
       // Use path object as a tween value
-      let obj = is.obj(v) && !is.pth(v) ? v : { value: v }
+      let obj = isObject(v) && !isPath(v) ? v : { value: v };
       // Set default delay value
-      if (is.und(obj.delay)) obj.delay = delay
-      return obj
+      if (isUnd(obj.delay)) obj.delay = delay;
+      return obj;
     })
-    .map(k => mergeObjects(k, settings))
-}
+    .map(k => mergeObjects(k, settings));
+};
 
+// Get the animation properties
 const getProperties = (instanceSettings, tweenSettings, params) => {
-  let properties = []
-  const settings = mergeObjects(instanceSettings, tweenSettings)
+  // store animation properties
+  let properties = [];
+  // Merge instance params and tween params
+  const settings = mergeObjects(instanceSettings, tweenSettings);
   for (let p in params) {
-    if (!settings.hasOwnProperty(p) && p !== 'elements') {
+    if (!settings.hasOwnProperty(p) && p !== "elements") {
       properties.push({
         name: p,
-        offset: settings['offset'],
-        tweens: normalizePropertyTweens(params[p], tweenSettings),
-      })
+        offset: settings["offset"],
+        tweens: normalizePropertyTweens(params[p], tweenSettings)
+      });
     }
   }
-  return properties
-}
+  return properties;
+};
 
+// Normalize tween values
 const normalizeTweenValues = (tween, animatable) => {
-  let t = {}
+  let t = {};
   for (let p in tween) {
-    let value = getFunctionValue(tween[p], animatable)
-    if (is.arr(value)) {
-      value = value.map(v => getFunctionValue(v, animatable))
-      if (value.length === 1) value = value[0]
+    let value = isFunctionValue(tween[p], p);
+    // from > to based ?
+    if (isArray(value)) {
+      value = value.map(v => isFunctionValue(v, p));
+      if (value.length === 1) value = value[0];
     }
-    t[p] = value
+    t[p] = value;
   }
-  t.duration = parseFloat(t.duration)
-  t.delay = parseFloat(t.delay)
-  return t
-}
+  t.duration = parseFloat(t.duration);
+  t.delay = parseFloat(t.delay);
+  return t;
+};
 
+// If we have an array of control points, then create a custom bezier curve or return the easing name using the val
 const normalizeEasing = val => {
-  return is.arr(val) ? bezier.apply(this, val) : easings[val]
-}
+  return isArray(val) ? bezier.apply(this, val) : easings[val];
+};
 
+// Create a normalise data structure of tween properties
 const normalizeTweens = (prop, animatable) => {
-  let previousTween
+  let previousTween;
+
   return prop.tweens.map(t => {
-    let tween = normalizeTweenValues(t, animatable)
-    const tweenValue = tween.value
-    const originalValue = getOriginalTargetValue(animatable.target, prop.name)
+    let tween = normalizeTweenValues(t, animatable);
+    // This may be transform value like 360deg or from to based animation values like [1, 2]
+    const tweenValue = tween.value;
+    const originalValue = getOriginalTargetValue(animatable.target, prop.name);
     const previousValue = previousTween
       ? previousTween.to.original
-      : originalValue
-    const from = is.arr(tweenValue) ? tweenValue[0] : previousValue
+      : originalValue;
+    const from = isArray(tweenValue) ? tweenValue[0] : previousValue;
     const to = getRelativeValue(
-      is.arr(tweenValue) ? tweenValue[1] : tweenValue,
+      isArray(tweenValue) ? tweenValue[1] : tweenValue,
       from
-    )
-    const unit = getUnit(to) || getUnit(from) || getUnit(originalValue)
-    tween.from = decomposeValue(from, unit)
-    tween.to = decomposeValue(to, unit)
-    tween.start = previousTween ? previousTween.end : prop.offset
-    tween.end = tween.start + tween.delay + tween.duration
-    tween.easing = normalizeEasing(tween.easing)
-    tween.elasticity = (1000 - minMaxValue(tween.elasticity, 1, 999)) / 1000
-    tween.isPath = is.pth(tweenValue)
-    tween.isColor = is.col(tween.from.original)
-    if (tween.isColor) tween.round = 1
-    previousTween = tween
-    return tween
-  })
-}
+    );
+    const unit = getUnit(to) || getUnit(from) || getUnit(originalValue);
+    tween.from = decomposeValue(from, unit);
+    tween.to = decomposeValue(to, unit);
+    tween.start = previousTween ? previousTween.end : prop.offset;
+    tween.end = tween.start + tween.delay + tween.duration;
+    tween.easing = normalizeEasing(tween.easing);
+    tween.elasticity = (1000 - minMaxValue(tween.elasticity, 1, 999)) / 1000;
+    tween.isPath = isPath(tweenValue);
+    tween.isColor = isCol(tween.from.original);
+    if (tween.isColor) tween.round = 1;
+    previousTween = tween;
+    return tween;
+  });
+};
 
+// Apply the animation properties throughout the tween progress
 const setTweenProgress = {
-  css: (t, p, v) => (t.style[p] = v),
-  attribute: (t, p, v) => t.setAttribute(p, v),
+  css: (t, p, v) => {
+    if (p === "opacity" && t.style["will-change"] !== "opacity") {
+      // TODO: At this point, we may override the 'will-change' property which was set to 'transform' earlier. Change this!
+      // Though, this isn't a concern for memory consumption as it just overrides the content
+
+      t.style["will-change"] = "opacity";
+
+      // Batch style updates
+      return batchMutation(() => (t.style[p] = v), p, v);
+    }
+
+    return batchMutation(() => (t.style[p] = v), p, v);
+  },
+  attribute: (t, p, v) => batchMutation(() => t.setAttribute(p, v), p, v),
   object: (t, p, v) => (t[p] = v),
   transform: (t, p, v, transforms, id) => {
-    if (!transforms[id]) transforms[id] = []
-    transforms[id].push(`${p}(${v})`)
-  },
-}
+    if (!transforms[id]) transforms[id] = [];
+    transforms[id].push(`${p}(${v})`);
+  }
+};
 
+// Create an object of animation properties for an element with animation type
 function createAnimation(animatable, prop) {
-  const animType = getAnimationType(animatable.target, prop.name)
+  const animType = getAnimationType(animatable.target, prop.name);
   if (animType) {
-    const tweens = normalizeTweens(prop, animatable)
+    const tweens = normalizeTweens(prop, animatable);
     return {
       type: animType,
       property: prop.name,
       animatable: animatable,
       tweens: tweens,
       duration: tweens[tweens.length - 1].end,
-      delay: tweens[0].delay,
-    }
+      delay: tweens[0].delay
+    };
   }
 }
 
+// Create animation object using array of properties
+// TODO: create a method for getting all the animations and changing there values at once
 function getAnimations(animatables, properties) {
   return filterArray(
     flattenArray(
       animatables.map(animatable => {
         return properties.map(prop => {
-          return createAnimation(animatable, prop)
-        })
+          return createAnimation(animatable, prop);
+        });
       })
     ),
-    a => !is.und(a)
-  )
+    a => !isUnd(a)
+  );
 }
 
-function getInstanceTimings(type, animations, instanceSettings, tweenSettings) {
-  const isDelay = type === 'delay'
+// Get the animation offset from the animation instance
+function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
+  const isDelay = type === "delay";
   if (animations.length) {
     return (isDelay ? Math.min : Math.max).apply(
       Math,
       animations.map(anim => anim[type])
-    )
+    );
   } else {
     return isDelay
       ? tweenSettings.delay
-      : instanceSettings.offset + tweenSettings.delay + tweenSettings.duration
+      : instanceSettings.offset + tweenSettings.delay + tweenSettings.duration;
   }
 }
 
+const hasLifecycleHook = params => {
+  const hooks = ["onStart", "onUpdate", "tick", "onComplete"];
+
+  const errorMsg =
+    "Use 'createLifecycleComponent()' method to create and use animation lifecyle. Lifecycle hooks are instance methods and are not animatable properties.";
+
+  hooks.forEach(hook => {
+    if (params.hasOwnProperty(hook)) {
+      // Remove the hook from the animation parameters
+      // delete params[hook]
+      // throw new Error(errorMsg)
+    }
+  });
+};
+
+// Create a new animation object which contains data about the element which will be animated and its animation properties, also the instance properties and tween properties.
 function createNewInstance(params) {
-  const instanceSettings = replaceObjectProps(defaultInstanceSettings, params)
-  const tweenSettings = replaceObjectProps(defaultTweenSettings, params)
-  const animatables = getAnimatables(params.elements)
-  const properties = getProperties(instanceSettings, tweenSettings, params)
-  const animations = getAnimations(animatables, properties)
+  // Lifecycle hook should not be an animation property
+  hasLifecycleHook(params);
+
+  const instanceSettings = replaceObjectProps(
+    getDefaultInstanceParams(),
+    params
+  );
+  const tweenSettings = replaceObjectProps(getDefaultTweensParams(), params);
+  const animatables = getAnimatables(params.elements);
+  const properties = getProperties(instanceSettings, tweenSettings, params);
+  const animations = getAnimations(animatables, properties);
   return mergeObjects(instanceSettings, {
     children: [],
     animatables: animatables,
     animations: animations,
-    duration: getInstanceTimings(
-      'duration',
+    duration: getInstanceoffsets(
+      "duration",
       animations,
       instanceSettings,
       tweenSettings
     ),
-    delay: getInstanceTimings(
-      'delay',
+    delay: getInstanceoffsets(
+      "delay",
       animations,
       instanceSettings,
       tweenSettings
-    ),
-  })
+    )
+  });
 }
 
-let activeInstances = []
-let raf = 0
+// Active animation instances
+let activeInstances = [];
+let raf = 0;
 
 const engine = (() => {
   function start() {
-    raf = requestAnimationFrame(step)
+    raf = requestAnimationFrame(step);
   }
   function step(t) {
-    const activeLength = activeInstances.length
+    const activeLength = activeInstances.length;
     if (activeLength) {
-      let i = 0
+      let i = 0;
       while (i < activeLength) {
-        if (activeInstances[i]) activeInstances[i].frameLoop(t)
-        i++
+        // Call frame loop for all active instances
+        if (activeInstances[i]) {
+          activeInstances[i].frameLoop(t);
+        }
+        i++;
       }
-      start()
+      start();
     } else {
-      cancelAnimationFrame(raf)
-      raf = 0
+      cancelAnimationFrame(raf);
+      raf = 0;
     }
   }
-  return start
-})()
+  return start;
+})();
 
 function animated(params = {}) {
   let now,
     startTime,
-    lastTime = 0
+    lastTime = 0;
 
-  let resolve = null
+  let instance = createNewInstance(params);
 
-  let instance = createNewInstance(params)
+  let res = null;
 
-  function toggleInstanceDirection() {
-    instance.reversed = !instance.reversed
+  function createPromise() {
+    return window.Promise && new Promise(resolve => (res = resolve));
   }
 
+  let promise = createPromise();
+
+  function toggleInstanceDirection() {
+    instance.reversed = !instance.reversed;
+  }
+
+  // If the direction is reverse, then make the playback rate negative (don't expose this as an imperative workaround to the user)
   function adjustTime(time) {
-    return instance.reversed ? instance.duration - time : time
+    return instance.reversed ? instance.duration - time : time;
   }
 
   function syncInstanceChildren(time) {
-    const children = instance.children
-    const childrenLength = children.length
+    const children = instance.children;
+    const childrenLength = children.length;
     if (time >= instance.currentTime) {
-      for (let i = 0; i < childrenLength; i++) children[i].seek(time)
+      for (let i = 0; i < childrenLength; i++) children[i].seek(time);
     } else {
-      for (let i = childrenLength; i--; ) children[i].seek(time)
+      for (let i = childrenLength; i--; ) children[i].seek(time);
     }
   }
 
+  // Batch style mutations
+  function batchStyleUpdates(instance, id, transforms, transformString) {
+    let element = instance.animatables[id].target;
+
+    if (element.style["will-change"] === "opacity") {
+      element.style["will-change"] = element.style["will-change"].concat(
+        ", transform"
+      );
+    } else if (
+      element.style["will-change"] === "opacity, transform" ||
+      element.style["will-change"] === "transform"
+    ) {
+    } else {
+      element.style["will-change"] = "transform";
+    }
+
+    // Batch updates
+    return batchMutation(
+      () => (element.style[transformString] = transforms[id].join(" ")),
+      transformString,
+      transforms[id].join(" ")
+    );
+  }
+
   function setAnimationsProgress(insTime) {
-    let i = 0
-    let transforms = {}
-    const animations = instance.animations
-    const animationsLength = animations.length
+    let i = 0;
+    let transforms = {};
+    const animations = instance.animations;
+    const animationsLength = animations.length;
     while (i < animationsLength) {
-      const anim = animations[i]
-      const animatable = anim.animatable
-      const tweens = anim.tweens
-      const tweenLength = tweens.length - 1
-      let tween = tweens[tweenLength]
+      const anim = animations[i];
+      const animatable = anim.animatable;
+      const tweens = anim.tweens;
+      const tweenLength = tweens.length - 1;
+      let tween = tweens[tweenLength];
       // Only check for keyframes if there is more than one tween
       if (tweenLength)
-        tween = filterArray(tweens, t => insTime < t.end)[0] || tween
+        tween = filterArray(tweens, t => insTime < t.end)[0] || tween;
       const elapsed =
         minMaxValue(insTime - tween.start - tween.delay, 0, tween.duration) /
-        tween.duration
-      const eased = isNaN(elapsed) ? 1 : tween.easing(elapsed, tween.elasticity)
-      const strings = tween.to.strings
-      const round = tween.round
-      let numbers = []
-      let progress
-      const toNumbersLength = tween.to.numbers.length
+        tween.duration;
+      const eased = isNaN(elapsed)
+        ? 1
+        : tween.easing(elapsed, tween.elasticity);
+      const strings = tween.to.strings;
+      const round = tween.round;
+      let numbers = [];
+      let progress;
+      const toNumbersLength = tween.to.numbers.length;
       for (let n = 0; n < toNumbersLength; n++) {
-        let value
-        const toNumber = tween.to.numbers[n]
-        const fromNumber = tween.from.numbers[n]
+        let value;
+        const toNumber = tween.to.numbers[n];
+        const fromNumber = tween.from.numbers[n];
         if (!tween.isPath) {
-          value = fromNumber + eased * (toNumber - fromNumber)
-        } else {
-          value = getPathProgress(tween.value, eased * toNumber)
+          value = fromNumber + eased * (toNumber - fromNumber);
         }
+
         if (round) {
           if (!(tween.isColor && n > 2)) {
-            value = Math.round(value * round) / round
+            value = Math.round(value * round) / round;
           }
         }
-        numbers.push(value)
+        numbers.push(value);
       }
       // Manual Array.reduce for better performances
-      const stringsLength = strings.length
+      const stringsLength = strings.length;
       if (!stringsLength) {
-        progress = numbers[0]
+        progress = numbers[0];
       } else {
-        progress = strings[0]
+        progress = strings[0];
         for (let s = 0; s < stringsLength; s++) {
-          const a = strings[s]
-          const b = strings[s + 1]
-          const n = numbers[s]
+          const a = strings[s];
+          const b = strings[s + 1];
+          const n = numbers[s];
           if (!isNaN(n)) {
             if (!b) {
-              progress += n + ' '
+              progress += n + " ";
             } else {
-              progress += n + b
+              progress += n + b;
             }
           }
         }
       }
+
       setTweenProgress[anim.type](
         animatable.target,
         anim.property,
         progress,
         transforms,
         animatable.id
-      )
-      anim.currentValue = progress
-      i++
+      );
+      anim.currentValue = progress;
+      i++;
     }
-    const transformsLength = Object.keys(transforms).length
+
+    const transformsLength = Object.keys(transforms).length;
     if (transformsLength) {
       for (let id = 0; id < transformsLength; id++) {
         if (!transformString) {
-          const t = 'transform'
-          transformString = getCSSValue(document.body, t) ? t : `-webkit-${t}`
+          const t = "transform";
+          transformString = batchRead(
+            () => getCSSValue(document.body, t),
+            "transform"
+          )
+            ? t
+            : `-webkit-${t}`;
         }
-        instance.animatables[id].target.style[transformString] = transforms[
-          id
-        ].join(' ')
+
+        batchStyleUpdates(instance, id, transforms, transformString);
       }
     }
-    instance.currentTime = insTime
-    instance.progress = insTime / instance.duration * 100
+    instance.currentTime = insTime;
+    instance.progress = insTime / instance.duration * 100;
   }
 
-  function setCallback(cb) {
+  function registerLifecycleHook(cb) {
+    // Prepare props for a lifecyle hook
     const {
       completed,
       progress,
@@ -567,17 +630,19 @@ function animated(params = {}) {
       stop,
       restart,
       reverse,
-      reset,
-    } = instance
+      reset
+    } = instance;
 
+    // Methods to control execution of an animation
     const controller = {
       start,
       stop,
       restart,
       reverse,
-      reset,
-    }
+      reset
+    };
 
+    // Props received by a lifecyle hook
     const finalProps = {
       completed,
       progress,
@@ -587,184 +652,277 @@ function animated(params = {}) {
       currentTime,
       began,
       paused,
-      controller,
-    }
+      controller
+    };
 
-    if (instance[cb]) instance[cb](finalProps)
+    if (instance[cb]) instance[cb](finalProps);
   }
 
   function countIteration() {
     if (instance.remaining && instance.remaining !== true) {
-      instance.remaining--
+      instance.remaining--;
     }
   }
 
+  // Set the animation instance progress using the engine time
+  // BUG: synchronise the engine time with speed coefficient
   function setInstanceProgress(engineTime) {
-    const insDuration = instance.duration
-    const insOffset = instance.offset
-    const insStart = insOffset + instance.delay
-    const insCurrentTime = instance.currentTime
-    const insReversed = instance.reversed
-    const insTime = adjustTime(engineTime)
-    if (instance.children.length) syncInstanceChildren(insTime)
+    const insDuration = instance.duration;
+    const insoffset = instance.offset;
+    const insStart = insoffset + instance.delay;
+    const insCurrentTime = instance.currentTime;
+    const insReversed = instance.reversed;
+    const insTime = adjustTime(engineTime);
+    // sync all the child nodes and call seek(). It's a recursive procedure.
+    if (instance.children.length) syncInstanceChildren(insTime);
     if (insTime >= insStart || !insDuration) {
       if (!instance.began) {
-        instance.began = true
-        setCallback('onStart')
+        instance.began = true;
+        animationStarted = true;
+        registerLifecycleHook("onStart");
       }
-      setCallback('callFrame')
     }
-    if (insTime > insOffset && insTime < insDuration) {
-      setAnimationsProgress(insTime)
+    if (insTime > insoffset && insTime < insDuration) {
+      // Update the style and apply the transforms here
+      setAnimationsProgress(insTime);
     } else {
-      if (insTime <= insOffset && insCurrentTime !== 0) {
-        setAnimationsProgress(0)
-        if (insReversed) countIteration()
+      if (insTime <= insoffset && insCurrentTime !== 0) {
+        // Animation completed!
+        setAnimationsProgress(0);
+        if (insReversed) countIteration();
       }
       if (
         (insTime >= insDuration && insCurrentTime !== insDuration) ||
         !insDuration
       ) {
-        setAnimationsProgress(insDuration)
-        if (!insReversed) countIteration()
+        // Run the animation for a value defind for duration property
+        setAnimationsProgress(insDuration);
+        if (!insReversed) countIteration();
       }
     }
-    setCallback('onUpdate')
+    registerLifecycleHook("onUpdate");
+
+    if (process.env.NODE_ENV !== "production") {
+      // Catch errors occurred due to a scheduled job.
+      exceptions();
+    }
+
     if (engineTime >= insDuration) {
+      // remaining not equals to 1 ?
       if (instance.remaining) {
-        startTime = now
-        if (instance.direction === 'alternate') toggleInstanceDirection()
+        startTime = now;
+        // Change the direction
+        if (instance.direction === "alternate") toggleInstanceDirection();
       } else {
-        instance.stop()
+        // Loops done! So animation can be stopped.
+        instance.stop();
+        // Mark the flag completed
         if (!instance.completed) {
-          instance.completed = true
-          setCallback('onComplete')
+          instance.completed = true;
+
+          // Animations are done so remove the hint ('will-change') and get back to the normal behavior.
+          removeHints(instance.animatables);
+
+          // Clear any scheduled job
+          emptyScheduledJobs();
+
+          registerLifecycleHook("onComplete");
+
+          if ("Promise" in window) {
+            // Resolve the promise
+            res({ msg: "Animation completed!" });
+
+            promise = createPromise();
+          }
         }
       }
-      lastTime = 0
+      lastTime = 0;
     }
   }
 
   instance.reset = function() {
-    const direction = instance.direction
-    const loops = instance.loop
-    instance.currentTime = 0
-    instance.progress = 0
-    instance.paused = true
-    instance.began = false
-    instance.completed = false
-    instance.reversed = direction === 'reverse'
-    instance.remaining = direction === 'alternate' && loops === 1 ? 2 : loops
-    setAnimationsProgress(0)
+    const direction = instance.direction;
+    const loops = instance.loop;
+    // console.log(loops);
+    instance.currentTime = 0;
+    instance.progress = 0;
+    instance.paused = true;
+    instance.began = false;
+    instance.completed = false;
+    instance.reversed = direction === "reverse";
+    instance.remaining = direction === "alternate" && loops === 1 ? 2 : loops;
+    setAnimationsProgress(0);
+    // Also reset the child nodes
     for (let i = instance.children.length; i--; ) {
-      instance.children[i].reset()
+      instance.children[i].reset();
     }
-  }
+  };
 
   instance.frameLoop = function(t) {
-    let speedInParams = false
+    let speedInParams = false;
 
-    now = t
-    if (!startTime) startTime = now
+    now = t;
+    if (!startTime) startTime = now;
 
     if (params.speed) {
-      speedInParams = true
+      speedInParams = true;
     }
 
-    const speedCoefficient = () => speedInParams ? params.speed : instance.speed
+    const speedCoefficient = () =>
+      speedInParams ? params.speed : instance.speed ? instance.speed : 1;
 
-    const engineTime = (lastTime + now - startTime) * speedCoefficient() || 1
-    setInstanceProgress(engineTime)
-  }
+    const engineTime = (lastTime + now - startTime) * speedCoefficient();
+    setInstanceProgress(engineTime);
+  };
 
   instance.seek = function(time) {
-    setInstanceProgress(adjustTime(time))
-  }
+    setInstanceProgress(adjustTime(time));
+  };
 
   instance.stop = function() {
-    const i = activeInstances.indexOf(instance)
-    if (i > -1) activeInstances.splice(i, 1)
-    instance.paused = true
-  }
+    const i = activeInstances.indexOf(instance);
+    if (i > -1) activeInstances.splice(i, 1);
+
+    instance.paused = true;
+  };
 
   instance.start = function() {
-    if (!instance.paused) return
-    instance.paused = false
-    startTime = 0
-    lastTime = adjustTime(instance.currentTime)
-    activeInstances.push(instance)
-    if (!raf) engine()
-  }
+    // Already running
+    if (!instance.paused) return;
+    instance.paused = false;
+    startTime = 0;
+    lastTime = adjustTime(instance.currentTime);
+    // Push the instances which will be animated
+    activeInstances.push(instance);
+    // Ignition
+    if (!raf) engine();
+  };
 
   instance.reverse = function() {
-    toggleInstanceDirection()
-    startTime = 0
-    lastTime = adjustTime(instance.currentTime)
-  }
+    toggleInstanceDirection();
+    startTime = 0;
+    lastTime = adjustTime(instance.currentTime);
+  };
 
   instance.restart = function() {
-    instance.stop()
-    instance.reset()
-    instance.start()
-  }
+    instance.stop();
+    instance.reset();
+    instance.start();
+  };
 
-  instance.reset()
+  // Promise based APIs
 
-  if (instance.autoplay) instance.start()
+  instance.onfinish = promise;
 
-  return instance
+  instance.oncancel = elements => {
+    // Promise status
+    let res = null;
+
+    function createPromise() {
+      return window.Promise && new Promise(resolved => (res = resolved));
+    }
+
+    let prom = createPromise();
+
+    const elementsArray = parseElements(elements);
+
+    for (let i = activeInstances.length; i--; ) {
+      const instance = activeInstances[i];
+
+      if (instance.animations.length === 0 && instance.children.length !== 0) {
+        for (let j = instance.children.length; j--; ) {
+          const animations = instance.children[j].animations;
+
+          for (let a = animations.length; a--; ) {
+            if (arrayContains(elementsArray, animations[a].animatable.target)) {
+              const node = animations[a].animatable.target;
+              // animations.splice(a, 1)
+
+              if (!animations.length) {
+                instance.paused = true;
+                if ("Promise" in window) {
+                  res({ node: node, msg: "Removed node from the timeline" });
+                }
+              }
+            }
+          }
+        }
+      } else {
+        const animations = instance.animations;
+        for (let a = animations.length; a--; ) {
+          if (arrayContains(elementsArray, animations[a].animatable.target)) {
+            const node = animations[a].animatable.target;
+
+            // animations.splice(a, 1)
+            if (!animations.length) {
+              instance.paused = true;
+              if ("Promise" in window) {
+                res({ node: node, msg: "Removed node from the timeline" });
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return prom;
+  };
+
+  instance.reset();
+
+  if (instance.autoplay) instance.start();
+
+  return instance;
 }
 
-// Timeline
+const removeHints = instances => {
+  instances.forEach(instance => {
+    instance.target.style["will-change"] = "";
+  });
+};
 
-function createTimeline(params) {
-  let tl = animated(params)
-  tl.stop()
-  tl.duration = 0
+function createTimeline(params, shouldDebug = false) {
+  debugBatching = shouldDebug;
+
+  let tl = animated(params);
+  tl.stop();
+  tl.duration = 0;
   tl.value = function(instancesParams) {
     tl.children.forEach(i => {
-      i.began = true
-      i.completed = true
-    })
+      i.began = true;
+      i.completed = true;
+    });
     toArray(instancesParams).forEach(instanceParams => {
       let insParams = mergeObjects(
         instanceParams,
-        replaceObjectProps(defaultTweenSettings, params || {})
-      )
-      insParams.elements = insParams.elements || params.elements
-      const tlDuration = tl.duration
-      const insOffset = insParams.offset
-      insParams.autoplay = false
-      insParams.direction = tl.direction
-      insParams.offset = is.und(insOffset)
+        replaceObjectProps(getDefaultTweensParams(), params || {})
+      );
+      insParams.elements = insParams.elements || params.elements;
+      const tlDuration = tl.duration;
+      const insoffset = insParams.offset;
+      insParams.autoplay = false;
+      insParams.direction = tl.direction;
+      insParams.offset = isUnd(insoffset)
         ? tlDuration
-        : getRelativeValue(insOffset, tlDuration)
-      tl.began = true
-      tl.completed = true
-      tl.seek(insParams.offset)
-      const ins = animated(insParams)
-      ins.began = true
-      ins.completed = true
-      if (ins.duration > tlDuration) tl.duration = ins.duration
-      tl.children.push(ins)
-    })
-    tl.seek(0)
-    tl.reset()
-    if (tl.autoplay) tl.restart()
-    return tl
-  }
-  return tl
+        : getRelativeValue(insoffset, tlDuration);
+      tl.began = true;
+      tl.completed = true;
+      tl.seek(insParams.offset);
+      // Start animating the next children node
+      const ins = animated(insParams);
+      ins.began = true;
+      ins.completed = true;
+      if (ins.duration > tlDuration) tl.duration = ins.duration;
+      tl.children.push(ins);
+    });
+    tl.seek(0);
+    tl.reset();
+    if (tl.autoplay) tl.restart();
+    return tl;
+  };
+  return tl;
 }
 
-const getRandomNum = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1)) + min
+const getTransforms = () => validTransforms;
 
-// Main instance fields should not be mutated
-Object.freeze(animated)
-
-export {
-  animated,
-  getOriginalTargetValue as getValue,
-  createTimeline,
-  getRandomNum as random,
-}
+export { animated, createTimeline, getTransforms };

@@ -1,11 +1,12 @@
 // @flow
 
-import { bezier, easings } from "../core";
 import invariant from "invariant";
+import { bezier } from "../core/bezier";
+import { easings } from "../core/easing";
 
 type curveName = "string";
 
-type controlPoints = Array<number> | Array<string>;
+type controlPoints = Array<number>;
 
 // Creates a custome easing function using the bezier curve control points
 // https://github.com/gre/bezier-easing

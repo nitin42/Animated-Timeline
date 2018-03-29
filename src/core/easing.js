@@ -1,26 +1,28 @@
-import { bezier } from './bezier'
-import { is } from './utils'
+// @flow
+
+import { bezier } from "./bezier";
+import { isFunc } from "./utils";
 
 const names = [
-  'Quad',
-  'Cubic',
-  'Quart',
-  'Quint',
-  'Sine',
-  'Expo',
-  'Circ',
-  'Back',
-  'Elastic',
-]
+  "Quad",
+  "Cubic",
+  "Quart",
+  "Quint",
+  "Sine",
+  "Expo",
+  "Circ",
+  "Back",
+  "Elastic"
+];
 
-const elastic = (t, p) => {
+const elastic = (t: number, p: number): number => {
   return t === 0 || t === 1
     ? t
     : -Math.pow(2, 10 * (t - 1)) *
         Math.sin(
           (t - 1 - p / (Math.PI * 2.0) * Math.asin(1)) * (Math.PI * 2) / p
-        )
-}
+        );
+};
 
 const equations = {
   In: [
@@ -32,7 +34,7 @@ const equations = {
     [0.95, 0.05, 0.795, 0.035] /* InExpo */,
     [0.6, 0.04, 0.98, 0.335] /* InCirc */,
     [0.6, -0.28, 0.735, 0.045] /* InBack */,
-    elastic /* InElastic */,
+    elastic /* InElastic */
   ],
   Out: [
     [0.25, 0.46, 0.45, 0.94] /* OutQuad */,
@@ -43,7 +45,7 @@ const equations = {
     [0.19, 1.0, 0.22, 1.0] /* OutExpo */,
     [0.075, 0.82, 0.165, 1.0] /* OutCirc */,
     [0.175, 0.885, 0.32, 1.275] /* OutBack */,
-    (t, f) => 1 - elastic(1 - t, f) /* OutElastic */,
+    (t, f) => 1 - elastic(1 - t, f) /* OutElastic */
   ],
   InOut: [
     [0.455, 0.03, 0.515, 0.955] /* InOutQuad */,
@@ -57,28 +59,26 @@ const equations = {
     (t, f) =>
       t < 0.5
         ? elastic(t * 2, f) / 2
-        : 1 - elastic(t * -2 + 2, f) / 2 /* InOutElastic */,
-  ],
-}
+        : 1 - elastic(t * -2 + 2, f) / 2 /* InOutElastic */
+  ]
+};
 
-const createEasingsInst = () => {
+const createEasingsInst = (): Object => {
   let functions = {
-    linear: bezier(0.25, 0.25, 0.75, 0.75),
-  }
+    linear: bezier(0.25, 0.25, 0.75, 0.75)
+  };
 
   for (let type in equations) {
     equations[type].forEach((f, i) => {
-      functions['ease' + type + names[i]] = is.fnc(f)
+      functions["ease" + type + names[i]] = isFunc(f)
         ? f
-        : bezier.apply(this, f)
-    })
+        : bezier.apply(this, f);
+    });
   }
 
-  return functions
-}
+  return functions;
+};
 
-const easings = createEasingsInst()
+const easings = createEasingsInst();
 
-export {
-  easings
-}
+export { easings };
