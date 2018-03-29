@@ -2,7 +2,7 @@ import { helpers } from "../src";
 
 describe("From-to animation properties", () => {
   it("Should serialise the animation properties", () => {
-    const fromTo = helpers.start({ from: 400, to: 500 });
+    const fromTo = helpers.transition({ from: 400, to: 500 });
 
     expect(Array.isArray(fromTo)).toBe(true);
     expect(fromTo.length).toBe(2);

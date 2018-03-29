@@ -6,6 +6,8 @@
   "scripts": {
     "start": "./node_modules/.bin/parcel demo/index.html",
     "flow": "flow",
+    "test": "./node_modules/.bin/jest",
+    "test:watch": "./node_modules/.bin/jest --watchAll",
     "precommit": "pretty-quick --staged"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
