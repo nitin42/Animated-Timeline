@@ -102,29 +102,27 @@ const debugMutation = (prop, value) => {
 
 // Batch style mutations
 const batchMutation = (mutation, prop, value) => {
-  return mutation();
-  // writeId = fastdom.mutate(() => {
-  //   debugBatching &&
-  //   animationStarted &&
-  //   (prop !== undefined && value !== undefined)
-  //     ? debugMutation(prop, value)
-  //     : null
-  //   return mutation()
-  // })
-  //
-  // return writeId
+  writeId = fastdom.mutate(() => {
+    debugBatching &&
+    animationStarted &&
+    (prop !== undefined && value !== undefined)
+      ? debugMutation(prop, value)
+      : null;
+    return mutation();
+  });
+
+  return writeId;
 };
 
 // Batch style reads
 // Queues are emptied at the turn of next frame using rAF
 const batchRead = (reads, prop) => {
-  return reads();
-  // readId = fastdom.measure(() => {
-  //   debugBatching ? log('Batched style read: ' + prop) : null
-  //   return reads()
-  // })
-  //
-  // return writeId
+  readId = fastdom.measure(() => {
+    debugBatching ? log("Batched style read: " + prop) : null;
+    return reads();
+  });
+
+  return writeId;
 };
 
 const exceptions = () => {
@@ -134,8 +132,8 @@ const exceptions = () => {
 };
 
 const emptyScheduledJobs = () => {
-  // fastdom.clear(readId)
-  // fastdom.clear(writeId)
+  fastdom.clear(readId);
+  fastdom.clear(writeId);
 };
 
 // Get the CSS property value (opacity, backgroundColor, ..., etc)
@@ -391,6 +389,7 @@ function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
   }
 }
 
+// TODO: for React component API, this is contradictory
 const hasLifecycleHook = params => {
   const hooks = ["onStart", "onUpdate", "tick", "onComplete"];
 
