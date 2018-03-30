@@ -94,6 +94,8 @@ const debugMutation = (prop, value) => {
   log(`Result: ${value}`)
 }
 
+// Scheduled jobs are stored in the queues which are emptied at the turn of next frame using rAF
+
 // Batch style mutations
 const batchMutation = (mutation, prop, value) => {
   writeId = fastdom.mutate(() => {
@@ -109,7 +111,6 @@ const batchMutation = (mutation, prop, value) => {
 }
 
 // Batch style reads
-// Queues are emptied at the turn of next frame using rAF
 const batchRead = (reads, prop) => {
   readId = fastdom.measure(() => {
     debugBatching ? log('Batched style read: ' + prop) : null
@@ -119,6 +120,8 @@ const batchRead = (reads, prop) => {
   return writeId
 }
 
+// In case we don't have the current node on which the mutations will be applied, catch the exceptions.
+// Because batching is async.
 const exceptions = () => {
   fastdom.catch = error => {
     console.log(error)
@@ -326,6 +329,7 @@ const setTweenProgress = {
       return batchMutation(() => (t.style[p] = v), p, v)
     }
 
+    // Hint already given to the browser, so batch the mutation
     return batchMutation(() => (t.style[p] = v), p, v)
   },
   attribute: (t, p, v) => batchMutation(() => t.setAttribute(p, v), p, v),
@@ -381,7 +385,6 @@ function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
   }
 }
 
-// TODO: for React component API, this is contradictory
 const hasLifecycleHook = params => {
   const hooks = ['onStart', 'onUpdate', 'tick', 'onComplete']
 
@@ -390,7 +393,9 @@ const hasLifecycleHook = params => {
 
   hooks.forEach(hook => {
     if (params.hasOwnProperty(hook)) {
-      console.error(errorMsg)
+      delete params[hook]
+
+      throw new Error(errorMsg)
     }
   })
 }
@@ -809,6 +814,20 @@ function animated(params = {}) {
 
   instance.onfinish = promise
 
+  function removeNodes(a, elements, animations, res) {
+    if (arrayContains(elements, animations[a].animatable.target)) {
+      const node = animations[a].animatable.target
+      animations.splice(a, 1)
+
+      if (!animations.length) {
+        instance.paused = true
+        if ('Promise' in window) {
+          res({ node: node, msg: 'Removed node from the timeline' })
+        }
+      }
+    }
+  }
+
   instance.oncancel = elements => {
     // Promise status
     let res = null
@@ -829,33 +848,13 @@ function animated(params = {}) {
           const animations = instance.children[j].animations
 
           for (let a = animations.length; a--; ) {
-            if (arrayContains(elementsArray, animations[a].animatable.target)) {
-              const node = animations[a].animatable.target
-              animations.splice(a, 1)
-
-              if (!animations.length) {
-                instance.paused = true
-                if ('Promise' in window) {
-                  res({ node: node, msg: 'Removed node from the timeline' })
-                }
-              }
-            }
+            removeNodes(a, elementsArray, animations, res)
           }
         }
       } else {
         const animations = instance.animations
         for (let a = animations.length; a--; ) {
-          if (arrayContains(elementsArray, animations[a].animatable.target)) {
-            const node = animations[a].animatable.target
-
-            animations.splice(a, 1)
-            if (!animations.length) {
-              instance.paused = true
-              if ('Promise' in window) {
-                res({ node: node, msg: 'Removed node from the timeline' })
-              }
-            }
-          }
+          removeNodes(a, elementsArray, animations, res)
         }
       }
     }

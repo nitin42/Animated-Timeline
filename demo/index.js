@@ -16,7 +16,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Basic />
+        <PromiseAPI />
       </React.Fragment>
     );
   }
