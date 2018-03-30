@@ -10,7 +10,7 @@ type defaultInstanceParams = {
   onStart: dummy,
 
   // Change this to iterations
-  loop: number | string,
+  iterations: number | string,
   direction: string,
   autoplay: boolean,
   offset: number
@@ -31,7 +31,7 @@ export const getDefaultInstanceParams = (): defaultInstanceParams => ({
   onComplete: noop,
   onStart: noop,
 
-  loop: 1,
+  iterations: 1,
   direction: "normal",
   autoplay: true,
   offset: 0

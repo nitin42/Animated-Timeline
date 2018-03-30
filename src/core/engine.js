@@ -360,7 +360,6 @@ function createAnimation(animatable, prop) {
 }
 
 // Create animation object using array of properties
-// TODO: create a method for getting all the animations and changing there values at once
 function getAnimations(animatables, properties) {
   return filterArray(
     flattenArray(
@@ -741,7 +740,7 @@ function animated(params = {}) {
 
   instance.reset = function() {
     const direction = instance.direction;
-    const loops = instance.loop;
+    const loops = instance.iterations;
     // console.log(loops);
     instance.currentTime = 0;
     instance.progress = 0;
@@ -793,7 +792,6 @@ function animated(params = {}) {
     lastTime = adjustTime(instance.currentTime);
     // Push the instances which will be animated
     activeInstances.push(instance);
-    // Ignition
     if (!raf) engine();
   };
 
@@ -807,6 +805,15 @@ function animated(params = {}) {
     instance.stop();
     instance.reset();
     instance.start();
+  };
+
+  // Mutate the active instances through this method
+  instance.getAnimations = () => {
+    if (activeInstances.length !== 0) {
+      return activeInstances;
+    }
+
+    return [];
   };
 
   // Promise based APIs
@@ -835,7 +842,7 @@ function animated(params = {}) {
           for (let a = animations.length; a--; ) {
             if (arrayContains(elementsArray, animations[a].animatable.target)) {
               const node = animations[a].animatable.target;
-              // animations.splice(a, 1)
+              animations.splice(a, 1);
 
               if (!animations.length) {
                 instance.paused = true;
@@ -852,7 +859,7 @@ function animated(params = {}) {
           if (arrayContains(elementsArray, animations[a].animatable.target)) {
             const node = animations[a].animatable.target;
 
-            // animations.splice(a, 1)
+            animations.splice(a, 1);
             if (!animations.length) {
               instance.paused = true;
               if ("Promise" in window) {

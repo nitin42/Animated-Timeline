@@ -9,7 +9,7 @@ const { transition, startAfter, startBefore } = helpers;
 const Animated = Timeline({
   direction: "alternate",
   easing: "easeInOutSine",
-  loop: 1
+  iterations: 1
 });
 
 export class Timing extends Component {

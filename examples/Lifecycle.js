@@ -8,7 +8,7 @@ const { transition } = helpers;
 
 const Animated = Timeline({
   easing: "easeInOutSine",
-  loop: 1,
+  iterations: 1,
   speed: 0.4
 });
 

@@ -8,10 +8,10 @@ const { transition } = helpers;
 
 const Animated = Timeline({
   direction: "alternate",
-  iterations: 2
+  iterations: 1
 });
 
-export class Basic extends Component {
+export class ChangeSpeed extends Component {
   componentDidMount() {
     Animated.value({
       elements: this.one,
@@ -20,16 +20,18 @@ export class Basic extends Component {
         value: transition({ from: 360, to: 180 })
       }
     }).start();
+
+    Animated.getAnimations().forEach(animation => {
+      animation.speed = 0.09;
+    });
   }
 
   render() {
     return (
-      <div>
-        <div
-          ref={one => (this.one = one)}
-          style={{ margin: "0 auto", width: "50%", ...boxStyles }}
-        />
-      </div>
+      <div
+        ref={one => (this.one = one)}
+        style={{ margin: "0 auto", width: "50%", ...boxStyles }}
+      />
     );
   }
 }

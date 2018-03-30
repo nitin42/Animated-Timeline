@@ -6,7 +6,7 @@ import { boxStyles } from "./styles";
 
 const Animated = Timeline({
   easing: "easeInOutSine",
-  loop: 1
+  iterations: 1
 });
 
 const x = new Keyframes()

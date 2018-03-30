@@ -21,7 +21,7 @@ class Animate extends React.Component {
     },
     // Animation model
     animationsProps: {
-      loop: 1,
+      iterations: 1,
       direction: "normal",
       autoplay: true,
       offset: 0
