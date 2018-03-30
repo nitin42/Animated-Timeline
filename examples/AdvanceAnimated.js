@@ -26,7 +26,7 @@ export class AdvanceAnimated extends Component {
                 restart()
                 reverse()
               }
-            },
+            }
           }}
           shouldStart={this.state.start}
           shouldStop={!this.state.start}

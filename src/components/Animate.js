@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { animated } from '../core/engine'
+import { noop } from '../utils/noop'
 
 class Animate extends React.Component {
   // Animated instance
@@ -26,6 +27,11 @@ class Animate extends React.Component {
       autoplay: true,
       offset: 0
     },
+    lifecycle: {
+      onUpdate: noop,
+      onStart: noop,
+      onComplete: noop
+    },
     // Overrides the autoplay
     shouldStart: true,
     shouldStop: false
@@ -36,14 +42,18 @@ class Animate extends React.Component {
       elements: this.elements,
       // Add all the user defined animation attributes
       ...this.props.timingProps,
-      ...this.props.lifecycle,
       ...this.props.animationProps,
       // Our .start() methods overrides this and vice-versa
       autoplay: this.props.autoplay
     })
 
-    if (this.props.shouldStop) this.ctrl.stop()
+    // Lifecycle hooks are instance properties, so they should live separately from the timing model props and animation model props.
+    if (this.props.lifecycle.onStart) this.ctrl.onStart = this.props.lifecycle.onStart
+    if (this.props.lifecycle.onComplete) this.ctrl.onComplete = this.props.lifecycle.onComplete
+    if (this.props.lifecycle.onUpdate) this.ctrl.onUpdate = this.props.lifecycle.onUpdate
 
+    // Animation status flags
+    if (this.props.shouldStop) this.ctrl.stop()
     if (this.props.shouldStart) this.ctrl.start()
   }
 

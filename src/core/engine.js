@@ -17,9 +17,9 @@
  * 1. Style reads and writes are now batched so as to avoid layout calc. in each frame ✅
  * 2. Use 'will-change' prop to let the browser know that a new layer has to be created for a transform ✅
       (don't use 'will-change' for all the properties so as to avoid memory consumption)
- * 3. APIs for getting information out of an animaton
+ * 3. APIs for getting information about active instances in an animation using getAnimation()
  * 4. Declarative API for Timeline component for React
- *
+ * 5. Promise based API for oncancel event
  */
 
 import fastdom from 'fastdom'
@@ -390,9 +390,7 @@ const hasLifecycleHook = params => {
 
   hooks.forEach(hook => {
     if (params.hasOwnProperty(hook)) {
-      // Remove the hook from the animation parameters
-      // delete params[hook]
-      // throw new Error(errorMsg)
+      console.error(errorMsg)
     }
   })
 }
