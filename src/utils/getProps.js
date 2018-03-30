@@ -16,7 +16,7 @@ export const getPropsFromMain = (main: AnimationEngine): lifecycleHookProps => {
     stop,
     restart,
     reverse,
-    reset,
+    reset
   } = main
 
   const controller = {
@@ -24,7 +24,7 @@ export const getPropsFromMain = (main: AnimationEngine): lifecycleHookProps => {
     stop,
     restart,
     reverse,
-    reset,
+    reset
   }
 
   return {
@@ -36,6 +36,6 @@ export const getPropsFromMain = (main: AnimationEngine): lifecycleHookProps => {
     currentTime,
     began,
     paused,
-    controller,
+    controller
   }
 }

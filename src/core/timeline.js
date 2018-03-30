@@ -1,9 +1,9 @@
 // @flow
 
-import invariant from "invariant";
+import invariant from 'invariant'
 
-import { createTimeline } from "./engine";
-import type { attributes, AnimationEngine } from "../types";
+import { createTimeline } from './engine'
+import type { attributes, AnimationEngine } from '../types'
 
 /**
  * Creates a new 'Animated' instance with timeline properties (delay, duration, iterations) and bridges both the models,
@@ -20,7 +20,7 @@ import type { attributes, AnimationEngine } from "../types";
  */
 
 export const Timeline = (attributes: attributes): AnimationEngine => {
-  attributes = attributes || {};
+  attributes = attributes || {}
 
-  return createTimeline(attributes);
-};
+  return createTimeline(attributes)
+}

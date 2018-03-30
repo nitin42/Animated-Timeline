@@ -1,19 +1,19 @@
 // @flow
 
-import { bezier } from "./bezier";
-import { isFunc } from "./utils";
+import { bezier } from './bezier'
+import { isFunc } from './utils'
 
 const names = [
-  "Quad",
-  "Cubic",
-  "Quart",
-  "Quint",
-  "Sine",
-  "Expo",
-  "Circ",
-  "Back",
-  "Elastic"
-];
+  'Quad',
+  'Cubic',
+  'Quart',
+  'Quint',
+  'Sine',
+  'Expo',
+  'Circ',
+  'Back',
+  'Elastic'
+]
 
 const elastic = (t: number, p: number): number => {
   return t === 0 || t === 1
@@ -21,8 +21,8 @@ const elastic = (t: number, p: number): number => {
     : -Math.pow(2, 10 * (t - 1)) *
         Math.sin(
           (t - 1 - p / (Math.PI * 2.0) * Math.asin(1)) * (Math.PI * 2) / p
-        );
-};
+        )
+}
 
 const equations = {
   In: [
@@ -61,24 +61,24 @@ const equations = {
         ? elastic(t * 2, f) / 2
         : 1 - elastic(t * -2 + 2, f) / 2 /* InOutElastic */
   ]
-};
+}
 
 const createEasingsInst = (): Object => {
   let functions = {
     linear: bezier(0.25, 0.25, 0.75, 0.75)
-  };
+  }
 
   for (let type in equations) {
     equations[type].forEach((f, i) => {
-      functions["ease" + type + names[i]] = isFunc(f)
+      functions['ease' + type + names[i]] = isFunc(f)
         ? f
-        : bezier.apply(this, f);
-    });
+        : bezier.apply(this, f)
+    })
   }
 
-  return functions;
-};
+  return functions
+}
 
-const easings = createEasingsInst();
+const easings = createEasingsInst()
 
-export { easings };
+export { easings }

@@ -1,16 +1,16 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
-import { Timeline, helpers } from "../src";
+import { Timeline, helpers } from '../src'
 
-import { boxStyles } from "./styles";
+import { boxStyles } from './styles'
 
-const { transition } = helpers;
+const { transition } = helpers
 
 const Animated = Timeline({
-  easing: "easeInOutSine",
+  easing: 'easeInOutSine',
   iterations: 1,
-  speed: 0.4
-});
+  speed: 0.4,
+})
 
 export class Lifecycle extends Component {
   componentDidMount() {
@@ -18,25 +18,25 @@ export class Lifecycle extends Component {
       elements: this.one,
       translateX: transition({ from: 10, to: 120 }),
       opacity: transition({ from: 0.8, to: 0.2 }),
-      rotate: "20turn"
-    }).start();
+      rotate: '20turn',
+    }).start()
 
     Animated.onComplete = ({ completed }) => {
       if (completed) {
         // Reverse the direction
-        Animated.reverse();
+        Animated.reverse()
 
         // Start the animation again
-        Animated.restart();
+        Animated.restart()
       }
-    };
+    }
 
     Animated.onStart = inst => {
-      console.log("Animation started");
-    };
+      console.log('Animation started')
+    }
   }
 
   render() {
-    return <div ref={one => (this.one = one)} style={boxStyles} />;
+    return <div ref={one => (this.one = one)} style={boxStyles} />
   }
 }

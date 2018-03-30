@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
-import { Animate, helpers } from "../src";
+import { Animate, helpers } from '../src'
 
-import { boxStyles } from "./styles";
+import { boxStyles } from './styles'
 
 export class AnimateExample extends Component {
   render() {
@@ -10,20 +10,20 @@ export class AnimateExample extends Component {
       <div>
         <Animate
           timingProps={{
-            duration: 1000
+            duration: 1000,
           }}
           animationProps={{
             rotate: {
-              value: helpers.transition({ from: 360, to: 180 })
-            }
+              value: helpers.transition({ from: 360, to: 180 }),
+            },
           }}
           lifecycle={{
             onComplete: ({ completed, controller: { restart, reverse } }) => {
               if (completed) {
-                restart();
-                reverse();
+                restart()
+                reverse()
               }
-            }
+            },
           }}
         >
           <div
@@ -32,6 +32,6 @@ export class AnimateExample extends Component {
           />
         </Animate>
       </div>
-    );
+    )
   }
 }

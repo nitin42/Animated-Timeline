@@ -1,15 +1,19 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
-import { Timeline, helpers } from "../src";
+import { Timeline, helpers } from '../src'
 
-import { boxStyles } from "./styles";
+import { boxStyles } from './styles'
 
-const { transition } = helpers;
+const { transition } = helpers
 
 const Animated = Timeline({
-  direction: "alternate",
-  iterations: 2
-});
+  direction: 'alternate',
+  iterations: 2,
+})
+
+// or if you prefer shorthand ver.
+
+// Timeline({ ...timingProps }).value({ ...animationProps })
 
 export class Basic extends Component {
   componentDidMount() {
@@ -17,9 +21,9 @@ export class Basic extends Component {
       elements: this.one,
       opacity: transition({ from: 0.2, to: 0.8 }),
       rotate: {
-        value: transition({ from: 360, to: 180 })
-      }
-    }).start();
+        value: transition({ from: 360, to: 180 }),
+      },
+    }).start()
   }
 
   render() {
@@ -27,9 +31,9 @@ export class Basic extends Component {
       <div>
         <div
           ref={one => (this.one = one)}
-          style={{ margin: "0 auto", width: "50%", ...boxStyles }}
+          style={{ margin: '0 auto', width: '50%', ...boxStyles }}
         />
       </div>
-    );
+    )
   }
 }

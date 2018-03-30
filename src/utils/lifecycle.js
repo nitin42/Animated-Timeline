@@ -1,6 +1,6 @@
 // @flow
 
-import type { AnimationEngine, lifecycle } from "../types";
+import type { AnimationEngine, lifecycle } from '../types'
 
 // Below are the props that a lifecycle hook receives:
 // {
@@ -46,16 +46,16 @@ export const appendLifecycleHooks = (
   if (lifecycle.onStart) {
     // Invoked when the animation has started
     // If there is any delay, it will be invoked after that delay timeout
-    instance.onStart = lifecycle.onStart;
+    instance.onStart = lifecycle.onStart
   }
 
   if (lifecycle.onUpdate) {
     // This is invoked whenever a new update is performed. Eg - Using 'seek' or 'events' or 'state updates'
-    instance.onUpdate = lifecycle.onUpdate;
+    instance.onUpdate = lifecycle.onUpdate
   }
 
   if (lifecycle.onComplete) {
     // This is fired when the animation is completed
-    instance.onComplete = lifecycle.onComplete;
+    instance.onComplete = lifecycle.onComplete
   }
-};
+}

@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react'
 
-import { animated } from "../core/engine";
+import { animated } from '../core/engine'
 
 class Animate extends React.Component {
   // Animated instance
-  ctrl = null;
+  ctrl = null
 
   // Stores all the elements which will be animated
-  elements = [];
+  elements = []
 
   static defaultProps = {
     autoplay: true,
@@ -15,21 +15,21 @@ class Animate extends React.Component {
     timingProps: {
       duration: 1000,
       delay: 0,
-      easing: "linear",
+      easing: 'linear',
       elasticity: 500,
       round: 0
     },
     // Animation model
     animationsProps: {
       iterations: 1,
-      direction: "normal",
+      direction: 'normal',
       autoplay: true,
       offset: 0
     },
     // Overrides the autoplay
     shouldStart: true,
     shouldStop: false
-  };
+  }
 
   componentDidMount() {
     this.ctrl = animated({
@@ -40,40 +40,40 @@ class Animate extends React.Component {
       ...this.props.animationProps,
       // Our .start() methods overrides this and vice-versa
       autoplay: this.props.autoplay
-    });
+    })
 
-    if (this.props.shouldStop) this.ctrl.stop();
+    if (this.props.shouldStop) this.ctrl.stop()
 
-    if (this.props.shouldStart) this.ctrl.start();
+    if (this.props.shouldStart) this.ctrl.start()
   }
 
   componentDidUpdate() {
-    if (this.props.shouldStop) this.ctrl.stop();
+    if (this.props.shouldStop) this.ctrl.stop()
 
-    if (this.props.shouldStart) this.ctrl.start();
+    if (this.props.shouldStart) this.ctrl.start()
   }
 
   componentWillUnmount() {
-    this.ctrl && this.ctrl.stop();
+    this.ctrl && this.ctrl.stop()
   }
 
   addElements = element => {
-    this.elements = [...this.elements, element];
-  };
+    this.elements = [...this.elements, element]
+  }
 
   resolveChildren = () => {
-    let { children } = this.props;
+    let { children } = this.props
 
-    if (!Array.isArray(children)) children = [children];
+    if (!Array.isArray(children)) children = [children]
 
     return children.map((child, i) =>
       React.cloneElement(child, { key: i, ref: this.addElements })
-    );
-  };
+    )
+  }
 
   render() {
-    return this.resolveChildren();
+    return this.resolveChildren()
   }
 }
 
-export { Animate };
+export { Animate }

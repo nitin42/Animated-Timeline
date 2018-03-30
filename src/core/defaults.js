@@ -1,8 +1,8 @@
 // @flow
 
-import type { AnimationEngine } from "../types";
+import type { AnimationEngine } from '../types'
 
-type dummy = (inst: AnimationEngine) => void;
+type dummy = (inst: AnimationEngine) => void
 
 type defaultInstanceParams = {
   onUpdate: dummy,
@@ -14,7 +14,7 @@ type defaultInstanceParams = {
   direction: string,
   autoplay: boolean,
   offset: number
-};
+}
 
 type defaultTweensParams = {
   duration: number,
@@ -22,9 +22,9 @@ type defaultTweensParams = {
   easing: string,
   elasticity: number,
   round: number
-};
+}
 
-const noop = (inst: AnimationEngine): void => {};
+const noop = (inst: AnimationEngine): void => {}
 
 export const getDefaultInstanceParams = (): defaultInstanceParams => ({
   onUpdate: noop,
@@ -32,32 +32,32 @@ export const getDefaultInstanceParams = (): defaultInstanceParams => ({
   onStart: noop,
 
   iterations: 1,
-  direction: "normal",
+  direction: 'normal',
   autoplay: true,
   offset: 0
-});
+})
 
 export const getDefaultTweensParams = (): defaultTweensParams => ({
   duration: 1000,
   delay: 0,
-  easing: "linear",
+  easing: 'linear',
   elasticity: 500,
   round: 0
-});
+})
 
 export const validTransforms = [
-  "translateX",
-  "translateY",
-  "translateZ",
-  "rotate",
-  "rotateX",
-  "rotateY",
-  "rotateZ",
-  "scale",
-  "scaleX",
-  "scaleY",
-  "scaleZ",
-  "skewX",
-  "skewY",
-  "perspective"
-];
+  'translateX',
+  'translateY',
+  'translateZ',
+  'rotate',
+  'rotateX',
+  'rotateY',
+  'rotateZ',
+  'scale',
+  'scaleX',
+  'scaleY',
+  'scaleZ',
+  'skewX',
+  'skewY',
+  'perspective'
+]
