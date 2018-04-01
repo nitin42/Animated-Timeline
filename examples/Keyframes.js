@@ -17,14 +17,9 @@ const x = new Keyframes()
     elasticity: 200,
   })
   .value({
-    value: 500,
+    value: 0,
     offset: 0.4,
     duration: 6000,
-  })
-  .value({
-    value: 900,
-    duration: 2000,
-    delay: 3000,
   })
 
 export class KeyframeExample extends Component {
@@ -32,7 +27,10 @@ export class KeyframeExample extends Component {
     Animated.value({
       elements: this.one,
       translateX: x.frames,
-      rotate: '20turn',
+      rotate: {
+        value: 180,
+        duration: 2000
+      },
     }).start()
   }
 

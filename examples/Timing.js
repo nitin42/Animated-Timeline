@@ -23,14 +23,14 @@ export class Timing extends Component {
     })
       .value({
         elements: this.two,
-        translateX: transition({ from: 5, to: 12 }),
-        opacity: transition({ from: 0.4, to: 0.8 }),
+        translateX: transition({ from: 10, to: 120 }),
+        opacity: transition({ from: 0.2, to: 0.8 }),
         rotate: '10turn',
         offset: startAfter(1200),
       })
       .value({
         elements: this.three,
-        translateX: transition({ from: 2, to: 20 }),
+        translateX: transition({ from: 10, to: 120 }),
         opacity: transition({ from: 0.3, to: 0.9 }),
         offset: startBefore(1400),
       })

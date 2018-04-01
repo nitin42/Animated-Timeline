@@ -146,57 +146,108 @@ To animate an object, you will need to specify properties for timing model like 
 
 ### Sequence based animations
 
+[See example code for sequence based animations](./examples/Sequence.js)
+
+<p align="center">
+  <img src="./media/sequence.gif" />
+</p>
+
+### Timing based animations
+
+[See example code for timing based animations](./examples/Timing.js)
+
+
+<p align="center">
+  <img src="./media/timing.gif" />
+</p>
+
+### Keyframes
+
+[**See example code for keyframes**](./examples/Keyframes.js)
+
+<p align="center">
+  <img src="./media/keyframes.gif" />
+</p>
+
+### Changing the animation duration
+
+You can also change the animation duration using an input value. In the below example, we are passing the value for the input type `range`.
+
+[See example code](./examples/Mover.js)
+
+<p align="center">
+  <img src="./media/mover.gif" />
+</p>
+
+### Spring based animations
+
+[See example code for spring based animations](./examples/Spring.js)
+
+<p align="center">
+  <img src="./media/spring.gif" />
+</p>
+
+### More examples
+
+See more examples for -
+
+* [**Animating multiple instances**](./examples/MultipleInstance.js)
+
+* [**Managing animation lifecycle**](./examples/Lifecycle.js)
+
+* [**Using promise based APIs to control `initialisation` and `cancellation` events for an animation**](./examples/PromiseAPI.js)
+
+### Basic React component
+
+`animated-timeline` also provides a basic component called `Animate` to animate elements instead of using `Timeline` constructor.
+
 ```js
 import React, { Component } from 'react'
 
-import { Timeline, helpers } from 'animated-timeline'
+import { Animate, helpers } from 'animated-timeline'
 
-const { transition } = helpers
-
-const styles = {
+const boxStyles = {
   width: '20px',
   height: '20px',
   backgroundColor: 'pink',
-  marginTop: 30
-};
-
-const Animated = Timeline({
-  direction: 'alternate',
-  easing: 'easeInOutSine',
-  iterations: 1,
-})
+  marginTop: 30,
+}
 
 class App extends Component {
-  componentDidMount() {
-    Animated.value({
-      elements: this.one,
-      translateX: transition({ from: 10, to: 120 }),
-      opacity: transition({ from: 0.8, to: 0.2 }),
-      rotate: '10turn',
-    })
-      .value({
-        elements: this.two,
-        translateX: transition({ from: 10, to: 120 }),
-        opacity: transition({ from: 0.2, to: 0.8 }),
-        rotate: '10turn',
-      })
-      .start()
-  }
-
   render() {
     return (
-      <React.Fragment>
-        <div ref={one => (this.one = one)} style={styles} />
-        <div ref={two => (this.two = two)} style={styles} />
-      </React.Fragment>
+      <div>
+        <Animate
+          // Timeline model props
+          timingProps={{
+            duration: 1000,
+          }}
+          // Animation model props
+          animationProps={{
+            rotate: {
+              value: helpers.transition({ from: 360, to: 180 }),
+            },
+          }}
+          // Animation lifecycle
+          lifecycle={{
+            onComplete: ({ completed, controller: { restart, reverse } }) => {
+              if (completed) {
+                restart()
+                reverse()
+              }
+            },
+          }}
+        >
+          <div
+            style={boxStyles}
+            onClick={e => this.setState(state => ({ start: !state.start }))}
+          />
+        </Animate>
+      </div>
     )
   }
 }
 ```
-
-<p align="center">
-  <img src="./sequence.gif" />
-</p>
 
 
 ## Documentation

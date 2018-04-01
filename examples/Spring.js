@@ -20,10 +20,6 @@ export class Spring extends React.Component {
     value: 0
   }
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
     spring.init(this.state.scale, '#one', 'scale', {
       mapValues: {
@@ -32,26 +28,26 @@ export class Spring extends React.Component {
       },
     })
 
-    spring2.init(1, '#two', 'rotate', {
-      mapValues: {
-        from: [0, 1],
-        to: [180, 360]
-      }
-    })
-
-    spring3.init(1, '#three', 'translateY', {
-      mapValues: {
-        from: [0, 1],
-        to: [0, 40]
-      }
-    })
-
-    spring4.init(1, '#four', 'translateX', {
-      mapValues: {
-        from: [0, 1],
-        to: [0, 50]
-      }
-    })
+    // spring2.init(1, '#two', 'rotate', {
+    //   mapValues: {
+    //     from: [0, 1],
+    //     to: [180, 360]
+    //   }
+    // })
+    //
+    // spring3.init(1, '#three', 'translateY', {
+    //   mapValues: {
+    //     from: [0, 1],
+    //     to: [0, 40]
+    //   }
+    // })
+    //
+    // spring4.init(1, '#four', 'translateX', {
+    //   mapValues: {
+    //     from: [0, 1],
+    //     to: [0, 50]
+    //   }
+    // })
   }
 
   handleChange = e => {
@@ -67,7 +63,7 @@ export class Spring extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{ margin: '0 auto', width: '50%'}}>
         <div
           id="one"
           onMouseUp={() => {
@@ -78,7 +74,7 @@ export class Spring extends React.Component {
           }}
           style={boxStyles}
         />
-        <div
+        {/* <div
           id="two"
           onMouseUp={() => {
             spring2.setValue(0)
@@ -107,8 +103,8 @@ export class Spring extends React.Component {
             spring4.setValue(1)
           }}
           style={boxStyles}
-        />
-        <input type="range" min="0" max="50" value={this.state.value} onChange={this.handleChange} />
+        /> */}
+        {/* <input type="range" min="0" max="50" value={this.state.value} onChange={this.handleChange} /> */}
       </div>
     )
   }
