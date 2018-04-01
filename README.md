@@ -2,6 +2,10 @@
 
 > Create timeline and playback based animations in React
 
+<p align="center">
+  <img src="https://i.gyazo.com/cbde1eda772e6837bc100c4a2681c32d.png" />
+</p>
+
 ## Table of contents
 
 * [Introduction](#introduction)
