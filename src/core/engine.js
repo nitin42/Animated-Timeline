@@ -134,19 +134,18 @@ const emptyScheduledJobs = () => {
 }
 
 // Get the CSS property value (opacity, backgroundColor, ..., etc)
-const getCSSValue = (el, prop) => {
+export const getCSSValue = (el, prop) => {
   if (prop in el.style) {
     return getComputedStyle(el).getPropertyValue(stringToHyphens(prop)) || '0'
   }
 }
 
 // Get the animation type (transform, css or attribute)
-const getAnimationType = (el, prop) => {
+export const getAnimationType = (el, prop) => {
   // Check if the prop is a valid transform name
   if (isDOM(el) && arrayContains(validTransforms, prop)) return 'transform'
   // Check if its a valid attribute for a DOM node
-  if (isDOM(el) && (el.getAttribute(prop) || (isSVG(el) && el[prop])))
-    return 'attribute'
+  if (isDOM(el) && (el.getAttribute(prop) || (isSVG(el) && el[prop]))) return 'attribute'
   // Check if the prop returns a valid CSS transform value
   if (isDOM(el) && (prop !== 'transform' && getCSSValue(el, prop))) return 'css'
   // { value: '', duration: 2000 }
@@ -154,7 +153,7 @@ const getAnimationType = (el, prop) => {
 }
 
 // Get the animation value for the element
-const getOriginalTargetValue = (target, propName) => {
+export const getOriginalTargetValue = (target, propName) => {
   switch (getAnimationType(target, propName)) {
     case 'transform':
       return getTransformValue(target, propName)
@@ -168,7 +167,7 @@ const getOriginalTargetValue = (target, propName) => {
 }
 
 // Validates and returns the value like 20px, 360deg, 0.4
-const validateValue = (val, unit) => {
+export const validateValue = (val, unit) => {
   if (isCol(val)) {
     return colorToRgb(val)
   }
@@ -193,7 +192,7 @@ const decomposeValue = (val, unit) => {
 }
 
 // Parse the elements and returns an array of elements
-const parseElements = elements => {
+export const parseElements = elements => {
   const elementsArray = elements
     ? flattenArray(
         isArray(elements) ? elements.map(toArray) : toArray(elements)
@@ -207,7 +206,7 @@ const parseElements = elements => {
 }
 
 // Returns an array of elements to be animated
-const getAnimatables = elements => {
+export const getAnimatables = elements => {
   const parsed = parseElements(elements)
   return parsed.map((t, i) => {
     return { target: t, id: i, total: parsed.length }

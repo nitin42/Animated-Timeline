@@ -20,6 +20,8 @@ export class Basic extends Component {
     Animated.value({
       elements: this.one,
       opacity: transition({ from: 0.2, to: 0.8 }),
+      width: '30%',
+      height: '20%',
       rotate: {
         value: transition({ from: 360, to: 180 }),
       },

@@ -11,12 +11,13 @@ import { PromiseAPI } from "../examples/PromiseAPI";
 import { Timing } from "../examples/Timing";
 import { AnimateExample } from "../examples/AnimateComponent";
 import { AdvanceAnimated } from "../examples/AdvanceAnimated";
+import { Spring } from "../examples/Spring";
 
 class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <PromiseAPI />
+        <Spring />
       </React.Fragment>
     );
   }

@@ -8,8 +8,7 @@
     "flow": "flow",
     "test": "./node_modules/.bin/jest",
     "test:watch": "./node_modules/.bin/jest --watchAll",
-    "format":
-      "find src -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
+    "format": "find src -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
   "license": "ISC",
@@ -31,6 +30,7 @@
     "react-test-renderer": "^16.2.0"
   },
   "dependencies": {
+    "animejs": "^2.2.0",
     "fastdom": "^1.0.8",
     "invariant": "^2.2.4",
     "prop-types": "^15.6.1",
