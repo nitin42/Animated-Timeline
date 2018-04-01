@@ -17,7 +17,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Spring />
+        <Sequence />
       </React.Fragment>
     );
   }

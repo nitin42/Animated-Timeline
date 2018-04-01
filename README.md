@@ -52,15 +52,15 @@ So I started playing with existing animation engines (`animatedjs` and `anime`) 
 
 * Promise based APIs
 
-Also, it's not experimental and doesn't require a polyfill. See [browser usage](#browser-usage)
+> Note - It's not experimental and doesn't require a polyfill. See [browser usage](#browser-usage)
 
 ## What's more ?
 
-* `animated-timeline` batches the style mutations and style reads to speed up the performance
+* `animated-timeline` batches the style mutations and style reads to speed up the performance and avoid document reflows.
 
 * It hints the browser to set up appropriate optimisations for an animation using `will-change` but in an optimal way to avoid high memory consumption
 
-* Provides APIs for getting information out of an animation like **computed timing** and **active instances**.
+* Provides APIs for getting information out of an animation
 
 But there are some challenges. Read more [here](#challenges).
 
@@ -89,26 +89,28 @@ yarn add animated-timeline
 **Basic example**
 
 ```js
-import React from "react";
+import React from 'react'
 
-import { Timeline, helpers } from "animated-timeline";
+import { Timeline, helpers } from 'animated-timeline'
 
 const { transition } = helpers;
 
 const styles = {
-  width: "20px",
-  height: "20px",
-  backgroundColor: "pink",
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'pink',
   marginTop: 30
 };
 
+// Timeline model
 const Animated = Timeline({
-  direction: "alternate",
-  loop: 1
+  direction: 'alternate',
+  iterations: 1
 });
 
 class App extends React.Component {
   componentDidMount() {
+    // Animation model
     Animated.value({
       elements: this.one,
       opacity: transition({ from: 0.2, to: 0.8 }),
@@ -124,9 +126,78 @@ class App extends React.Component {
 }
 ```
 
-<p align="center">
-  <img src="./media/basic.gif" />
+<p align='center'>
+  <img src='./media/basic.gif' />
 </p>
+
+To animate an object, you will need to specify properties for timing model like `duration`, `delay`, `iterations` and animation model like `elements` for animating an element or an array of elements, `transform`, `color`, `opacity` etc.
+
+## Animation types
+
+`animated-timeline` lets you perform:
+
+* Sequence based animations
+
+* Timing based animations
+
+* Keyframes
+
+* Spring based animations
+
+### Sequence based animations
+
+```js
+import React, { Component } from 'react'
+
+import { Timeline, helpers } from 'animated-timeline'
+
+const { transition } = helpers
+
+const styles = {
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'pink',
+  marginTop: 30
+};
+
+const Animated = Timeline({
+  direction: 'alternate',
+  easing: 'easeInOutSine',
+  iterations: 1,
+})
+
+class App extends Component {
+  componentDidMount() {
+    Animated.value({
+      elements: this.one,
+      translateX: transition({ from: 10, to: 120 }),
+      opacity: transition({ from: 0.8, to: 0.2 }),
+      rotate: '10turn',
+    })
+      .value({
+        elements: this.two,
+        translateX: transition({ from: 10, to: 120 }),
+        opacity: transition({ from: 0.2, to: 0.8 }),
+        rotate: '10turn',
+      })
+      .start()
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div ref={one => (this.one = one)} style={styles} />
+        <div ref={two => (this.two = two)} style={styles} />
+      </React.Fragment>
+    )
+  }
+}
+```
+
+<p align="center">
+  <img src="./sequence.gif" />
+</p>
+
 
 ## Documentation
 
@@ -135,8 +206,6 @@ class App extends React.Component {
 * Complex layout animations
 
 * Motion path, SVGs
-
-* Spring system (**in progress**)
 
 ## Contributing
 

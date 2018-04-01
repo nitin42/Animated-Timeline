@@ -7,6 +7,7 @@ import { boxStyles } from './styles'
 const { transition } = helpers
 
 const Animated = Timeline({
+  direction: 'alternate',
   easing: 'easeInOutSine',
   iterations: 1,
 })
@@ -17,12 +18,12 @@ export class Sequence extends Component {
       elements: this.one,
       translateX: transition({ from: 10, to: 120 }),
       opacity: transition({ from: 0.8, to: 0.2 }),
-      rotate: '20turn',
+      rotate: '10turn',
     })
       .value({
         elements: this.two,
-        translateX: transition({ from: 5, to: 12 }),
-        opacity: transition({ from: 0.4, to: 0.8 }),
+        translateX: transition({ from: 10, to: 120 }),
+        opacity: transition({ from: 0.2, to: 0.8 }),
         rotate: '10turn',
       })
       .start()
