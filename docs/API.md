@@ -32,8 +32,10 @@ Below are the timeline properties which you can pass to `Timeline` function.
 * `easing` - Eg - `easing: 'easeInSine'. `Available `easing` curves are
 
 ```js
+// Default
 "linear"
 
+// easeIn
 "easeInQuad"
 "easeInCubic"
 "easeInQuart"
@@ -44,6 +46,7 @@ Below are the timeline properties which you can pass to `Timeline` function.
 "easeInBack"
 "easeInElastic"
 
+// easeOut
 "easeOutQuad"
 "easeOutCubic"
 "easeOutQuart"
@@ -54,6 +57,7 @@ Below are the timeline properties which you can pass to `Timeline` function.
 "easeOutBack"
 "easeOutElastic"
 
+// easeInOut
 "easeInOutQuad"
 "easeInOutCubic"
 "easeInOutQuart"
@@ -184,23 +188,32 @@ Animated.value({
 })
 ```
 
-Below is the list of available `transform` properties.
+Available `transform` properties -
 
 ```js
-'translateX'
-'translateY'
-'translateZ'
-'rotate'
-'rotateX'
-'rotateY'
-'rotateZ'
-'scale'
-'scaleX'
-'scaleY'
-'scaleZ'
-'skewX'
-'skewY'
-'perspective'
+// translate
+translateX
+translateY
+translateZ
+
+// rotate
+rotate
+rotateX
+rotateY
+rotateZ
+
+// scale
+scale
+scaleX
+scaleY
+scaleZ
+
+// skew
+skewX
+skewY
+
+// perspective
+perspective
 ```
 
 [Learn more about the transform CSS property here](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
@@ -240,3 +253,104 @@ Animated.value({
   ```js
   offset: times(4)
   ```
+
+### Keyframes
+
+To define keyframes for an animation property, use the class `Keyframes`.
+
+```js
+const x = new Keyframes()
+  .value({
+    value: 200,
+    duration: 4000,
+    delay: 1000,
+    elasticity: 200,
+  })
+  .value({
+    value: 0,
+    offset: 0.4,
+    duration: 6000,
+  })
+```
+
+This returns an array of frames. The property `frames` is accessible on the instance, in our example `x`. Use the returned array of frames to define the tween value for an animation property,
+
+```js
+Animated.value({
+  elements: '#one',
+  translateX: x.frames // array of frames
+})
+```
+
+[See this example for more details on defining the keyframes.](../examples/Keyframes.js)
+
+### Animate
+
+`Animate` is the React component which is basically, a wrapper around `Animated.value()`. This, however, has some limitations like
+
+* You cannot use the control methods [`.reset()`](), [`.reverse()`]() [`.restart()`]() directly. To use them, you will be relying on the lifecycle methods
+
+* Promise based APIs are not available
+
+* Unavailability of the methods for getting information out of a running animation.
+
+But you can still use all the [helper methods]() and [Keyframes]().
+
+These limitations are due to the design decisions. If your use case involves just animating the elements, then you can simply use this component.
+
+```js
+class App extends React.Component {
+  render() {
+    return (
+      <Animate timingProps={{ duration: 2000 }} animationProps={{ scale: 2}}>
+        <h1>React</h1>
+      </Animate>
+    )
+  }
+}
+```
+
+**Note** - We are not using the property `elements` here anymore to specify the elements we want to animate because the component `Animate` internally resolves all the children for us.
+
+#### Props
+
+* **`timingProps`**
+
+Accepts an object of properties for timing model.
+
+```js
+timingProps={{
+  delay: 2000,
+  duration: 4000,
+  direction: 'alternate',
+  easing: 'easeInSine'
+}}
+```
+
+* **`animationProps`**
+
+Accepts an object of properties for animation model
+
+```js
+animationProps={{
+  rotate: {
+    value: 180,
+    duration: 2000
+  },
+  scale: 2
+}}
+```
+
+* **`autoplay`**
+
+A `boolean` value which indicates whether to autoplay the animation or not.
+
+* **`shouldStart`**
+
+A `boolean` value which indicates whether to start the animation or not. Use this when you want to animate based on the state updates.
+
+* **`shouldStop`**
+
+A `boolean` value which indicates whether to stop the animation or not.
+
+[See this detailed example](../examples/AdvanceComponent.js)
