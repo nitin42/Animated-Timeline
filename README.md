@@ -249,8 +249,8 @@ class App extends Component {
 }
 ```
 
-
-## Documentation
+<br/><br/>
+**If that sounds interesting to you**, [**then let's dive into the detailed documentation which covers example use cases, API reference, and some more examples 😃**](./docs)
 
 ## Challenges
 
