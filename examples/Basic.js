@@ -26,6 +26,8 @@ export class Basic extends Component {
         value: transition({ from: 360, to: 180 }),
       },
     }).start()
+
+    console.log(helpers.getEasings())
   }
 
   render() {
