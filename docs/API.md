@@ -268,10 +268,12 @@ const x = new Keyframes()
   })
   .value({
     value: 0,
-    offset: 0.4,
+    offset: 0.4, // corresponds to the keyframes-selector value 40%
     duration: 6000,
   })
 ```
+
+To define [keyframes-selector](https://www.w3schools.com/cssref/css3_pr_animation-keyframes.asp) (percentage of the animation duration), use the property `offset`.
 
 This returns an array of frames. The property `frames` is accessible on the instance, in our example `x`. Use the returned array of frames to define the tween value for an animation property,
 
