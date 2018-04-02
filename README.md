@@ -28,7 +28,7 @@
 
 > **_focus on declarative relationships between inputs and outputs, with configurable transforms in between, and simple start/stop methods to control time-based animation execution._**
 
-Along with `start` and `stop` methods it also provides -
+Along with `start` and `stop` methods it also has -
 
 * `restart` - To replay the animation
 
@@ -220,34 +220,32 @@ const boxStyles = {
 class App extends Component {
   render() {
     return (
-      <div>
-        <Animate
-          // Timeline model props
-          timingProps={{
-            duration: 1000,
-          }}
-          // Animation model props
-          animationProps={{
-            rotate: {
-              value: helpers.transition({ from: 360, to: 180 }),
-            },
-          }}
-          // Animation lifecycle
-          lifecycle={{
-            onComplete: ({ completed, controller: { restart, reverse } }) => {
-              if (completed) {
-                restart()
-                reverse()
-              }
-            },
-          }}
-        >
-          <div
-            style={boxStyles}
-            onClick={e => this.setState(state => ({ start: !state.start }))}
-          />
-        </Animate>
-      </div>
+      <Animate
+        // Timing model props
+        timingProps={{
+          duration: 1000,
+        }}
+        // Animation model props
+        animationProps={{
+          rotate: {
+            value: helpers.transition({ from: 360, to: 180 }),
+          },
+        }}
+        // Animation lifecycle
+        lifecycle={{
+          onComplete: ({ completed, controller: { restart, reverse } }) => {
+            if (completed) {
+              restart()
+              reverse()
+            }
+          },
+        }}
+      >
+        <div
+          style={boxStyles}
+          onClick={e => this.setState(state => ({ start: !state.start }))}
+        />
+      </Animate>
     )
   }
 }
@@ -256,11 +254,11 @@ class App extends Component {
 <br/><br/>
 **If that sounds interesting to you**, [**then let's dive into the detailed documentation which covers example use cases, API reference, and some more examples 😃**](./docs)
 
-## Challenges
+## Challenges / Todos
 
-* Complex layout animations
+* Complex layout animations ?
 
-* Motion path, SVGs
+* Motion path, SVGs ?
 
 ## Contributing
 
