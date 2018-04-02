@@ -9,6 +9,7 @@ const { transition } = helpers
 const Animated = Timeline({
   easing: 'easeInOutSine',
   iterations: 1,
+  speed: 0.2
 })
 
 export class PromiseAPI extends Component {
@@ -21,7 +22,7 @@ export class PromiseAPI extends Component {
     }).start()
 
     // Done animating
-    Animated.onfinish.then(res => console.log(res))
+    // Animated.onfinish.then(res => console.log(res))
   }
 
   handleClick = e => {

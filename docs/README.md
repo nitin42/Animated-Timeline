@@ -20,25 +20,25 @@ This is the documentation for `animated-timeline`.
 
   * [Timeline](./API.md#timeline)
 
-  * [Animated]()
+  * [Animated](./API.md#animated)
 
-  * [Animate]()
+  * [Animate](./API.md#animate)
 
-  * [Keyframes]()
+  * [Keyframes](./API.md#keyframes)
 
-  * [createMover]()
+  * [createMover](./API.md#createMover)
 
-  * [Spring]()
+  * [Spring](./API.md#spring)
 
-  * [.start()]()
+  * [.start()](./API.md#start())
 
-  * [.stop()]()
+  * [.stop()](./API.md#stop())
 
-  * [.reset()]()
+  * [.reset()](./API.md#reset())
 
-  * [.reverse]()
+  * [.reverse](./API.md#reverse())
 
-  * [.restart]()
+  * [.restart](./API.md#restart())
 
   * [Lifecycle: onComplete]()
 

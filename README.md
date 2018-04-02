@@ -3,7 +3,7 @@
 > Create playback based animations in React
 
 <p align="center">
-  <img src="https://i.gyazo.com/067209604b7e21e28e5fc3c9a2de79b7.png" />
+  <img src="../media/logo.png" />
 </p>
 
 ## Table of contents

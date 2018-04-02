@@ -19,7 +19,7 @@ type moveArgs = number | Function
 export const createMover = (instance: AnimationEngine): Function => {
   invariant(
     instance !== undefined || instance !== null || instance === 'object',
-    `Unknown timeline instance passed to createMover().`
+    `Invalid timeline instance passed to createMover().`
   )
 
   const config = {
@@ -33,17 +33,23 @@ export const createMover = (instance: AnimationEngine): Function => {
         `Expected callback to be a function instead got a ${typeof callback}.`
       )
 
-      // Also pass the animation engine instance to the user defined callback
-      instance.seek(callback(instance))
+      instance.seek(callback({
+        duration: instance.duration,
+        iterations: instance.iterations,
+        progress: instance.progress,
+        offset: instance.offset,
+        delay: instance.delay,
+        currentTime: instance.currentTime
+      }))
     }
   }
 
-  const move = (arg: moveArgs): void => {
+  const seek = (arg: moveArgs): void => {
     invariant(
       typeof arg === 'number' ||
         typeof arg === 'function' ||
         typeof arg === 'string',
-      `move() expected a number or a callback function but instead got a ${typeof arg}`
+      `seek() expected a number or a callback function but instead got a ${typeof arg}`
     )
 
     if (typeof arg === 'number' || typeof arg === 'string') {
@@ -53,5 +59,5 @@ export const createMover = (instance: AnimationEngine): Function => {
     }
   }
 
-  return move
+  return seek
 }

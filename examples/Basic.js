@@ -16,6 +16,10 @@ const Animated = Timeline({
 // Timeline({ ...timingProps }).value({ ...animationProps })
 
 export class Basic extends Component {
+  state = {
+    value: 0
+  }
+
   componentDidMount() {
     Animated.value({
       elements: this.one,
@@ -27,7 +31,9 @@ export class Basic extends Component {
       },
     }).start()
 
-    console.log(Animated);
+    Animated.onUpdate = ({ progress }) => {
+      this.setState({ value: Math.floor(Number(progress)) })
+    }
   }
 
   render() {
@@ -37,6 +43,7 @@ export class Basic extends Component {
           ref={one => (this.one = one)}
           style={{ margin: '0 auto', width: '50%', ...boxStyles }}
         />
+        {this.state.value}
       </div>
     )
   }

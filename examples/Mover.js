@@ -11,7 +11,7 @@ const Animated = Timeline({
   iterations: 1,
 })
 
-const move = createMover(Animated)
+const seek = createMover(Animated)
 
 export class Mover extends Component {
   state = {
@@ -21,10 +21,10 @@ export class Mover extends Component {
   handleChange = e => {
     const value = e.target.value
     // With a number value
-    // move(value)
+    // seek(value)
 
     // or with a callback function that must return a number value
-    move(({ duration }) => duration - value * 10)
+    seek(({ duration }) => duration - value * 10)
 
     this.setState({ value })
   }

@@ -73,7 +73,7 @@ Below are the timeline properties which you can pass to `Timeline` function.
 
 * `elasticity` (`Number`)
 
-* `offset` (`Number`)
+* `offset` (`Number`) - Used for performing timing based animations.
 
 * `autoplay` (`Boolean`) - Default is `true`.
 
@@ -116,7 +116,7 @@ Animated.value({
 
 **Using .value() for timing based animations**
 
-To perform timing based animations, you will need to pass an offset value for an element
+To perform timing based animations, you will need to pass an offset value for an element. The `offset` value determines when to start the animation i.e after the previous animation, before the previous animation or at n times the previous animation.
 
 ```js
 Animated.value({
@@ -292,7 +292,7 @@ To define [keyframes-selector](https://www.w3schools.com/cssref/css3_pr_animatio
 
 ### Animate
 
-`Animate` is the React component, which is basically a wrapper around `Timeline` function. This, however, has some limitations like
+`Animate` is a React component, which is basically a thin wrapper around `Timeline` function. This, however, has some limitations like -
 
 * You cannot use the control methods [`.reset()`](), [`.reverse()`]() [`.restart()`]() directly. To use them, you will be relying on the lifecycle methods
 
@@ -318,7 +318,7 @@ class App extends React.Component {
 
 **Note** - We are not using the property `elements` here anymore to specify the elements we want to animate because the component `Animate` internally resolves all the children for us.
 
-#### Props
+#### Component props
 
 * **`timingProps`**
 
@@ -363,12 +363,12 @@ A `boolean` value which indicates whether to stop the animation or not.
 
 ### `createMover`
 
-Accepts an [Animated](#animated) instance and returns a function `move` that moves an element throughout its timeline by changing its duration value or progress value.
+Accepts an [Animated](#animated) instance and returns a function that is used to seek the animation and change the animation position along the timeline. This is possible by changing the animation duration or its progress value with an input value.
 
 **Example**
 
 ```js
-import { createMover } from 'animated-timeline'
+import { Timeline, createMover } from 'animated-timeline'
 
 const Animated = Timeline({
   ...props
@@ -378,16 +378,16 @@ Animated.value({
   ...props
 })
 
-const move = createMover(Animated)
+const seek = createMover(Animated)
 ```
 
-**move**
+**seek**
 
-`move` function accepts a callback function or a number value for changing the animation duration or its progress value.
+`seek` function accepts a callback function or a number value.
 
 **Passing a callback function**
 
-The callback function receives the following arguments -
+The callback function receives the following parameters -
 
 ```js
 duration: Number, // Animation duration
@@ -399,21 +399,183 @@ currentTime: Number // Current time of an animation
 ```
 
 ```js
-move(({ duration }) => duration - this.state.value * 10)
+seek(({ duration }) => duration - input_value * 10)
 ```
 
-In the above example, the element moves in the reverse direction with the input value.
-
-The callback function **should** return a number value.
+The callback function **SHOULD** return a number value.
 
 **Passing a number value**
 
 ```js
-move(this.state.value)
+seek(input_value)
 ```
 
-Here is an example of `createMover` in which we change the animation duration time by passing the value for the input type `range`.
+In the above example we change the animation duration time by passing the value for the input type `range`.
 
 <p align="center">
   <img src="../media/mover.gif" />
+</p>
+
+### `.start()`
+
+`.start()` method is used to start an animation. This method is directly available on the [Animated](#animated) instance.
+
+```js
+Animated.start()
+```
+
+You can also access `.start()` method in lifecycle hook. It is available on the `controller` property.
+
+```js
+Animated.onComplete = ({ completed, controller }) => {
+  completed ? controller.reverse() && controller.start() : null
+}
+```
+
+### `.stop()`
+
+`.stop()` method is used to stop an animation. This method is directly available on the [Animated](#animated) instance.
+
+```js
+Animated.stop()
+```
+
+Similar to `.start()`, this method can also be accessed inside a lifecycle hook.
+
+### `.reset()`
+
+`.reset()` method is used to reset the animation state. This method is directly available on the [Animated](#animated) instance.
+
+```js
+Animated.reset()
+```
+
+This method can also be accessed inside a lifecycle hook.
+
+### `.reverse()`
+
+`.reverse()` method is used to reverse the animation state. This method is directly available on the [Animated](#animated) instance.
+
+```js
+Animated.reverse()
+```
+
+This method can also be accessed inside a lifecycle hook.
+
+### `.restart()`
+
+`.restart()` method is used to restart the animation. This method is directly available on the [Animated](#animated) instance.
+
+```js
+Animated.restart()
+```
+
+This method can also be accessed inside a lifecycle hook.
+
+### Animation lifecycle
+
+Lifecycle hooks gets executed during different phases of an animation. All the lifecycle hooks receive the following parameters -
+
+```js
+completed: boolean, // Animation completed ?
+progress: number, // Animation progress value
+duration: number, // Animation duration
+remaining: number, // Remaining iterations
+reversed: boolean, // Animation state reversed ?
+currentTime: number, // Animation current time
+began: boolean, // Animation started ?
+paused: boolean, // Animation paused ?
+controller: {
+  start: () => void, // Start an animation
+  stop: () => void, // Stop an animation
+  restart: () => void, // Restart an animation
+  reverse: () => void, // Reverse an animation
+  reset: () => void // Reset an animation
+}
+```
+
+**Note** - Lifecycle hooks can be accessed only through the [Animated](#animated) instance.
+
+#### Lifecycle: onComplete
+
+`onComplete` lifecycle hook is called when the animation is completed.
+
+```js
+const Animated = Timeline({ ...props })
+
+Animated.value({ ...props }).start()
+
+Animated.onComplete = ({ completed, controller }) => {
+  if (completed) {
+    // Reverse the animation state
+    controller.reverse()
+
+    // Restart the animation again
+    controller.restart()
+  }
+}
+```
+
+Use this hook as an opportunity to instantiate another task after an animation has been completed.
+
+#### Lifecycle: onStart
+
+`onStart` lifecycle hook is called when the animation has started.
+
+```js
+const Animated = Timeline({ ...props })
+
+Animated.value({ ...props }).start()
+
+Animated.onStart = ({ completed }) => {
+  console.log('Animation started')
+}
+```
+
+#### Lifecycle: onUpdate
+
+`onUpdate` lifecycle hook is called when the animation is being updated throughout its timeline.
+
+```js
+const Animated = Timeline({ ...props })
+
+Animated.value({ ...props }).start()
+
+Animated.onUpdate = ({ progress }) => {
+  this.setState({ value: Math.floor(Number(progress)) })
+}
+```
+
+<p align="center">
+  <img src="../media/onUpdate.gif" />
+</p>
+
+## Promise: onfinish
+
+Use `onfinish` promise API when an animation has been completed. It is accessible only through the [Animated](#animated) instance.
+
+```js
+Animated.value({
+  elements: this.one,
+  translateX: transition({ from: 10, to: 120 }),
+  opacity: transition({ from: 0.8, to: 0.2 }),
+  rotate: '20turn',
+}).start()
+
+Animated.onfinish.then(res => console.log(res))
+```
+
+## Promise: oncancel(elements|selectors)
+
+Use `oncancel` promise API to cancel a running animation. It accepts an element or a selector, or an array of elements or selectors or mixed.
+
+```js
+// Cancel the animation
+Animated.oncancel('#xyz').then(res => console.log(res))
+```
+
+For instance, you can use `oncancel` to cancel an animation when an `onClick` event is fired.
+
+<p align="center">
+  <img src="../media/oncancel.gif" />
 </p>
