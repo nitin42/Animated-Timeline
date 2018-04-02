@@ -27,7 +27,7 @@ export class Basic extends Component {
       },
     }).start()
 
-    console.log(helpers.getEasings())
+    console.log(Animated);
   }
 
   render() {

@@ -4,7 +4,9 @@ API reference for `animated-timeline`
 
 ### `Timeline`
 
-Returns a new timeline instance which is used to animate the elements. It accepts an object of timeline properties.
+Returns a new [Animated](#animated) instance which is used to animate the elements. `Timeline` function accepts an object of timeline properties.
+
+**Example**
 
 ```js
 const Animated = Timeline({
@@ -15,21 +17,21 @@ const Animated = Timeline({
 })
 ```
 
-**Timeline properties** -
+**Timeline properties**
 
 Below are the timeline properties which you can pass to `Timeline` function.
 
-* `delay` (ms)
+* `delay` (ms) - Animation delay
 
-* `duration` (ms)
+* `duration` (ms) - Animation duration
 
-* `direction` [`normal`, `reverse` and `alternate`]
+* `direction` (`normal`, `reverse` or `alternate`) - Animation direction
 
-* `speed`
+* `speed` - Animation speed. This sets the speed for all the elements being animated using the same `Animated` instance.
 
-* `iterations`
+* `iterations` - Can be a number value or `Infinity`
 
-* `easing` - Eg - `easing: 'easeInSine'. `Available `easing` curves are
+* `easing` - Eg - `easing: 'easeInSine'. ` Available `easing` curves are
 
 ```js
 // Default
@@ -77,7 +79,7 @@ Below are the timeline properties which you can pass to `Timeline` function.
 
 ### `Animated`
 
-`Animated` object accepts animation properties for an element you wish to animate.
+`Animated` object accepts animation properties for an element you want to animate via `.value()`.
 
 ```js
 const Animated = Timeline({
@@ -102,9 +104,11 @@ You can pass an object of animation properties using the method `.value()`.
 
 ```js
 Animated.value({
+  // Animate the element with selector '.one'
   elements: '.one',
   ...props
 }).value({
+  // then animate the element with selector '.two'
   elements: '.two',
   ...props
 })
@@ -129,11 +133,11 @@ Animated.value({
 })
 ```
 
-[Learn more about the methods `startBefore` and `startAfter`]()
+Learn more about the methods [`startBefore`](#startBefore) and [`startAfter`](#startAfter)
 
-**Animation properties** -
+**Animation properties**
 
-* `elements` - Specify an element or an array of elements you wish to animate through selectors or refs (React)
+* `elements` - Specify an element or an array of elements you want to animate through selectors or refs (React)
 
 ```js
 Animated.value({
@@ -152,11 +156,11 @@ render() {
 }
 ```
 
-* `css` properties - CSS properties you wish to animate like `opacity`, `fontSize`, `backgroundColor` etc. [See this list of available CSS animatable properties.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animated_properties)
+* `css` properties - CSS properties you want to animate like `opacity`, `fontSize`, `backgroundColor` etc. [See this list of available CSS animatable properties.](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animated_properties)
 
 ```js
 Animated.value({
-  elements: this.one, // Refs
+  elements: this.one,
   backgroundColor: helpers.transition({
     from: '#4286f4',
     to: '#398964'
@@ -288,7 +292,7 @@ To define [keyframes-selector](https://www.w3schools.com/cssref/css3_pr_animatio
 
 ### Animate
 
-`Animate` is the React component which is basically, a wrapper around `Animated.value()`. This, however, has some limitations like
+`Animate` is the React component, which is basically a wrapper around `Timeline` function. This, however, has some limitations like
 
 * You cannot use the control methods [`.reset()`](), [`.reverse()`]() [`.restart()`]() directly. To use them, you will be relying on the lifecycle methods
 
@@ -356,3 +360,60 @@ A `boolean` value which indicates whether to start the animation or not. Use thi
 A `boolean` value which indicates whether to stop the animation or not.
 
 [See this detailed example](../examples/AdvanceComponent.js)
+
+### `createMover`
+
+Accepts an [Animated](#animated) instance and returns a function `move` that moves an element throughout its timeline by changing its duration value or progress value.
+
+**Example**
+
+```js
+import { createMover } from 'animated-timeline'
+
+const Animated = Timeline({
+  ...props
+})
+
+Animated.value({
+  ...props
+})
+
+const move = createMover(Animated)
+```
+
+**move**
+
+`move` function accepts a callback function or a number value for changing the animation duration or its progress value.
+
+**Passing a callback function**
+
+The callback function receives the following arguments -
+
+```js
+duration: Number, // Animation duration
+iterations: Number, // Number of iterations
+progress: Number, // Animation progress
+offset: Number, // Offset value for animation
+delay: Number, // Animation delay
+currentTime: Number // Current time of an animation
+```
+
+```js
+move(({ duration }) => duration - this.state.value * 10)
+```
+
+In the above example, the element moves in the reverse direction with the input value.
+
+The callback function **should** return a number value.
+
+**Passing a number value**
+
+```js
+move(this.state.value)
+```
+
+Here is an example of `createMover` in which we change the animation duration time by passing the value for the input type `range`.
+
+<p align="center">
+  <img src="../media/mover.gif" />
+</p>

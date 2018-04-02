@@ -7,9 +7,10 @@ import { boxStyles } from './styles'
 const { transition } = helpers
 
 const Animated = Timeline({
+  direction: 'alternate',
   easing: 'easeInOutSine',
   iterations: 1,
-  speed: 0.4,
+  speed: 0.2,
 })
 
 export class Lifecycle extends Component {
@@ -25,7 +26,7 @@ export class Lifecycle extends Component {
       if (completed) {
         // Reverse the direction
         Animated.reverse()
-
+        //
         // Start the animation again
         Animated.restart()
       }

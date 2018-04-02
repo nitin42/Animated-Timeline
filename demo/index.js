@@ -17,7 +17,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <AdvanceAnimated />
+        <Basic />
       </React.Fragment>
     );
   }

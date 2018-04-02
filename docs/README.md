@@ -18,7 +18,7 @@ This is the documentation for `animated-timeline`.
 
 * [API](./API.md)
 
-  * [Timeline]()
+  * [Timeline](./API.md#timeline)
 
   * [Animated]()
 
