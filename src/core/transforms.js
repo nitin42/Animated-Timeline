@@ -1,6 +1,6 @@
 // @flow
 
-import { filterArray, stringContains } from './utils'
+import { filterArray, stringContains } from '../utils/engineUtils'
 
 // Get the transform unit
 export const getTransformUnit = (propName: string): void | string => {

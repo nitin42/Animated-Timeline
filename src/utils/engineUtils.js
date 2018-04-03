@@ -4,6 +4,8 @@ export const stringContains = (str, text) => {
 
 export const isArray = obj => Array.isArray(obj)
 
+export const minMaxValue = (val, min, max) => Math.min(Math.max(val, min), max)
+
 export const isObject = object =>
   stringContains(Object.prototype.toString.call(object), 'Object')
 

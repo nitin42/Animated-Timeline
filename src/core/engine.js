@@ -20,6 +20,7 @@
  * 3. APIs for getting information about active instances in an animation using getAnimation()
  * 4. Declarative API for Timeline component for React
  * 5. Promise based API for oncancel event
+ *
  */
 
 import fastdom from 'fastdom'
@@ -53,26 +54,21 @@ import {
   colorToRgb,
   getRelativeValue,
   getUnit
-} from './utils'
+} from '../utils/engineUtils'
 import { easings } from './easing'
 import { bezier } from './bezier'
-import { getDefaultTweensParams, getDefaultInstanceParams } from './defaults'
+import { getDefaultTweensParams, getDefaultInstanceParams } from '../utils/defaults'
 import {
   getTransformUnit,
   getTransformValue,
   validTransforms
 } from './transforms'
-
-// Debug reads and style mutations
-let debugBatching = false
-
-let animationStarted = false
-
-// Style updates
-let writeId = null
-
-// Style reads
-let readId = null
+import {
+  batchMutation,
+  batchRead,
+  exceptions,
+  emptyScheduledJobs
+} from './batchMutations'
 
 let transformString
 
@@ -87,50 +83,6 @@ const isFunctionValue = (val, prop) => {
     `Animation property value for '${prop}' cannot be a function.`
   )
   return val
-}
-
-const debugMutation = (prop, value) => {
-  log(`Batched style mutation: ${prop}\n`)
-  log(`Result: ${value}`)
-}
-
-// Scheduled jobs are stored in the queues which are emptied at the turn of next frame using rAF
-
-// Batch style mutations
-const batchMutation = (mutation, prop, value) => {
-  writeId = fastdom.mutate(() => {
-    debugBatching &&
-    animationStarted &&
-    (prop !== undefined && value !== undefined)
-      ? debugMutation(prop, value)
-      : null
-    return mutation()
-  })
-
-  return writeId
-}
-
-// Batch style reads
-const batchRead = (reads, prop) => {
-  readId = fastdom.measure(() => {
-    debugBatching ? log('Batched style read: ' + prop) : null
-    return reads()
-  })
-
-  return writeId
-}
-
-// In case we don't have the current node on which the mutations will be applied, catch the exceptions.
-// Because batching is async.
-const exceptions = () => {
-  fastdom.catch = error => {
-    console.log(error)
-  }
-}
-
-const emptyScheduledJobs = () => {
-  fastdom.clear(readId)
-  fastdom.clear(writeId)
 }
 
 // Get the CSS property value (opacity, backgroundColor, ..., etc)
@@ -205,7 +157,6 @@ export const parseElements = elements => {
   )
 }
 
-// Returns an array of elements to be animated
 export const getAnimatables = elements => {
   const parsed = parseElements(elements)
   return parsed.map((t, i) => {
@@ -409,7 +360,9 @@ function createNewInstance(params) {
     params
   )
   const tweenSettings = replaceObjectProps(getDefaultTweensParams(), params)
+
   const animatables = getAnimatables(params.elements)
+
   const properties = getProperties(instanceSettings, tweenSettings, params)
   const animations = getAnimations(animatables, properties)
   return mergeObjects(instanceSettings, {
@@ -510,11 +463,13 @@ function animated(params = {}) {
     }
 
     // Batch updates
-    return batchMutation(
-      () => (element.style[transformString] = transforms[id].join(' ')),
-      transformString,
-      transforms[id].join(' ')
-    )
+    if (transforms[id]) {
+      return batchMutation(
+        () => (element.style[transformString] = transforms[id].join(' ')),
+        transformString,
+        transforms[id].join(' ')
+      )
+    }
   }
 
   function setAnimationsProgress(insTime) {
@@ -664,12 +619,10 @@ function animated(params = {}) {
     const insCurrentTime = instance.currentTime
     const insReversed = instance.reversed
     const insTime = adjustTime(engineTime)
-    // sync all the child nodes and call seek(). It's a recursive procedure.
     if (instance.children.length) syncInstanceChildren(insTime)
     if (insTime >= insStart || !insDuration) {
       if (!instance.began) {
         instance.began = true
-        animationStarted = true
         registerLifecycleHook('onStart')
       }
     }
@@ -691,6 +644,7 @@ function animated(params = {}) {
         if (!insReversed) countIteration()
       }
     }
+
     registerLifecycleHook('onUpdate')
 
     if (process.env.NODE_ENV !== 'production') {
@@ -711,7 +665,7 @@ function animated(params = {}) {
         if (!instance.completed) {
           instance.completed = true
 
-          // Animations are done so remove the hint ('will-change') and get back to the normal behavior.
+          // Animations are done so remove the hint ('will-change')
           removeHints(instance.animatables)
 
           // Clear any scheduled job
@@ -817,7 +771,6 @@ function animated(params = {}) {
     if (arrayContains(elements, animations[a].animatable.target)) {
       const node = animations[a].animatable.target
       animations.splice(a, 1)
-
       if (!animations.length) {
         instance.paused = true
         if ('Promise' in window) {
@@ -841,7 +794,6 @@ function animated(params = {}) {
 
     for (let i = activeInstances.length; i--; ) {
       const instance = activeInstances[i]
-
       if (instance.animations.length === 0 && instance.children.length !== 0) {
         for (let j = instance.children.length; j--; ) {
           const animations = instance.children[j].animations
@@ -874,9 +826,7 @@ const removeHints = instances => {
   })
 }
 
-function createTimeline(params, shouldDebug = false) {
-  debugBatching = shouldDebug
-
+function createTimeline(params) {
   let tl = animated(params)
   tl.stop()
   tl.duration = 0

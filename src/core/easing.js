@@ -1,7 +1,7 @@
 // @flow
 
 import { bezier } from './bezier'
-import { isFunc } from './utils'
+import { isFunc } from '../utils/engineUtils'
 
 const names = [
   'Quad',

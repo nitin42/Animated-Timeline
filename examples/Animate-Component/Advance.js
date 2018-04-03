@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-import { Animate, helpers } from '../src'
+import { Animate, helpers } from '../../src'
 
-import { boxStyles } from './styles'
+import { boxStyles } from '../styles'
 
-export class AdvanceAnimated extends Component {
-  state = {
-    start: true,
-  }
+export class AnimateAdvance extends Component {
+  state = {value: 0}
+
+  handleChange = e => this.setState({ value: e.target.value })
 
   render() {
     return (
@@ -17,26 +17,24 @@ export class AdvanceAnimated extends Component {
             duration: 2000,
           }}
           animationProps={{
+            translateX: helpers.transition({ from: 0, to: 200 }),
             rotate: helpers.transition({ from: '360deg', to: '180deg' }),
             opacity: helpers.transition({ from: 0.2, to: 0.8 }),
           }}
           lifecycle={{
-            onComplete: ({ completed, controller: { restart, reverse } }) => {
-              if (completed) {
-                restart()
-                reverse()
-              }
+            onUpdate: ({ progress }) => {
+              this.state.value = progress
             }
           }}
           shouldStart={this.state.start}
           shouldStop={!this.state.start}
+          seekAnimation={this.state.value}
         >
           <div
             style={boxStyles}
-            onClick={e => this.setState(state => ({ start: !state.start }))}
           />
         </Animate>
-        <p>Click on the box to perform playback animations</p>
+        <input type="range" min="0" max="100" value={this.state.value} onChange={this.handleChange} />
       </div>
     )
   }

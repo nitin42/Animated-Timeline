@@ -22,7 +22,7 @@ export class PromiseAPI extends Component {
     }).start()
 
     // Done animating
-    // Animated.onfinish.then(res => console.log(res))
+    Animated.onfinish.then(res => console.log(res))
   }
 
   handleClick = e => {
