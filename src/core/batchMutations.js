@@ -9,7 +9,7 @@ let readId = null
 // Scheduled jobs are stored in the queues which are emptied at the turn of next frame using rAF. This helps in reducing recalcs/sec and speed up the animation performance.
 
 // Batch style mutations
-export const batchMutation = (mutation, prop, value) => {
+export const batchMutation = mutation => {
   writeId = fastdom.mutate(() => {
     return mutation()
   })
@@ -18,7 +18,7 @@ export const batchMutation = (mutation, prop, value) => {
 }
 
 // Batch style reads
-export const batchRead = (reads, prop) => {
+export const batchRead = reads => {
   readId = fastdom.measure(() => {
     return reads()
   })
