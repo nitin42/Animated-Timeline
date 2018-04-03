@@ -53,21 +53,24 @@ import {
   hslToRgba,
   colorToRgb,
   getRelativeValue,
-  getUnit
+  getUnit,
 } from '../utils/engineUtils'
 import { easings } from './easing'
 import { bezier } from './bezier'
-import { getDefaultTweensParams, getDefaultInstanceParams } from '../utils/defaults'
+import {
+  getDefaultTweensParams,
+  getDefaultInstanceParams,
+} from '../utils/defaults'
 import {
   getTransformUnit,
   getTransformValue,
-  validTransforms
+  validTransforms,
 } from './transforms'
 import {
   batchMutation,
   batchRead,
   exceptions,
-  emptyScheduledJobs
+  emptyScheduledJobs,
 } from './batchMutations'
 
 let transformString
@@ -97,7 +100,8 @@ export const getAnimationType = (el, prop) => {
   // Check if the prop is a valid transform name
   if (isDOM(el) && arrayContains(validTransforms, prop)) return 'transform'
   // Check if its a valid attribute for a DOM node
-  if (isDOM(el) && (el.getAttribute(prop) || (isSVG(el) && el[prop]))) return 'attribute'
+  if (isDOM(el) && (el.getAttribute(prop) || (isSVG(el) && el[prop])))
+    return 'attribute'
   // Check if the prop returns a valid CSS transform value
   if (isDOM(el) && (prop !== 'transform' && getCSSValue(el, prop))) return 'css'
   // { value: '', duration: 2000 }
@@ -139,7 +143,7 @@ const decomposeValue = (val, unit) => {
   return {
     original: value,
     numbers: value.match(rgx) ? value.match(rgx).map(Number) : [0],
-    strings: isString(val) || unit ? value.split(rgx) : []
+    strings: isString(val) || unit ? value.split(rgx) : [],
   }
 }
 
@@ -205,7 +209,7 @@ const getProperties = (instanceSettings, tweenSettings, params) => {
       properties.push({
         name: p,
         offset: settings['offset'],
-        tweens: normalizePropertyTweens(params[p], tweenSettings)
+        tweens: normalizePropertyTweens(params[p], tweenSettings),
       })
     }
   }
@@ -276,18 +280,18 @@ const setTweenProgress = {
       t.style['will-change'] = 'opacity'
 
       // Batch style updates
-      return batchMutation(() => (t.style[p] = v), p, v)
+      return batchMutation(() => (t.style[p] = v))
     }
 
     // Hint already given to the browser, so batch the mutation
-    return batchMutation(() => (t.style[p] = v), p, v)
+    return batchMutation(() => (t.style[p] = v))
   },
-  attribute: (t, p, v) => batchMutation(() => t.setAttribute(p, v), p, v),
+  attribute: (t, p, v) => batchMutation(() => t.setAttribute(p, v)),
   object: (t, p, v) => (t[p] = v),
   transform: (t, p, v, transforms, id) => {
     if (!transforms[id]) transforms[id] = []
     transforms[id].push(`${p}(${v})`)
-  }
+  },
 }
 
 // Create an object of animation properties for an element with animation type
@@ -301,7 +305,7 @@ function createAnimation(animatable, prop) {
       animatable: animatable,
       tweens: tweens,
       duration: tweens[tweens.length - 1].end,
-      delay: tweens[0].delay
+      delay: tweens[0].delay,
     }
   }
 }
@@ -380,7 +384,7 @@ function createNewInstance(params) {
       animations,
       instanceSettings,
       tweenSettings
-    )
+    ),
   })
 }
 
@@ -465,9 +469,7 @@ function animated(params = {}) {
     // Batch updates
     if (transforms[id]) {
       return batchMutation(
-        () => (element.style[transformString] = transforms[id].join(' ')),
-        transformString,
-        transforms[id].join(' ')
+        () => (element.style[transformString] = transforms[id].join(' '))
       )
     }
   }
@@ -546,10 +548,7 @@ function animated(params = {}) {
       for (let id = 0; id < transformsLength; id++) {
         if (!transformString) {
           const t = 'transform'
-          transformString = batchRead(
-            () => getCSSValue(document.body, t),
-            'transform'
-          )
+          transformString = batchRead(() => getCSSValue(document.body, t))
             ? t
             : `-webkit-${t}`
         }
@@ -576,7 +575,7 @@ function animated(params = {}) {
       stop,
       restart,
       reverse,
-      reset
+      reset,
     } = instance
 
     // Methods to control execution of an animation
@@ -585,7 +584,7 @@ function animated(params = {}) {
       stop,
       restart,
       reverse,
-      reset
+      reset,
     }
 
     // Props received by a lifecyle hook
@@ -598,7 +597,7 @@ function animated(params = {}) {
       currentTime,
       began,
       paused,
-      controller
+      controller,
     }
 
     if (instance[cb]) instance[cb](finalProps)
