@@ -4,7 +4,7 @@ const available_transforms = ["translateX", "translateY", "translateZ", "rotate"
 
 describe('Available transforms', () => {
   it('should return an array of available transforms', () => {
-    const transforms = helpers.getTransforms()
+    const transforms = helpers.getAvailableTransforms()
 
     expect(Array.isArray(transforms)).toBe(true)
     expect(transforms).toEqual(available_transforms)

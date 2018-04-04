@@ -86,12 +86,12 @@ export class Animate extends React.Component {
   componentDidMount() {
     this.ctrl = animated({
       // Animate all the children
-      elements: this.elements,
+      element: this.elements,
       // Timeline model props
       ...this.props.timingProps,
       // Animation model props
       ...this.props.animationProps,
-      autoplay: this.props.autoplay,
+      autoplay: this.props.autoplay || true,
     })
 
     // Add lifecyle hooks to the animated instance

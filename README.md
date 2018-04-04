@@ -3,7 +3,7 @@
 > Create playback based animations in React
 
 <p align="center">
-  <img src="../media/logo.png" />
+  <img src="./media/Logo.png" />
 </p>
 
 ## Table of contents
@@ -92,7 +92,52 @@ yarn add animated-timeline
 
 ## Usage
 
-**Basic example**
+`animated-timeline` provides two ways to perform an animation:
+
+* A React component called [`Animate`]() which uses timeline and animation model properties and animate the children.
+
+* and a [`Timeline`]() function which accepts elements to be animated and animation properties.
+
+**Usage with `Animate` component**
+
+```js
+import React, { Component } from 'react'
+import { Animate, helpers } from 'animated-timeline'
+
+class App extends Component {
+  render() {
+    const styles = {
+      width: '20px',
+      height: '20px',
+      backgroundColor: 'pink',
+      marginTop: 30,
+    }
+
+    return (
+      <Animate
+        // Timing model props
+        timingProps={{
+          duration: 1000,
+        }}
+        // Animation model props
+        animationProps={{
+          rotate: {
+            value: helpers.transition({ from: 360, to: 180 }),
+          }
+        }}
+      >
+        <div style={styles} />
+      </Animate>
+    )
+  }
+}
+```
+
+<p align="center">
+  <img src="./media/Animate.gif" />
+</p>
+
+**Usage with `Timeline` function**
 
 ```js
 import React from 'react'
@@ -100,7 +145,7 @@ import { Timeline, helpers } from 'animated-timeline'
 
 const { transition } = helpers
 
-// Define properties for an animation timeline
+// Define timeline model properties
 const Animated = Timeline({
   direction: 'alternate',
   iterations: 1
@@ -108,7 +153,7 @@ const Animated = Timeline({
 
 class App extends React.Component {
   componentDidMount() {
-    // Define animation properties for the element you want to animate
+    // Define animation model properties
     Animated.value({
       elements: this.one,
       opacity: transition({ from: 0.2, to: 0.8 }),
@@ -131,10 +176,6 @@ class App extends React.Component {
 ```
 
 > **Note** - You can also use selectors like '.xyz' or '#xyz' along with refs or an array of elements like `[this.one, '.xyz', '#xyz']` and pass it to `elements` property.
-
-<p align='center'>
-  <img src='./media/basic.gif' />
-</p>
 
 ## Brief
 
@@ -216,44 +257,7 @@ See more examples for -
 
 * [**Using promise based APIs to control `initialisation` and `cancellation` events for an animation**](./examples/PromiseAPI.js)
 
-### Basic React component
-
-`animated-timeline` also provides a basic React component called `Animate` to animate elements. It's a thin wrapper around the `Timeline` function. Read more about it [here]().
-
-```js
-import React, { Component } from 'react'
-import { Animate, helpers } from 'animated-timeline'
-
-class App extends Component {
-  render() {
-    const styles = {
-      width: '20px',
-      height: '20px',
-      backgroundColor: 'pink',
-      marginTop: 30,
-    }
-
-    return (
-      <Animate
-        // Timing model props
-        timingProps={{
-          duration: 1000,
-        }}
-        // Animation model props
-        animationProps={{
-          rotate: {
-            value: helpers.transition({ from: 360, to: 180 }),
-          },
-        }}
-      >
-        <div style={styles} />
-      </Animate>
-    )
-  }
-}
-```
-
-<br/><br/>
+<br/>
 **If that sounds interesting**, [**then let's dive into the detailed documentation which covers example use cases, API reference, and some more examples**](./docs)
 
 ## Challenges / Todos

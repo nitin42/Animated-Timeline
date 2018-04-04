@@ -18,6 +18,7 @@ export class AnimateAdvance extends Component {
           }}
           animationProps={{
             translateX: helpers.transition({ from: 0, to: 200 }),
+            scale: helpers.transition({ from: 2, to: 4 }),
             rotate: helpers.transition({ from: '360deg', to: '180deg' }),
             opacity: helpers.transition({ from: 0.2, to: 0.8 }),
           }}
@@ -26,9 +27,7 @@ export class AnimateAdvance extends Component {
               this.state.value = progress
             }
           }}
-          shouldStart={this.state.start}
-          shouldStop={!this.state.start}
-          seekAnimation={this.state.value}
+          seekAnimation={({ duration }) => duration - this.state.value * 20}
         >
           <div
             style={boxStyles}

@@ -33,7 +33,7 @@ export const getDefaultInstanceParams = (): defaultInstanceParams => ({
 
   iterations: 1,
   direction: 'normal',
-  autoplay: true,
+  autoplay: false,
   offset: 0
 })
 

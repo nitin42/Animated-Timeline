@@ -6,15 +6,15 @@ import type { AnimationEngine } from '../types'
 type moveArgs = number | Function
 
 /**
- * Creates a function 'move' that moves an object throughout its timeline by changing its time value or progress value
+ * Creates a function that moves/changes an animation position along its timeline.
  *
- * const move = createMover(Animated: AnimationInstance)
+ * const seek = createMover(Animated: AnimationInstance)
  *
  * With a number value for animation time:
- * move(120)
+ * seek(120)
  *
  * With a callback function that returns an integer:
- * move(({ progress }) => progress * 10)
+ * seek(({ progress }) => progress * 10)
  */
 export const createMover = (instance: AnimationEngine): Function => {
   invariant(

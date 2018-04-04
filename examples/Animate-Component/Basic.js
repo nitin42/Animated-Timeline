@@ -6,24 +6,29 @@ import { boxStyles } from '../styles'
 
 export class AnimateBasic extends Component {
   render() {
+    const styles = {
+      width: '20px',
+      height: '20px',
+      backgroundColor: 'pink',
+      marginTop: 30,
+    }
+
     return (
-      <div>
+      <div style={{ margin: '0 auto', width: '50%'}} >
         <Animate
+          // Timing model props
           timingProps={{
-            duration: 3000
+            duration: 1000,
+            iterations: Infinity
           }}
+          // Animation model props
           animationProps={{
-            translateX: helpers.transition({ from: 0, to: 200 }),
             rotate: {
               value: helpers.transition({ from: 360, to: 180 }),
-            },
-            backgroundColor: helpers.transition({
-              from: '#f48c42',
-              to: '#844462'
-            }),
+            }
           }}
         >
-          <div style={boxStyles} />
+          <div style={styles} />
         </Animate>
       </div>
     )

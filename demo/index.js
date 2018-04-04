@@ -3,24 +3,30 @@ import { render } from 'react-dom'
 
 import { boxStyles } from '../examples/styles'
 
-import { Basic } from '../examples/Basic'
-import { Sequence } from '../examples/Sequence'
-import { Multiple } from '../examples/MultipleInstance'
-import { KeyframeExample } from '../examples/Keyframes'
-import { Lifecycle } from '../examples/Lifecycle'
-import { Mover } from '../examples/Mover'
-import { PromiseAPI } from '../examples/PromiseAPI'
-import { Timing } from '../examples/Timing'
-import { Spring } from '../examples/Spring'
-
 import { AnimateBasic } from '../examples/Animate-Component/Basic'
 import { AnimateAdvance } from '../examples/Animate-Component/Advance'
+
+import { BasicTimeline } from '../examples/Timeline/basic'
+import { SequenceTimeline } from '../examples/Timeline/sequence'
+import { Timing } from '../examples/Timeline/timing'
+
+import { KeyframesExample } from '../examples/Keyframes'
+
+import { SeekBasic } from '../examples/Seeking/basic'
+
+import { Lifecycle } from '../examples/Lifecycle'
+
+import { PromiseAPI } from '../examples/Promise'
+
+import { ChangeSpeed } from '../examples/Extra/speed'
+
+import { Finish } from '../examples/Extra/Finish'
 
 class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <PromiseAPI />
+        <Finish />
       </React.Fragment>
     )
   }

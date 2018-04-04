@@ -6,7 +6,7 @@ type easing = string
 
 type easingNames = Array<easing>
 
-export const getEasings = (): easingNames => {
+export const getAvailableEasings = (): easingNames => {
   const names = []
 
   Object.keys(easings).forEach((easing: easing) => names.push(easing))

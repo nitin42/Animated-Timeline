@@ -20,7 +20,8 @@
  * 3. APIs for getting information about active instances in an animation using getAnimation()
  * 4. Declarative API for Timeline component for React
  * 5. Promise based API for oncancel event
- *
+ * 6. Finish the animation immediately
+ * 7. Springs ❤️
  */
 
 import fastdom from 'fastdom'
@@ -74,6 +75,9 @@ import {
 } from './batchMutations'
 
 let transformString
+
+// oncancel promise flag
+let cancelled = false
 
 const minMaxValue = (val, min, max) => Math.min(Math.max(val, min), max)
 
@@ -339,6 +343,7 @@ function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
   }
 }
 
+// TODO
 const hasLifecycleHook = params => {
   const hooks = ['onStart', 'onUpdate', 'tick', 'onComplete']
 
@@ -365,7 +370,7 @@ function createNewInstance(params) {
   )
   const tweenSettings = replaceObjectProps(getDefaultTweensParams(), params)
 
-  const animatables = getAnimatables(params.elements)
+  const animatables = getAnimatables(params.element || params.multipleEl)
 
   const properties = getProperties(instanceSettings, tweenSettings, params)
   const animations = getAnimations(animatables, properties)
@@ -673,9 +678,10 @@ function animated(params = {}) {
           registerLifecycleHook('onComplete')
 
           if ('Promise' in window) {
-            // Resolve the promise
-            res({ msg: 'Animation completed!' })
-
+            // Resolve the promise only if haven't cancelled the animation
+            if (!cancelled) {
+              res({ msg: 'Animation completed!' })
+            }
             promise = createPromise()
           }
         }
@@ -687,7 +693,6 @@ function animated(params = {}) {
   instance.reset = function() {
     const direction = instance.direction
     const loops = instance.iterations
-    // console.log(loops);
     instance.currentTime = 0
     instance.progress = 0
     instance.paused = true
@@ -719,6 +724,20 @@ function animated(params = {}) {
     setInstanceProgress(engineTime)
   }
 
+  // Default speed
+  instance.speed = 1
+
+  instance.setSpeed = (speed) => {
+    invariant(
+      typeof speed === 'number' || typeof speed === 'string',
+      `setSpeed() expected a number or string value for speed but instead got ${typeof speed}.`
+    )
+
+    // Update both the coefficients (because a user can define params.speed, so we overwrite it.)
+    params.speed = speed
+    instance.speed = speed
+  }
+
   instance.seek = function(time) {
     setInstanceProgress(adjustTime(time))
   }
@@ -731,7 +750,6 @@ function animated(params = {}) {
   }
 
   instance.start = function() {
-    // Already running
     if (!instance.paused) return
     instance.paused = false
     startTime = 0
@@ -762,22 +780,19 @@ function animated(params = {}) {
     return []
   }
 
+  instance.finish = () => {
+    instance.completed = true
+    instance.paused = true
+    instance.currentTime = 0
+    instance.duration = 1000
+    instance.progress = instance.direction === 'normal' ? 100 : 0
+    instance.remaining = 0
+    instance.reversed = instance.direction === 'normal' ? false : true
+  }
+
   // Promise based APIs
 
   instance.onfinish = promise
-
-  function removeNodes(a, elements, animations, res) {
-    if (arrayContains(elements, animations[a].animatable.target)) {
-      const node = animations[a].animatable.target
-      animations.splice(a, 1)
-      if (!animations.length) {
-        instance.paused = true
-        if ('Promise' in window) {
-          res({ node: node, msg: 'Removed node from the timeline' })
-        }
-      }
-    }
-  }
 
   instance.oncancel = elements => {
     // Promise status
@@ -790,6 +805,19 @@ function animated(params = {}) {
     let prom = createPromise()
 
     const elementsArray = parseElements(elements)
+
+    function removeNodes(a, elements, animations, res) {
+      if (arrayContains(elements, animations[a].animatable.target)) {
+        const node = animations[a].animatable.target
+        animations.splice(a, 1)
+        if (!animations.length) {
+          instance.paused = true
+          // This ensures that the onfinish promise is not resolved if the nodes are removed
+          if (!cancelled) cancelled = true
+          res({ element: node, msg: 'Removed element from the timeline' })
+        }
+      }
+    }
 
     for (let i = activeInstances.length; i--; ) {
       const instance = activeInstances[i]
@@ -829,7 +857,7 @@ function createTimeline(params) {
   let tl = animated(params)
   tl.stop()
   tl.duration = 0
-  tl.value = function(instancesParams) {
+  tl.animate = function(instancesParams) {
     tl.children.forEach(i => {
       i.began = true
       i.completed = true
@@ -865,6 +893,6 @@ function createTimeline(params) {
   return tl
 }
 
-const getTransforms = () => validTransforms
+const getAvailableTransforms = () => validTransforms
 
-export { animated, createTimeline, getTransforms }
+export { animated, createTimeline, getAvailableTransforms }

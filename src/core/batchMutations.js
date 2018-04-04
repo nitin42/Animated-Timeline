@@ -26,7 +26,7 @@ export const batchRead = reads => {
   return writeId
 }
 
-// In case we don't have the current node on which the mutations will be applied, catch the exceptions.
+// In case we don't have the current node on which the mutations were applied, catch the exceptions.
 export const exceptions = () => {
   fastdom.catch = error => {
     console.error(error)
