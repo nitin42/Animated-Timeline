@@ -21,10 +21,9 @@
  * 4. Declarative API for Timeline component for React
  * 5. Promise based API for oncancel event
  * 6. Finish the animation immediately
- * 7. Springs ❤️
+ * 7. Spring based animations
  */
 
-import fastdom from 'fastdom'
 import invariant from 'invariant'
 import {
   isArray,
