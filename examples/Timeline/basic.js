@@ -6,7 +6,7 @@ import { Timeline, helpers } from '../../src'
 
 const timeline = Timeline({
   speed: 1,
-  iterations: Infinity,
+  iterations: 1,
   direction: 'alternate',
   easing: 'easeInOutSine',
 })

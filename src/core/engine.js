@@ -82,7 +82,6 @@ const minMaxValue = (val, min, max) => Math.min(Math.max(val, min), max)
 
 const log = args => console.log(args)
 
-// Check if the prop value is a function
 const isFunctionValue = (val, prop) => {
   invariant(
     typeof val !== 'function',
@@ -91,38 +90,31 @@ const isFunctionValue = (val, prop) => {
   return val
 }
 
-// Get the CSS property value (opacity, backgroundColor, ..., etc)
 export const getCSSValue = (el, prop) => {
   if (prop in el.style) {
     return getComputedStyle(el).getPropertyValue(stringToHyphens(prop)) || '0'
   }
 }
 
-// Get the animation type (transform, css or attribute)
 export const getAnimationType = (el, prop) => {
-  // Check if the prop is a valid transform name
   if (isDOM(el) && arrayContains(validTransforms, prop)) return 'transform'
-  // Check if its a valid attribute for a DOM node
   if (isDOM(el) && (el.getAttribute(prop) || (isSVG(el) && el[prop])))
     return 'attribute'
-  // Check if the prop returns a valid CSS transform value
   if (isDOM(el) && (prop !== 'transform' && getCSSValue(el, prop))) return 'css'
-  // { value: '', duration: 2000 }
   if (el[prop] != null) return 'object'
 }
 
-// Get the animation value for the element
-export const getOriginalTargetValue = (target, propName) => {
-  switch (getAnimationType(target, propName)) {
+export const getOriginalelementValue = (element, propName) => {
+  switch (getAnimationType(element, propName)) {
     case 'transform':
-      return getTransformValue(target, propName)
+      return getTransformValue(element, propName)
     case 'css':
-      return getCSSValue(target, propName)
+      return getCSSValue(element, propName)
     case 'attribute':
-      return target.getAttribute(propName)
+      return element.getAttribute(propName)
   }
 
-  return target[propName] || 0
+  return element[propName] || 0
 }
 
 // Validates and returns the value like 20px, 360deg, 0.4
@@ -167,7 +159,7 @@ export const parseElements = elements => {
 export const getAnimatables = elements => {
   const parsed = parseElements(elements)
   return parsed.map((t, i) => {
-    return { target: t, id: i, total: parsed.length }
+    return { element: t, id: i, total: parsed.length }
   })
 }
 
@@ -193,7 +185,7 @@ const normalizePropertyTweens = (prop, tweenSettings) => {
       // Default delay value should be applied only on the first tween
       const delay = !i ? tweenSettings.delay : 0
       // Use path object as a tween value
-      let obj = isObject(v) && !isPath(v) ? v : { value: v }
+      let obj = isObject(v) ? v : { value: v }
       // Set default delay value
       if (isUnd(obj.delay)) obj.delay = delay
       return obj
@@ -208,7 +200,7 @@ const getProperties = (instanceSettings, tweenSettings, params) => {
   // Merge instance params and tween params
   const settings = mergeObjects(instanceSettings, tweenSettings)
   for (let p in params) {
-    if (!settings.hasOwnProperty(p) && p !== 'elements') {
+    if (!settings.hasOwnProperty(p) && (p !== 'element' || p !== 'multipleEl')) {
       properties.push({
         name: p,
         offset: settings['offset'],
@@ -249,7 +241,7 @@ const normalizeTweens = (prop, animatable) => {
     let tween = normalizeTweenValues(t, animatable)
     // This may be transform value like 360deg or from to based animation values like [1, 2]
     const tweenValue = tween.value
-    const originalValue = getOriginalTargetValue(animatable.target, prop.name)
+    const originalValue = getOriginalelementValue(animatable.element, prop.name)
     const previousValue = previousTween
       ? previousTween.to.original
       : originalValue
@@ -265,7 +257,6 @@ const normalizeTweens = (prop, animatable) => {
     tween.end = tween.start + tween.delay + tween.duration
     tween.easing = normalizeEasing(tween.easing)
     tween.elasticity = (1000 - minMaxValue(tween.elasticity, 1, 999)) / 1000
-    tween.isPath = isPath(tweenValue)
     tween.isColor = isCol(tween.from.original)
     if (tween.isColor) tween.round = 1
     previousTween = tween
@@ -274,6 +265,7 @@ const normalizeTweens = (prop, animatable) => {
 }
 
 // Apply the animation properties throughout the tween progress
+// TODO
 const setTweenProgress = {
   css: (t, p, v) => {
     if (p === 'opacity' && t.style['will-change'] !== 'opacity') {
@@ -299,7 +291,7 @@ const setTweenProgress = {
 
 // Create an object of animation properties for an element with animation type
 function createAnimation(animatable, prop) {
-  const animType = getAnimationType(animatable.target, prop.name)
+  const animType = getAnimationType(animatable.element, prop.name)
   if (animType) {
     const tweens = normalizeTweens(prop, animatable)
     return {
@@ -342,18 +334,16 @@ function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
   }
 }
 
-// TODO
 const hasLifecycleHook = params => {
   const hooks = ['onStart', 'onUpdate', 'tick', 'onComplete']
 
-  const errorMsg =
-    "Use 'createLifecycleComponent()' method to create and use animation lifecyle. Lifecycle hooks are instance methods and are not animatable properties."
+  const errorMsg = 'Lifecycle hook cannot be passed as a parameter to Timeline function. They are accessible only via the timeline instance.'
 
   hooks.forEach(hook => {
     if (params.hasOwnProperty(hook)) {
       delete params[hook]
 
-      throw new Error(errorMsg)
+      console.error(errorMsg)
     }
   })
 }
@@ -455,8 +445,9 @@ function animated(params = {}) {
   }
 
   // Batch style mutations
+  // TODO
   function batchStyleUpdates(instance, id, transforms, transformString) {
-    let element = instance.animatables[id].target
+    let element = instance.animatables[id].element
 
     if (element.style['will-change'] === 'opacity') {
       element.style['will-change'] = element.style['will-change'].concat(
@@ -505,9 +496,8 @@ function animated(params = {}) {
         let value
         const toNumber = tween.to.numbers[n]
         const fromNumber = tween.from.numbers[n]
-        if (!tween.isPath) {
-          value = fromNumber + eased * (toNumber - fromNumber)
-        }
+
+        value = fromNumber + eased * (toNumber - fromNumber)
 
         if (round) {
           if (!(tween.isColor && n > 2)) {
@@ -537,7 +527,7 @@ function animated(params = {}) {
       }
 
       setTweenProgress[anim.type](
-        animatable.target,
+        animatable.element,
         anim.property,
         progress,
         transforms,
@@ -806,8 +796,8 @@ function animated(params = {}) {
     const elementsArray = parseElements(elements)
 
     function removeNodes(a, elements, animations, res) {
-      if (arrayContains(elements, animations[a].animatable.target)) {
-        const node = animations[a].animatable.target
+      if (arrayContains(elements, animations[a].animatable.element)) {
+        const node = animations[a].animatable.element
         animations.splice(a, 1)
         if (!animations.length) {
           instance.paused = true
@@ -848,7 +838,7 @@ function animated(params = {}) {
 
 const removeHints = instances => {
   instances.forEach(instance => {
-    instance.target.style['will-change'] = ''
+    instance.element.style['will-change'] = ''
   })
 }
 
@@ -866,7 +856,8 @@ function createTimeline(params) {
         instanceParams,
         replaceObjectProps(getDefaultTweensParams(), params || {})
       )
-      insParams.elements = insParams.elements || params.elements
+      // TODO: multipleEl ?
+      insParams.element = insParams.element || params.element
       const tlDuration = tl.duration
       const insoffset = insParams.offset
       insParams.autoplay = false
