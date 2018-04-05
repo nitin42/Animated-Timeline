@@ -1,3 +1,5 @@
+**WORK IN PROGRESS**
+
 # Animated Timeline
 
 > Create playback based animations in React
