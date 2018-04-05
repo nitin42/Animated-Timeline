@@ -16,13 +16,13 @@ export class ChangeSpeed extends React.Component {
 
   componentDidMount() {
     timeline.animate({
-      element: '#one',
+      element: '#speed-one',
       scale: helpers.transition({
         from: 2,
         to: 1
       })
     }).animate({
-      element: '#two',
+      element: '#speed-two',
       rotate: '360deg',
       offset: helpers.startBefore(1200)
     }).start()
@@ -38,8 +38,8 @@ export class ChangeSpeed extends React.Component {
   render() {
     return (
       <div>
-        <div id='one' style={boxStyles} />
-        <div id='two' style={boxStyles} />
+        <div id='speed-one' style={boxStyles} />
+        <div id='speed-two' style={boxStyles} />
       </div>
     )
   }

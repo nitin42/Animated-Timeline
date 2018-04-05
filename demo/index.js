@@ -26,7 +26,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Finish />
+        <AnimateBasic />
       </React.Fragment>
     )
   }

@@ -18,7 +18,7 @@ export class SeekBasic extends React.Component {
 
   componentDidMount() {
     timeline.animate({
-      element: '#one',
+      element: this.one,
       scale: helpers.transition({
         from: 4,
         to: 2
@@ -42,7 +42,7 @@ export class SeekBasic extends React.Component {
   render() {
     return (
       <div>
-        <div id='one' style={boxStyles} />
+        <div ref={one => this.one = one} style={boxStyles} />
         <div style={{ marginTop: '40'}}>
           <input type="range" min="0" max="100" value={this.state.value} onChange={this.handleChange} />
         </div>

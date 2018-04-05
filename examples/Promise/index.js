@@ -15,7 +15,7 @@ const timeline = Timeline({
 export class PromiseAPI extends React.Component {
   componentDidMount() {
     timeline.animate({
-      element: '#one',
+      element: this.one,
       scale: helpers.transition({
         from: 2,
         to: 1
@@ -29,7 +29,7 @@ export class PromiseAPI extends React.Component {
 
   render() {
     return (
-      <div id='one' style={boxStyles} onClick={this.cancelAnimation}/>
+      <div ref={one => this.one = one} style={boxStyles} onClick={this.cancelAnimation}/>
     )
   }
 }
