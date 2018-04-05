@@ -264,26 +264,18 @@ const normalizeTweens = (prop, animatable) => {
   })
 }
 
-// Apply the animation properties throughout the tween progress
-// TODO
 const setTweenProgress = {
-  css: (t, p, v) => {
-    if (p === 'opacity' && t.style['will-change'] !== 'opacity') {
-      // TODO: At this point, we may override the 'will-change' property which was set to 'transform' earlier. Change this!
-      // Though, this isn't a concern for memory consumption as it just overrides the content
-
-      t.style['will-change'] = 'opacity'
-
-      // Batch style updates
-      return batchMutation(() => (t.style[p] = v))
+  css: (el, p, v) => {
+    if (p === 'opacity' && el.style['will-change'] !== 'opacity') {
+      el.style['will-change'] = 'opacity'
+      return batchMutation(() => (el.style[p] = v))
     }
 
-    // Hint already given to the browser, so batch the mutation
     return batchMutation(() => (t.style[p] = v))
   },
-  attribute: (t, p, v) => batchMutation(() => t.setAttribute(p, v)),
-  object: (t, p, v) => (t[p] = v),
-  transform: (t, p, v, transforms, id) => {
+  attribute: (el, p, v) => batchMutation(() => el.setAttribute(p, v)),
+  object: (el, p, v) => (el[p] = v),
+  transform: (el, p, v, transforms, id) => {
     if (!transforms[id]) transforms[id] = []
     transforms[id].push(`${p}(${v})`)
   },
@@ -444,27 +436,24 @@ function animated(params = {}) {
     }
   }
 
-  // Batch style mutations
-  // TODO
   function batchStyleUpdates(instance, id, transforms, transformString) {
-    let element = instance.animatables[id].element
+    let el = instance.animatables[id].element
 
-    if (element.style['will-change'] === 'opacity') {
-      element.style['will-change'] = element.style['will-change'].concat(
+    if (el.style['will-change'] === 'opacity') {
+      el.style['will-change'] = el.style['will-change'].concat(
         ', transform'
       )
     } else if (
-      element.style['will-change'] === 'opacity, transform' ||
-      element.style['will-change'] === 'transform'
+      el.style['will-change'] === 'opacity, transform' ||
+      el.style['will-change'] === 'transform'
     ) {
     } else {
-      element.style['will-change'] = 'transform'
+      el.style['will-change'] = 'transform'
     }
 
-    // Batch updates
     if (transforms[id]) {
       return batchMutation(
-        () => (element.style[transformString] = transforms[id].join(' '))
+        () => (el.style[transformString] = transforms[id].join(' '))
       )
     }
   }
