@@ -15,13 +15,14 @@
  * Additions -
  *
  * 1. Style reads and writes are now batched so as to avoid layout calc. in each frame ✅
- * 2. Use 'will-change' prop to let the browser know that a new layer has to be created for a transform ✅
+ * 2. Timing APIs
+ * 3. Use 'will-change' prop to let the browser know that a new layer has to be created for a transform ✅
       (don't use 'will-change' for all the properties so as to avoid memory consumption)
- * 3. APIs for getting information about active instances in an animation using getAnimation()
- * 4. Declarative API for Timeline component for React
- * 5. Promise based API for oncancel event
- * 6. Finish the animation immediately
- * 7. Spring based animations
+ * 4. APIs for getting information about active instances in an animation using getAnimation()
+ * 5. Declarative API for Timeline component for React
+ * 6. Promise based API for oncancel event
+ * 7. Now we can finish the animation immediately
+ * 8. Spring based animations
  */
 
 import invariant from 'invariant'
@@ -200,7 +201,10 @@ const getProperties = (instanceSettings, tweenSettings, params) => {
   // Merge instance params and tween params
   const settings = mergeObjects(instanceSettings, tweenSettings)
   for (let p in params) {
-    if (!settings.hasOwnProperty(p) && (p !== 'element' || p !== 'multipleEl')) {
+    if (
+      !settings.hasOwnProperty(p) &&
+      (p !== 'element' || p !== 'multipleEl')
+    ) {
       properties.push({
         name: p,
         offset: settings['offset'],
@@ -329,7 +333,8 @@ function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
 const hasLifecycleHook = params => {
   const hooks = ['onStart', 'onUpdate', 'tick', 'onComplete']
 
-  const errorMsg = 'Lifecycle hook cannot be passed as a parameter to Timeline function. They are accessible only via the timeline instance.'
+  const errorMsg =
+    'Lifecycle hook cannot be passed as a parameter to Timeline function. They are accessible only via the timeline instance.'
 
   hooks.forEach(hook => {
     if (params.hasOwnProperty(hook)) {
@@ -440,9 +445,7 @@ function animated(params = {}) {
     let el = instance.animatables[id].element
 
     if (el.style['will-change'] === 'opacity') {
-      el.style['will-change'] = el.style['will-change'].concat(
-        ', transform'
-      )
+      el.style['will-change'] = el.style['will-change'].concat(', transform')
     } else if (
       el.style['will-change'] === 'opacity, transform' ||
       el.style['will-change'] === 'transform'
@@ -705,7 +708,7 @@ function animated(params = {}) {
   // Default speed
   instance.speed = 1
 
-  instance.setSpeed = (speed) => {
+  instance.setSpeed = speed => {
     invariant(
       typeof speed === 'number' || typeof speed === 'string',
       `setSpeed() expected a number or string value for speed but instead got ${typeof speed}.`
@@ -749,6 +752,89 @@ function animated(params = {}) {
     instance.start()
   }
 
+  // Timing APIs
+
+  // Traverse the children and set the property value
+  function traverseAndSet(element, property) {
+    if (instance.children.length !== 0) {
+      let value
+
+      const elementsArray = parseElements(element)
+
+      for (let j = instance.children.length; j--; ) {
+        const animations = instance.children[j].animations
+
+        for (let a = animations.length; a--; ) {
+          if (arrayContains(elementsArray, animations[a].animatable.element)) {
+            value = instance.children[j][property]
+          }
+        }
+      }
+
+      return value
+    }
+  }
+
+  instance.getAnimationTime = function() {
+    const iterations =
+      instance.iterations === Infinity ? 1 : Number(instance.iterations)
+
+    return instance.duration * iterations
+  }
+
+  instance.getAnimationTimeByElement = function(element) {
+    invariant(
+      typeof element === 'string' || typeof element === 'object',
+      `Received an invalid element type ${typeof element}.`
+    )
+
+    return traverseAndSet(element, 'duration')
+  }
+
+  instance.getCurrentTime = function() {
+    return Number(instance.currentTime).toFixed(2)
+  }
+
+  instance.getCurrentTimeByElement = function(element) {
+    invariant(
+      typeof element === 'string' || typeof element === 'object',
+      `Received an invalid element type ${typeof element}.`
+    )
+
+    let currentTime = traverseAndSet(element, 'currentTime')
+
+    return Number(currentTime).toFixed(2)
+  }
+
+  instance.getAnimationProgress = function() {
+    return Number(instance.progress).toFixed(2)
+  }
+
+  instance.getAnimationProgressByElement = function(element) {
+    invariant(
+      typeof element === 'string' || typeof element === 'object',
+      `Received an invalid element type ${typeof element}.`
+    )
+
+    let progress = traverseAndSet(element, 'progress')
+
+    return Number(progress).toFixed(2)
+  }
+
+  instance.getComputedTiming = function() {
+    return {
+      activeTime: instance.getAnimationTime() || null,
+      currentTime: Number(instance.getCurrentTime()) || null,
+      progress: Number(instance.getAnimationProgress()) || null,
+      currentIteration:
+        instance.iterations === Infinity
+          ? Infinity
+          : instance.iterations - instance.remaining === 0
+            ? 1
+            : instance.iterations - instance.remaining,
+    }
+  }
+
   // Mutate the active instances through this method
   instance.getAnimations = () => {
     if (activeInstances.length !== 0) {
@@ -773,14 +859,13 @@ function animated(params = {}) {
   instance.onfinish = promise
 
   instance.oncancel = elements => {
-    // Promise status
     let res = null
 
     function createPromise() {
       return window.Promise && new Promise(resolved => (res = resolved))
     }
 
-    let prom = createPromise()
+    let prm = createPromise()
 
     const elementsArray = parseElements(elements)
 
@@ -790,9 +875,9 @@ function animated(params = {}) {
         animations.splice(a, 1)
         if (!animations.length) {
           instance.paused = true
-          // This ensures that the onfinish promise is not resolved if the nodes are removed
+          // This ensures that the onfinish promise is not resolved if the elements are removed
           if (!cancelled) cancelled = true
-          res({ element: node, msg: 'Removed element from the timeline' })
+          res({ element: node, msg: 'Removed the element from the timeline' })
         }
       }
     }
@@ -815,7 +900,7 @@ function animated(params = {}) {
       }
     }
 
-    return prom
+    return prm
   }
 
   instance.reset()

@@ -7,7 +7,7 @@ import { Timeline, helpers } from '../../src'
 const timeline = Timeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
-  iterations: Infinity
+  iterations: 3,
 })
 
 export class Timing extends React.Component {
@@ -30,14 +30,15 @@ export class Timing extends React.Component {
       scale: helpers.transition({
         from: 2,
         to: 1
-      })
+      }),
+      offset: 2000
     }).start()
   }
 
   render() {
     return (
       <div>
-        <div ref={one => this.one = one} style={boxStyles}/>
+        <div ref={one => this.one = one} style={boxStyles} />
         <div ref={two => this.two = two} style={boxStyles} />
       </div>
     )

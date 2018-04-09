@@ -7,9 +7,8 @@ type attributes = Object
 
 type keyframes = Array<attributes>
 
-// Inspired from https://github.com/mattdesl/keyframes
+// API Inspired from https://github.com/mattdesl/keyframes
 export function Keyframes() {
-  // Store keyframes for each property
   this.frames = []
 }
 

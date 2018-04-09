@@ -10,8 +10,8 @@ import { createMover } from '../core/createMover'
  *
  * Features -
  *
- * 1. Animate children by defining timing and animation model props
- * 2. Control the animation execution at any progress
+ * 1. Animate elements by defining props for timing and animation model.
+ * 2. Control the animation execution at any progress on state updates
  * 3. Seek the animation to change the animation position along its timeline
  * 4. Lifecycle hooks, which gets executed during different phases of an animation
  *
@@ -19,14 +19,14 @@ import { createMover } from '../core/createMover'
  *
  * 1. Cannot perform sequence based animations and timing based animations
  * 2. Promise based APIs for oncancel and onfinish events are not available
- * 3. Controls for time-based execution are directly not available on the instance, and they are accessible only via flags
+ * 3. Controls for time-based execution are directly not available on the instance, and they are accessible only via flags or * lifecycle hooks.
  *
  */
 export class Animate extends React.Component {
   // Animated instance
   ctrl = null
 
-  // seek the animation
+  // seek the animation position
   seek = null
 
   // Stores all the elements which will be animated
@@ -44,6 +44,7 @@ export class Animate extends React.Component {
       onComplete: PropTypes.func,
     }),
 
+    // Can accepts a number or a callback which receives the timing props and should return a number
     seekAnimation: PropTypes.oneOfType([ PropTypes.number, PropTypes.func, PropTypes.string ]),
 
     stop: PropTypes.bool,

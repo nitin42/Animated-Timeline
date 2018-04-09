@@ -10,93 +10,61 @@ import {
 
 /**
 
-API for spring system:
-
 // Create a new spring with friction and tension
-const spring = createSpring({
+const spring = Spring({
   friction: 10,
-  tension: 2
+  tension: 4
 })
 
-// Initialise the spring with properties
-spring.init(
-  initial_value_of_the_property_being_animated,
-  target_or_selector_or_element_which_you_want_to_animate,
-  property to animate or a function that will perform the style updates,
-  options (mapValues, mapColors)
+// Animate the element with spring motion
+spring.animate(
+  element: '',
+  initValue: this.state.scale,
+  property: 'scale',
+  options: {
+    mapValues: {
+      from: [],
+      to: []
+    }
+  },
+  // This is called after 'setValue'. Use this callback to update styles using the newValue
+  // Use mapValues/interpolateColor helpers to convert the values and update the styles
+  onUpdate: (style, value, { mapValues, interpolateColor }) => {}
 )
 
-// Update the value
-spring.setValue(2)
-
-// Methods
+// Set new value and starts the motion
+spring.setValue()
 
 // Stop the motion
 spring.stop()
 
-// Start the motion (called when a new value is set using setValue)
-spring.start()
-
-// Reset the value
-spring.reset()
-
-// Restart from the previous value
-spring.restart()
-
-// Reverse the values
-spring.reverse()
-
-// Change the motion with values dynamically
+// Change the motion with an input value
 spring.seek()
 
-// Procedure:
+// Reset the motion
+spring.reset()
 
-1. Get the initial value for the property
+// Reverse the spring motion
+spring.reverse()
 
-2. Get the element (refs, classes or ids). It can be an array.
+// Restart the spring motion
+spring.restart()
 
-  * If its a single element, then check the type of the element (is it ref. or a selector)
-
-3. Get the property value.
-
-  * If its a string, then apply the transform for the that single property
-
-  * If its a function, then apply schedule an update using rAF for that function. The function will be receiving the value until  equlibirium is achieved.
-
-  * Get the options (mapValues or interpolateColor)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Start the motion from a value
+spring.startAt()
 */
-
 
 export function createSpring(friction, tension) {
   const springSystem = new _R.SpringSystem()
   let spring = springSystem.createSpring(friction, tension)
   let id = null
 
-  spring.init = (state, element, prop, options={
+  spring.animate = (element, state, prop, options={
     mapValues: {
       from: [],
       to: []
     }
-  }) => {
+  }, onUpdate) => {
     let ref = null
     let el = null
     let type = null
@@ -117,11 +85,6 @@ export function createSpring(friction, tension) {
     } else {
       throw new Error('Not a valid element.')
     }
-    // if (typeof prop !== 'function' && type !== 'css') {
-    //   el.style['transform'] = `${prop}(${state})`
-    // } else {
-    //   el.style[prop] = state
-    // }
 
     spring.addListener({
       onSpringUpdate: (spr) => {
@@ -140,14 +103,15 @@ export function createSpring(friction, tension) {
         }
 
         id = window.requestAnimationFrame(() => {
-          if (typeof prop !== 'function') {
-            if (type === 'transform') {
+          if (type === 'transform') {
+            onUpdate(el.style, val, { mapValues: _R.MathUtil.mapValueInRange, interpolateColor: _R.util.interpolateColor})
+            if (!el.style['transform'].includes(prop)) {
+              el.style['transform'] = el.style['transform'].concat(`${prop}(${val})`)
+            } else {
               el.style['transform'] = `${prop}(${val})`
-            } else if (type === 'css') {
-              el.style[prop] = `${val}`
             }
-          } else {
-            prop(val)
+          } else if (type === 'css') {
+            el.style[prop] = `${val}`
           }
         })
       }

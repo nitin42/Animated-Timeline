@@ -2,11 +2,10 @@ import React from 'react'
 
 import { boxStyles } from '../styles'
 
-import { Timeline, helpers } from '../../src'
+import { Timeline, helpers, Keyframes } from '../../src'
 
 const timeline = Timeline({
-  speed: 1,
-  iterations: 1,
+  iterations: 3,
   direction: 'alternate',
   easing: 'easeInOutSine',
 })
@@ -24,7 +23,10 @@ export class BasicTimeline extends React.Component {
 
   render() {
     return (
-      <div ref={one => this.one = one} style={boxStyles} />
+      <div ref={one => this.one = one} style={boxStyles} onClick={e => {
+        timeline.stop()
+        console.log(timeline.getCurrentTime())
+      }} />
     )
   }
 }
