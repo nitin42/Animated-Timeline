@@ -6,7 +6,7 @@ import { boxStyles } from './../styles'
 
 const spring = Spring({ friction: 4, tension: 2 })
 
-export class SpringSystem extends React.Component {
+export class SpringVelocity extends React.Component {
 	componentDidMount() {
 		spring.animate({
 			element: this.one,
@@ -26,10 +26,10 @@ export class SpringSystem extends React.Component {
 				<div
 					ref={one => (this.one = one)}
 					onMouseUp={() => {
-						spring.setValue(0)
+						spring.startWithVelocity({ value: 0, velocity: 20 })
           }}
 					onMouseDown={() => {
-						spring.setValue(1)
+						spring.startWithVelocity({ value: 1, velocity: 10 })
 					}}
 					style={boxStyles}
 				/>

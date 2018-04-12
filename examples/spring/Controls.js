@@ -6,7 +6,11 @@ import { boxStyles } from './../styles'
 
 const spring = Spring({ friction: 4, tension: 2 })
 
-export class SpringSystem extends React.Component {
+export class SpringControls extends React.Component {
+	state = {
+    value: 0
+	}
+
 	componentDidMount() {
 		spring.animate({
 			element: this.one,
@@ -18,7 +22,15 @@ export class SpringSystem extends React.Component {
 				},
 			}
 		})
-	}
+  }
+  
+  handleChange = e => {
+    const value = e.target.value
+
+    spring.seek(value)
+
+    this.setState({ value })
+  }
 
 	render() {
 		return (
@@ -33,6 +45,11 @@ export class SpringSystem extends React.Component {
 					}}
 					style={boxStyles}
 				/>
+        <input type="range" min="0" min="1" value={this.state.value} onChange={this.handleChange} />
+        <button onClick={() => spring.reset()}>Reset</button>
+        <button onClick={() => spring.start()}>Start</button>
+        <button onClick={() => spring.stop()}>Stop</button>
+        <button onClick={() => spring.reverse()}>Reverse</button>
 			</div>
 		)
 	}

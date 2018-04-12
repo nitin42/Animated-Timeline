@@ -13,7 +13,7 @@
  * https://github.com/flowtype/flow-typed
  */
 
-declare module "prop-types" {
+declare module 'prop-types' {
   declare module.exports: any;
 }
 
@@ -22,59 +22,59 @@ declare module "prop-types" {
  * require those files directly. Feel free to delete any files that aren't
  * needed.
  */
-declare module "prop-types/checkPropTypes" {
+declare module 'prop-types/checkPropTypes' {
   declare module.exports: any;
 }
 
-declare module "prop-types/factory" {
+declare module 'prop-types/factory' {
   declare module.exports: any;
 }
 
-declare module "prop-types/factoryWithThrowingShims" {
+declare module 'prop-types/factoryWithThrowingShims' {
   declare module.exports: any;
 }
 
-declare module "prop-types/factoryWithTypeCheckers" {
+declare module 'prop-types/factoryWithTypeCheckers' {
   declare module.exports: any;
 }
 
-declare module "prop-types/lib/ReactPropTypesSecret" {
+declare module 'prop-types/lib/ReactPropTypesSecret' {
   declare module.exports: any;
 }
 
-declare module "prop-types/prop-types" {
+declare module 'prop-types/prop-types' {
   declare module.exports: any;
 }
 
-declare module "prop-types/prop-types.min" {
+declare module 'prop-types/prop-types.min' {
   declare module.exports: any;
 }
 
 // Filename aliases
-declare module "prop-types/checkPropTypes.js" {
-  declare module.exports: $Exports<"prop-types/checkPropTypes">;
+declare module 'prop-types/checkPropTypes.js' {
+  declare module.exports: $Exports<'prop-types/checkPropTypes'>;
 }
-declare module "prop-types/factory.js" {
-  declare module.exports: $Exports<"prop-types/factory">;
+declare module 'prop-types/factory.js' {
+  declare module.exports: $Exports<'prop-types/factory'>;
 }
-declare module "prop-types/factoryWithThrowingShims.js" {
-  declare module.exports: $Exports<"prop-types/factoryWithThrowingShims">;
+declare module 'prop-types/factoryWithThrowingShims.js' {
+  declare module.exports: $Exports<'prop-types/factoryWithThrowingShims'>;
 }
-declare module "prop-types/factoryWithTypeCheckers.js" {
-  declare module.exports: $Exports<"prop-types/factoryWithTypeCheckers">;
+declare module 'prop-types/factoryWithTypeCheckers.js' {
+  declare module.exports: $Exports<'prop-types/factoryWithTypeCheckers'>;
 }
-declare module "prop-types/index" {
-  declare module.exports: $Exports<"prop-types">;
+declare module 'prop-types/index' {
+  declare module.exports: $Exports<'prop-types'>;
 }
-declare module "prop-types/index.js" {
-  declare module.exports: $Exports<"prop-types">;
+declare module 'prop-types/index.js' {
+  declare module.exports: $Exports<'prop-types'>;
 }
-declare module "prop-types/lib/ReactPropTypesSecret.js" {
-  declare module.exports: $Exports<"prop-types/lib/ReactPropTypesSecret">;
+declare module 'prop-types/lib/ReactPropTypesSecret.js' {
+  declare module.exports: $Exports<'prop-types/lib/ReactPropTypesSecret'>;
 }
-declare module "prop-types/prop-types.js" {
-  declare module.exports: $Exports<"prop-types/prop-types">;
+declare module 'prop-types/prop-types.js' {
+  declare module.exports: $Exports<'prop-types/prop-types'>;
 }
-declare module "prop-types/prop-types.min.js" {
-  declare module.exports: $Exports<"prop-types/prop-types.min">;
+declare module 'prop-types/prop-types.min.js' {
+  declare module.exports: $Exports<'prop-types/prop-types.min'>;
 }

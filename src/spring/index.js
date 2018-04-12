@@ -2,18 +2,32 @@
 
 TODO:
 
-4. Refactor the listeners
+1. Examples
 
-5. Flow types
+2. Refactor
 
-6. Make the implementation concrete
+3. Edge cases
+
+Features:
+
+1. Basic spring based animation
+
+2. Control for controlling the motion
+
+3. Promise based API for cancellation API
+
+4. Parallel animations
+
+5. Interpolations
+
+6. onRest and onStart callbacks for dynamic execution of the motion
 
 */
 
 import _R from 'rebound'
 import invariant from 'invariant'
 
-import { getAnimatables, getCSSValue, getAnimationType, getOriginalTargetValue } from '../core/engine'
+import { getAnimationType } from '../core/engine'
 import { noop } from '../utils/noop'
 
 const rAF = window.requestAnimationFrame
@@ -47,7 +61,7 @@ const applyInitialProps = (el, { property, value, type }) => {
 	}
 }
 
-export function SpringSys(friction = 10, tension = 5) {
+export function Spring({ friction = 10, tension = 5 }) {
 	invariant(
 		typeof friction === 'number',
 		`Expected 'friction' value to be a number but instead got a ${typeof friction}`
@@ -65,7 +79,7 @@ export function SpringSys(friction = 10, tension = 5) {
 	let id = null
 
 	spring.animate = ({
-		element = '',
+		element,
 		property,
 		options = {
 			mapValues: { from: [0, 1], to: [1, 1.5] },
@@ -82,14 +96,14 @@ export function SpringSys(friction = 10, tension = 5) {
 
 		invariant(
 			typeof interpolate === 'function',
-			`Expected onUpdate to be a function but instead got a ${typeof interpolate}.`
+			`Expected interpolate to be a function but instead got a ${typeof interpolate}.`
 		)
 
 		// Reference to the element which will be animated
-		let el = null
+		let el
 
 		// Property type (css or transform)
-		let type = null
+		let type
 
 		if (typeof element === 'object') {
 			// must be a 'ref'
@@ -116,17 +130,17 @@ export function SpringSys(friction = 10, tension = 5) {
 			onSpringActivate: spr => shouldInvokeCallback(spring.onStart, spr),
 			onSpringAtRest: spr => shouldInvokeCallback(spring.onRest, spr),
 			onSpringUpdate: spr => {
-				shouldInvokeCallback(spring.onUpdate, spr)
-
 				let val = spr.getCurrentValue()
 
 				if (!isColorProperty(property)) {
 					const { from, to } = options.mapValues
 
+					// Map the value for the animation property
 					val = mapValues(val, from[0], from[1], to[0], to[1])
 				} else if (isColorProperty(property)) {
 					const { colors, range } = options.interpolateColor
 
+					// Interpolate hex values with an input range
 					if (range && (Array.isArray(range) && range.length === 2)) {
 						val = interpolateColor(val, colors[0], colors[1], range[0], range[1])
 					} else {
@@ -140,18 +154,6 @@ export function SpringSys(friction = 10, tension = 5) {
 				} else if (property.includes('translate')) val = String(val).concat('px')
 
 				id = rAF(() => {
-					interpolate(
-						// Pass the style object
-						el.style,
-						// Values should be unitless
-						String(val).replace('deg', '') || String(val).replace('px', ''),
-						// Options to map values from one range to another (for numbers and hex codes)
-						{
-							mapValues: _R.MathUtil.mapValueInRange,
-							interpolateColor: _R.util.interpolateColor,
-						}
-					)
-
 					if (type === 'transform') {
 						if (!el.style['transform'].includes(property)) {
 							el.style['transform'] = el.style['transform'].concat(`${property}(${val})`)
@@ -161,6 +163,10 @@ export function SpringSys(friction = 10, tension = 5) {
 					} else if (type === 'css') {
 						el.style[property] = `${val}`
 					}
+					interpolate(el.style, String(val).replace('deg', '') || String(val).replace('px', ''), {
+						mapValues: _R.MathUtil.mapValueInRange,
+						interpolateColor: _R.util.interpolateColor,
+					})
 				})
 			},
 		})
@@ -172,7 +178,7 @@ export function SpringSys(friction = 10, tension = 5) {
 	// Set a new value
 	spring.setValue = spring.setEndValue
 
-	// Set a new value and velocity
+	// Start the motion with value and velocity
 	spring.startWithVelocity = ({ value, velocity }) => {
 		spring.setValue(value)
 		spring.setVelocity(velocity)
@@ -185,26 +191,16 @@ export function SpringSys(friction = 10, tension = 5) {
 	spring.stop = () => spring.setCurrentValue(spring.getCurrentValue())
 
 	// Reset the motion
-	spring.reset = () => {
-		spring.setCurrentValue(-1)
-	}
+	spring.reset = () => spring.setCurrentValue(-1)
 
 	// Reverse the motion
-	spring.reverse = () => {
-		spring.setValue(-spring.getCurrentValue())
-	}
+	spring.reverse = () => spring.setValue(-spring.getCurrentValue())
 
 	// Change the position of an element along with its motion
-	spring.seek = val => {
-		spring.setValue(val)
-	}
+	spring.seek = val => spring.setValue(val)
 
 	// Start the motion
-	spring.start = () => {
-		const value = spring.getEndValue() - spring.getCurrentValue()
-		
-		spring.setValue(value)
-	}
+	spring.start = () => spring.setValue(spring.getEndValue() - spring.getCurrentValue())
 
 	spring.infinite = (startValue, endValue, duration) => {
 		let id = null
@@ -219,7 +215,7 @@ export function SpringSys(friction = 10, tension = 5) {
 	}
 
 	spring.oncancel = () => {
-		let res = null
+		let res
 
 		function createPromise() {
 			return window.Promise && new Promise(resolve => (res = resolve))
@@ -227,7 +223,9 @@ export function SpringSys(friction = 10, tension = 5) {
 
 		const promise = createPromise()
 
+		// Exit the physics solver loop
 		spring.removeAllListeners()
+
 		window.cancelAnimationFrame(id)
 
 		res({ msg: 'Animation cancelled.' })

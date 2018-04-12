@@ -25,11 +25,23 @@ import { Finish } from '../examples/Extra/Finish'
 
 import { SpringSystem } from '../examples/spring/Spring'
 
+import { SpringInterpolate } from '../examples/spring/Interpolations'
+
+import { SpringCallback } from '../examples/spring/Callback'
+
+import { SpringControls } from '../examples/spring/Controls'
+
+import { SpringMultiple } from '../examples/spring/Multiple'
+
+import { SpringStart } from '../examples/spring/Start'
+
+import { SpringVelocity } from '../examples/spring/Velocity'
+
 class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <SpringSystem />
+        <SpringVelocity />
       </React.Fragment>
     )
   }

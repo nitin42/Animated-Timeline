@@ -6,7 +6,7 @@ import { boxStyles } from './../styles'
 
 const spring = Spring({ friction: 4, tension: 2 })
 
-export class SpringSystem extends React.Component {
+export class SpringMultiple extends React.Component {
 	componentDidMount() {
 		spring.animate({
 			element: this.one,
@@ -17,7 +17,16 @@ export class SpringSystem extends React.Component {
 					to: [1, 1.5],
 				},
 			}
-		})
+		}).animate({
+      element: this.two,
+      property: 'rotate',
+      options: {
+        mapValues: {
+          from: [0, 1],
+          to: [0, 180]
+        }
+      }
+    })
 	}
 
 	render() {
@@ -33,6 +42,7 @@ export class SpringSystem extends React.Component {
 					}}
 					style={boxStyles}
 				/>
+        <div ref={two => (this.two = two)} style={boxStyles} />
 			</div>
 		)
 	}
