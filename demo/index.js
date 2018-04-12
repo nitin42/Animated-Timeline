@@ -41,7 +41,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <SpringVelocity />
+        <SpringInterpolate />
       </React.Fragment>
     )
   }

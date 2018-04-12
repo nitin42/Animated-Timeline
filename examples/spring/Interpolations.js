@@ -9,7 +9,7 @@ const spring = Spring({ friction: 4, tension: 2 })
 export class SpringInterpolate extends React.Component {
 	state = {
 		rotate: 0,
-		backgroundColor: '#4a79c4',
+		backgroundColor: '#a8123a',
 	}
 
 	componentDidMount() {
@@ -24,8 +24,8 @@ export class SpringInterpolate extends React.Component {
 			},
 			interpolate: (style, value, { mapValues, interpolateColor }) => {
 				this.setState({
-					rotate: mapValues(value, 1, 1.5, 0, 80),
-					backgroundColor: interpolateColor(value, '#4a79c4', '#a8123a'),
+					rotate: mapValues(value, 1, 1.5, 0, 120),
+					backgroundColor: interpolateColor(value, '#4a79c4', '#a8123a', 20, 120),
 				})
 			},
 		})
@@ -37,10 +37,10 @@ export class SpringInterpolate extends React.Component {
 				<div
 					ref={one => (this.one = one)}
 					onMouseUp={() => {
-						spring.startWithVelocity({ value: 0, velocity: 2000 })
+						spring.setValueVelocity({ value: 0, velocity: 10 })
 					}}
 					onMouseDown={() => {
-						spring.startWithVelocity({ value: 1, velocity: 1200 })
+						spring.setValueVelocity({ value: 1, velocity: 20 })
 					}}
 					style={{
 						...boxStyles,
