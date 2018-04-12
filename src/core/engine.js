@@ -54,24 +54,24 @@ import {
   hslToRgba,
   colorToRgb,
   getRelativeValue,
-  getUnit,
+  getUnit
 } from '../utils/engineUtils'
 import { easings } from './easing'
 import { bezier } from './bezier'
 import {
   getDefaultTweensParams,
-  getDefaultInstanceParams,
+  getDefaultInstanceParams
 } from '../utils/defaults'
 import {
   getTransformUnit,
   getTransformValue,
-  validTransforms,
+  validTransforms
 } from './transforms'
 import {
   batchMutation,
   batchRead,
   exceptions,
-  emptyScheduledJobs,
+  emptyScheduledJobs
 } from './batchMutations'
 
 let transformString
@@ -139,7 +139,7 @@ const decomposeValue = (val, unit) => {
   return {
     original: value,
     numbers: value.match(rgx) ? value.match(rgx).map(Number) : [0],
-    strings: isString(val) || unit ? value.split(rgx) : [],
+    strings: isString(val) || unit ? value.split(rgx) : []
   }
 }
 
@@ -208,7 +208,7 @@ const getProperties = (instanceSettings, tweenSettings, params) => {
       properties.push({
         name: p,
         offset: settings['offset'],
-        tweens: normalizePropertyTweens(params[p], tweenSettings),
+        tweens: normalizePropertyTweens(params[p], tweenSettings)
       })
     }
   }
@@ -282,7 +282,7 @@ const setTweenProgress = {
   transform: (el, p, v, transforms, id) => {
     if (!transforms[id]) transforms[id] = []
     transforms[id].push(`${p}(${v})`)
-  },
+  }
 }
 
 // Create an object of animation properties for an element with animation type
@@ -296,7 +296,7 @@ function createAnimation(animatable, prop) {
       animatable: animatable,
       tweens: tweens,
       duration: tweens[tweens.length - 1].end,
-      delay: tweens[0].delay,
+      delay: tweens[0].delay
     }
   }
 }
@@ -375,7 +375,7 @@ function createNewInstance(params) {
       animations,
       instanceSettings,
       tweenSettings
-    ),
+    )
   })
 }
 
@@ -561,7 +561,7 @@ function animated(params = {}) {
       stop,
       restart,
       reverse,
-      reset,
+      reset
     } = instance
 
     // Methods to control execution of an animation
@@ -570,7 +570,7 @@ function animated(params = {}) {
       stop,
       restart,
       reverse,
-      reset,
+      reset
     }
 
     // Props received by a lifecyle hook
@@ -583,7 +583,7 @@ function animated(params = {}) {
       currentTime,
       began,
       paused,
-      controller,
+      controller
     }
 
     if (instance[cb]) instance[cb](finalProps)
@@ -831,7 +831,7 @@ function animated(params = {}) {
           ? Infinity
           : instance.iterations - instance.remaining === 0
             ? 1
-            : instance.iterations - instance.remaining,
+            : instance.iterations - instance.remaining
     }
   }
 

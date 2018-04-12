@@ -8,6 +8,7 @@
     "flow": "flow",
     "test": "./node_modules/.bin/jest",
     "test:watch": "./node_modules/.bin/jest --watchAll",
+    "precommit": "npm run format",
     "format": "find src -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
@@ -25,6 +26,7 @@
     "husky": "^0.14.3",
     "jest": "^22.4.2",
     "parcel-bundler": "^1.7.0",
+    "prettier": "^1.12.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-test-renderer": "^16.2.0"

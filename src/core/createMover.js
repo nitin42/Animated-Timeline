@@ -33,14 +33,16 @@ export const createMover = (instance: AnimationEngine): Function => {
         `Expected callback to be a function instead got a ${typeof callback}.`
       )
 
-      instance.seek(callback({
-        duration: instance.duration,
-        iterations: instance.iterations,
-        progress: instance.progress,
-        offset: instance.offset,
-        delay: instance.delay,
-        currentTime: instance.currentTime
-      }))
+      instance.seek(
+        callback({
+          duration: instance.duration,
+          iterations: instance.iterations,
+          progress: instance.progress,
+          offset: instance.offset,
+          delay: instance.delay,
+          currentTime: instance.currentTime
+        })
+      )
     }
   }
 

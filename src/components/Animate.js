@@ -41,11 +41,15 @@ export class Animate extends React.Component {
     lifecyle: PropTypes.shape({
       onUpdate: PropTypes.func,
       onStart: PropTypes.func,
-      onComplete: PropTypes.func,
+      onComplete: PropTypes.func
     }),
 
     // Can accepts a number or a callback which receives the timing props and should return a number
-    seekAnimation: PropTypes.oneOfType([ PropTypes.number, PropTypes.func, PropTypes.string ]),
+    seekAnimation: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.func,
+      PropTypes.string
+    ]),
 
     stop: PropTypes.bool,
     start: PropTypes.bool,
@@ -67,7 +71,7 @@ export class Animate extends React.Component {
       // Called when the animation has started
       onStart: noop,
       // Invoked when the animation is completed
-      onComplete: noop,
+      onComplete: noop
     },
 
     // Change the animation position along its timeline
@@ -92,7 +96,7 @@ export class Animate extends React.Component {
       ...this.props.timingProps,
       // Animation model props
       ...this.props.animationProps,
-      autoplay: this.props.autoplay || true,
+      autoplay: this.props.autoplay || true
     })
 
     // Add lifecyle hooks to the animated instance

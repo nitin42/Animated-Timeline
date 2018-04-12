@@ -10,7 +10,10 @@ type controlPoints = Array<number>
 
 // Creates a custome easing function using the bezier curve control points
 // https://github.com/gre/bezier-easing
-export function createEasingCurve(name: curveName, points: controlPoints): curveName {
+export function createEasingCurve(
+  name: curveName,
+  points: controlPoints
+): curveName {
   invariant(
     typeof name === 'string',
     `Expected easing curve name to be a string instead got a ${typeof name}.`
