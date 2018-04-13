@@ -31,11 +31,43 @@ import { batchMutation } from '../core/batchMutations'
 
 const rAF = window.requestAnimationFrame
 
-const isColorProperty = property =>
+const isColorProperty = (property) =>
   property.includes('Color') || property.includes('color')
 
-const isSkewOrRotate = property =>
+const isSkewOrRotate = (property) =>
   property.includes('rotate') || property.includes('skew')
+
+const withUnit = (value, unit) => {
+  value = String(value)
+  if (value.includes(unit)) return value
+  return value.concat(unit)
+}
+
+// Helpers for assigning units
+
+const deg = (value) => withUnit(value, 'deg')
+
+const px = (value) => withUnit(value, 'px')
+
+const em = (value) => withUnit(value, 'em')
+
+const rem = (value) => withUnit(value, 'rem')
+
+const rad = (value) => withUnit(value, 'rad')
+
+const grad = (value) => withUnit(value, 'grad')
+
+const turn = (value) => withUnit(value, 'turn')
+
+// Get the unit from value
+const parseValue = (value) => {
+  value = String(value)
+
+  const split = /([\+\-]?[0-9#\.]+)(%|px|em|rem|in|cm|mm|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(
+    value.replace(/\s/g, '')
+  )
+  if (split) return split
+}
 
 const shouldInvokeCallback = (callback, params) => {
   if (callback && typeof callback === 'function') callback(params)
@@ -45,26 +77,16 @@ const shouldInvokeCallback = (callback, params) => {
     )
 }
 
-const validateValue = (property, value) => {
-  // Color properties are validated and converted to RGB by `interpolateColor` option
-  if (isColorProperty(property)) return value
-  else if (isSkewOrRotate(property))
-    // TODO: Add conversion for degrees to radians and vice-versa
-    return String(value).concat('deg')
-  else return String(value).concat('px')
-}
-
-const applyInitialProps = (element, { property, value, type }) => {
-  const newValue = validateValue(property, value)
-
+const setInitialState = (element, { property, value, type }) => {
   if (type === 'transform') {
-    batchMutation(() => (element.style.transform = `${property}(${newValue})`))
+    // Saves us recalcs/sec
+    batchMutation(() => (element.style.transform = `${property}(${value})`))
   } else if (type === 'css') {
-    batchMutation(() => (element.style[property] = newValue))
+    batchMutation(() => (element.style[property] = value))
   }
 }
 
-const getCallbackProps = instance => ({
+const getCallbackProps = (instance) => ({
   currentValue: instance.getCurrentValue(),
   endValue: instance.getEndValue(),
   velocity: instance.getVelocity(),
@@ -94,7 +116,9 @@ export function Spring({ friction = 10, tension = 5 }) {
     element,
     property,
     options = {
-      mapValues: { from: [0, 1], to: [1, 1.5] },
+      // TODO: not sure if these are the right defaults !?
+      mapValues: { from: [0, 1], to: ['1px', '1.5px'] },
+      // TODO: not sure if these are the right defaults !?
       interpolateColor: { colors: ['#183a72', '#85c497'], range: [] }
     },
     interpolate = noop
@@ -137,7 +161,7 @@ export function Spring({ friction = 10, tension = 5 }) {
     }
 
     // Set the initial state of the animation property of the element we want to animate
-    applyInitialProps(el, {
+    setInitialState(el, {
       property,
       value: isColorProperty(property)
         ? options.interpolateColor.colors[0]
@@ -146,23 +170,34 @@ export function Spring({ friction = 10, tension = 5 }) {
     })
 
     spring.addListener({
-      onSpringActivate: spr =>
+      onSpringActivate: (spr) =>
         shouldInvokeCallback(spring.onStart, getCallbackProps(spr)),
-      onSpringAtRest: spr =>
+      onSpringAtRest: (spr) =>
         shouldInvokeCallback(spring.onRest, getCallbackProps(spr)),
-      onSpringUpdate: spr => {
+      onSpringUpdate: (spr) => {
         let val = spr.getCurrentValue()
 
         if (!isColorProperty(property)) {
+          // For transforms, layout and other props (but not color props)
           const { from, to } = options.mapValues
 
-          // Map the value for the animation property
-          val = mapValues(val, from[0], from[1], to[0], to[1])
+          const unit = parseValue(to[0])[2] || parseValue(to[1])[2] || ''
+
+          // Output ranges
+
+          const t1 = Number(parseValue(to[0])[1])
+
+          const t2 = Number(parseValue(to[1])[1])
+
+          // Map the values
+          val = String(mapValues(val, from[0], from[1], t1, t2)).concat(unit)
         } else if (isColorProperty(property)) {
+          // For color props only
           const { colors, range } = options.interpolateColor
 
           // Interpolate hex values with an input range
           if (range && (Array.isArray(range) && range.length === 2)) {
+            // Converted to RGB scale
             val = interpolateColor(
               val,
               colors[0],
@@ -176,18 +211,26 @@ export function Spring({ friction = 10, tension = 5 }) {
           }
         }
 
-        if (isSkewOrRotate(property)) {
-          val = String(val).concat('deg')
-        } else if (property.includes('translate'))
-          val = String(val).concat('px')
-
         id = rAF(() => {
+          // Interpolate callback should receive unitless values
+          // They can be changed afterwards (by adding units) using the options
           interpolate(
             el.style,
-            String(val).replace('deg', '') || String(val).replace('px', ''),
+            !isColorProperty(property)
+              ? Number(parseValue(String(val))[1])
+              : val,
             {
               mapValues: _R.MathUtil.mapValueInRange,
-              interpolateColor: _R.util.interpolateColor
+              interpolateColor: _R.util.interpolateColor,
+              radians: _R.util.radiansToDegrees,
+              degrees: _R.util.degreesToRadians,
+              px,
+              deg,
+              rad,
+              grad,
+              turn,
+              em,
+              rem
             }
           )
 
@@ -220,7 +263,7 @@ export function Spring({ friction = 10, tension = 5 }) {
   }
 
   // Start the animation with a value
-  spring.startAt = val => spring.setValue(val)
+  spring.startAt = (val) => spring.setValue(val)
 
   // Stop the animation
   spring.stop = () => spring.setCurrentValue(spring.getCurrentValue())
@@ -232,7 +275,7 @@ export function Spring({ friction = 10, tension = 5 }) {
   spring.reverse = () => spring.setValue(-spring.getCurrentValue())
 
   // Change the position of an element along with its motion
-  spring.seek = val => spring.setValue(val)
+  spring.seek = (val) => spring.setValue(val)
 
   // Start the animation
   spring.start = () =>
@@ -251,16 +294,22 @@ export function Spring({ friction = 10, tension = 5 }) {
     return id
   }
 
+  // This ensures that we don't cause a memory leak when the setState calls are batched inside the interpolations
+  // If we need to update the state inside the interpolation method, then this method MUST be called inside the componentWillUnmount() hook.
+  spring.unbatchUpdate = () => {
+    spring.removeAllListeners()
+    id && cancelAnimationFrame(id)
+  }
+
   spring.oncancel = () => {
     let res
 
     function createPromise() {
-      return window.Promise && new Promise(resolve => (res = resolve))
+      return window.Promise && new Promise((resolve) => (res = resolve))
     }
 
     const promise = createPromise()
 
-    // Exit the physics solver loop
     spring.removeAllListeners()
 
     window.cancelAnimationFrame(id)
