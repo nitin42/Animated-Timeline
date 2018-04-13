@@ -4,3 +4,5 @@ cache
 dist
 .cache
 yarn-error.log
+examples
+demo
