@@ -31,10 +31,10 @@ import { batchMutation } from '../core/batchMutations'
 
 const rAF = window.requestAnimationFrame
 
-const isColorProperty = (property) =>
+const isColorProperty = property =>
   property.includes('Color') || property.includes('color')
 
-const isSkewOrRotate = (property) =>
+const isSkewOrRotate = property =>
   property.includes('rotate') || property.includes('skew')
 
 const withUnit = (value, unit) => {
@@ -45,22 +45,22 @@ const withUnit = (value, unit) => {
 
 // Helpers for assigning units
 
-const deg = (value) => withUnit(value, 'deg')
+const deg = value => withUnit(value, 'deg')
 
-const px = (value) => withUnit(value, 'px')
+const px = value => withUnit(value, 'px')
 
-const em = (value) => withUnit(value, 'em')
+const em = value => withUnit(value, 'em')
 
-const rem = (value) => withUnit(value, 'rem')
+const rem = value => withUnit(value, 'rem')
 
-const rad = (value) => withUnit(value, 'rad')
+const rad = value => withUnit(value, 'rad')
 
-const grad = (value) => withUnit(value, 'grad')
+const grad = value => withUnit(value, 'grad')
 
-const turn = (value) => withUnit(value, 'turn')
+const turn = value => withUnit(value, 'turn')
 
 // Get the unit from value
-const parseValue = (value) => {
+const parseValue = value => {
   value = String(value)
 
   const split = /([\+\-]?[0-9#\.]+)(%|px|em|rem|in|cm|mm|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(
@@ -86,7 +86,7 @@ const setInitialState = (element, { property, value, type }) => {
   }
 }
 
-const getCallbackProps = (instance) => ({
+const getCallbackProps = instance => ({
   currentValue: instance.getCurrentValue(),
   endValue: instance.getEndValue(),
   velocity: instance.getVelocity(),
@@ -170,11 +170,11 @@ export function Spring({ friction = 10, tension = 5 }) {
     })
 
     spring.addListener({
-      onSpringActivate: (spr) =>
+      onSpringActivate: spr =>
         shouldInvokeCallback(spring.onStart, getCallbackProps(spr)),
-      onSpringAtRest: (spr) =>
+      onSpringAtRest: spr =>
         shouldInvokeCallback(spring.onRest, getCallbackProps(spr)),
-      onSpringUpdate: (spr) => {
+      onSpringUpdate: spr => {
         let val = spr.getCurrentValue()
 
         if (!isColorProperty(property)) {
@@ -263,7 +263,7 @@ export function Spring({ friction = 10, tension = 5 }) {
   }
 
   // Start the animation with a value
-  spring.startAt = (val) => spring.setValue(val)
+  spring.startAt = val => spring.setValue(val)
 
   // Stop the animation
   spring.stop = () => spring.setCurrentValue(spring.getCurrentValue())
@@ -275,7 +275,7 @@ export function Spring({ friction = 10, tension = 5 }) {
   spring.reverse = () => spring.setValue(-spring.getCurrentValue())
 
   // Change the position of an element along with its motion
-  spring.seek = (val) => spring.setValue(val)
+  spring.seek = val => spring.setValue(val)
 
   // Start the animation
   spring.start = () =>
@@ -305,7 +305,7 @@ export function Spring({ friction = 10, tension = 5 }) {
     let res
 
     function createPromise() {
-      return window.Promise && new Promise((resolve) => (res = resolve))
+      return window.Promise && new Promise(resolve => (res = resolve))
     }
 
     const promise = createPromise()
