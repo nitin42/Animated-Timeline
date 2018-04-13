@@ -10,7 +10,6 @@ let writeId = null
 // Style reads
 let readId = null
 
-
 // Scheduled jobs are stored in the queues which are emptied at the turn of next frame using rAF. This helps in reducing recalcs/sec and speed up the animation performance.
 
 // Batch style mutations
