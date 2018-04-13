@@ -146,7 +146,7 @@ export const colorToRgb = val => {
 // Get the unit from value
 export const getUnit = val => {
   const split = /([\+\-]?[0-9#\.]+)(%|px|em|rem|in|cm|mm|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(
-    val
+    val.replace(/\s/g, '')
   )
   if (split) return split[2]
 }
