@@ -13,8 +13,8 @@ export class SpringVelocity extends React.Component {
 			property: 'scale',
 			options: {
 				mapValues: {
-					from: [0, 1],
-					to: [1, 1.5],
+					input: [0, 1],
+					output: [1, 1.5],
 				},
 			}
 		})
@@ -26,10 +26,10 @@ export class SpringVelocity extends React.Component {
 				<div
 					ref={one => (this.one = one)}
 					onMouseUp={() => {
-						spring.startWithVelocity({ value: 0, velocity: 20 })
+						spring.setValueVelocity({ value: 0, velocity: 20 })
           }}
 					onMouseDown={() => {
-						spring.startWithVelocity({ value: 1, velocity: 10 })
+						spring.setValueVelocity({ value: 1, velocity: 30 })
 					}}
 					style={boxStyles}
 				/>

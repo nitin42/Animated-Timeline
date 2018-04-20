@@ -13,8 +13,8 @@ export class SpringStart extends React.Component {
 			property: 'scale',
 			options: {
 				mapValues: {
-					from: [0, 1],
-					to: [1, 1.5],
+					input: [0, 1],
+					output: [1, 1.5],
 				},
 			}
 		}).startAt(1)

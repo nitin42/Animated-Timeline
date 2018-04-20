@@ -13,15 +13,14 @@ export class SpringCallback extends React.Component {
 			property: 'scale',
 			options: {
 				mapValues: {
-					from: [0, 1],
-					to: [1, 1.5],
+					input: [0, 1],
+					output: [1, 1.5],
 				},
 			}
     })
     
     spring.onRest = (inst) => {
-      // Run infinite times
-      this.id = spring.infinite(0, 1, 2000)
+      spring.infinite(0, 1, 2000)
 		}
 		
 		spring.onStart = (inst) => {
@@ -30,7 +29,7 @@ export class SpringCallback extends React.Component {
   }
   
   componentWillUnmount() {
-    this.id && clearTimeout(this.id)
+    spring.remove()
   }
 
 	render() {

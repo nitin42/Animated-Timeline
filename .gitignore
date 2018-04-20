@@ -6,3 +6,4 @@ dist
 yarn-error.log
 examples
 demo
+.DS_Store

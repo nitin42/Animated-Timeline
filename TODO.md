@@ -1,9 +1,19 @@
 # TODO
 
-- [ ] Layout animations
+* [ ] Layout animations
 
-- [ ] SVG
+* [ ] Packages
 
-- [ ] Motion path API for React component
+* [ ] Examples
 
-- [ ] Interrupt child instances (Priority 1)
+* [ ] Documentation
+
+* [ ] APIs for tooling
+
+* [x] Change 'from' and 'to' -> 'Input' and 'Output'
+
+* [x] Refactor the spring examples
+
+* [ ] Notes for creating animation tool
+
+* [x] createSpringWithBounciness
