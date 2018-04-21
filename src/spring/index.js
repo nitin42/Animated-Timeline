@@ -71,14 +71,14 @@ type interpolateOptions = {
 }
 
 type animationOptions = {
-  mapValues: {
-    input: Array<number>,
-    output: Array<any>,
-  },
-  interpolateColor: {
-    colors: Array<any>,
-    range?: Array<number>,
-  },
+	mapValues: {
+		input: Array<number>,
+		output: Array<any>,
+	},
+	interpolateColor: {
+		colors: Array<any>,
+		range?: Array<number>,
+	},
 }
 
 type interpolate = (style: Object, value: string | number, options: interpolateOptions) => void
