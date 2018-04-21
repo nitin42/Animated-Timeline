@@ -8,7 +8,7 @@ const timeline = Timeline({
   speed: 1,
   iterations: 1,
   direction: 'alternate',
-  easing: 'easeInOutSine',
+  easing: 'easeInOutSine'
 })
 
 const seekAnimation = createMover(timeline)
@@ -17,13 +17,15 @@ export class SeekBasic extends React.Component {
   state = { value: 0 }
 
   componentDidMount() {
-    timeline.animate({
-      element: this.one,
-      scale: helpers.transition({
-        from: 4,
-        to: 2
+    timeline
+      .animate({
+        element: this.one,
+        scale: helpers.transition({
+          from: 4,
+          to: 2
+        })
       })
-    }).start()
+      .start()
   }
 
   handleChange = e => {
@@ -42,9 +44,15 @@ export class SeekBasic extends React.Component {
   render() {
     return (
       <div>
-        <div ref={one => this.one = one} style={boxStyles} />
-        <div style={{ marginTop: '40'}}>
-          <input type="range" min="0" max="100" value={this.state.value} onChange={this.handleChange} />
+        <div ref={one => (this.one = one)} style={boxStyles} />
+        <div style={{ marginTop: '40' }}>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={this.state.value}
+            onChange={this.handleChange}
+          />
         </div>
       </div>
     )

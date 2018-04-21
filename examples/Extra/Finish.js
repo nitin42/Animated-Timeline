@@ -7,25 +7,31 @@ import { Timeline, helpers } from '../../src'
 const timeline = Timeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
-  iterations: Infinity,
+  iterations: Infinity
 })
 
 export class Finish extends React.Component {
   timer = null
 
   componentDidMount() {
-    timeline.animate({
-      element: this.finish,
-      scale: helpers.transition({
-        from: 2,
-        to: 1
+    timeline
+      .animate({
+        element: this.finish,
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
       })
-    }).start()
+      .start()
   }
 
   render() {
     return (
-      <div ref={finish => this.finish = finish} style={boxStyles} onClick={e => timeline.finish()} />
+      <div
+        ref={finish => (this.finish = finish)}
+        style={boxStyles}
+        onClick={e => timeline.finish()}
+      />
     )
   }
 }

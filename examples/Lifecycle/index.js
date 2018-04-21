@@ -18,13 +18,15 @@ export class Lifecycle extends React.Component {
   }
 
   componentDidMount() {
-    timeline.animate({
-      element: this.one,
-      scale: helpers.transition({
-        from: 2,
-        to: 1
+    timeline
+      .animate({
+        element: this.one,
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
       })
-    }).start()
+      .start()
 
     timeline.onStart = ({ began }) => {
       if (began) {
@@ -47,7 +49,9 @@ export class Lifecycle extends React.Component {
 
   render() {
     return (
-      <div ref={one => this.one = one} style={boxStyles}>{this.state.value}</div>
+      <div ref={one => (this.one = one)} style={boxStyles}>
+        {this.state.value}
+      </div>
     )
   }
 }

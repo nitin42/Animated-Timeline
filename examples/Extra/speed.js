@@ -15,17 +15,20 @@ export class ChangeSpeed extends React.Component {
   timer = null
 
   componentDidMount() {
-    timeline.animate({
-      element: '#speed-one',
-      scale: helpers.transition({
-        from: 2,
-        to: 1
+    timeline
+      .animate({
+        element: '#speed-one',
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
       })
-    }).animate({
-      element: '#speed-two',
-      rotate: '360deg',
-      offset: helpers.startBefore(1200)
-    }).start()
+      .animate({
+        element: '#speed-two',
+        rotate: '360deg',
+        offset: helpers.startBefore(1200)
+      })
+      .start()
 
     // Change the speed after 3s
     setTimeout(() => {
@@ -38,8 +41,8 @@ export class ChangeSpeed extends React.Component {
   render() {
     return (
       <div>
-        <div id='speed-one' style={boxStyles} />
-        <div id='speed-two' style={boxStyles} />
+        <div id="speed-one" style={boxStyles} />
+        <div id="speed-two" style={boxStyles} />
       </div>
     )
   }

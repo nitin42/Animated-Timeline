@@ -7,26 +7,32 @@ import { Timeline, helpers, Keyframes } from '../../src'
 const timeline = Timeline({
   iterations: 3,
   direction: 'alternate',
-  easing: 'easeInOutSine',
+  easing: 'easeInOutSine'
 })
 
 export class BasicTimeline extends React.Component {
   componentDidMount() {
-    timeline.animate({
-      element: this.one,
-      scale: helpers.transition({
-        from: 2,
-        to: 1
+    timeline
+      .animate({
+        element: this.one,
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
       })
-    }).start()
+      .start()
   }
 
   render() {
     return (
-      <div ref={one => this.one = one} style={boxStyles} onClick={e => {
-        timeline.stop()
-        console.log(timeline.getCurrentTime())
-      }} />
+      <div
+        ref={one => (this.one = one)}
+        style={boxStyles}
+        onClick={e => {
+          timeline.stop()
+          console.log(timeline.getCurrentTime())
+        }}
+      />
     )
   }
 }

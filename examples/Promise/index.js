@@ -14,22 +14,29 @@ const timeline = Timeline({
 
 export class PromiseAPI extends React.Component {
   componentDidMount() {
-    timeline.animate({
-      element: this.one,
-      scale: helpers.transition({
-        from: 2,
-        to: 1
+    timeline
+      .animate({
+        element: this.one,
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
       })
-    }).start()
+      .start()
 
     timeline.onfinish.then(res => console.log(res))
   }
 
-  cancelAnimation = () => timeline.oncancel('#one').then(res => console.log(res))
+  cancelAnimation = () =>
+    timeline.oncancel('#one').then(res => console.log(res))
 
   render() {
     return (
-      <div ref={one => this.one = one} style={boxStyles} onClick={this.cancelAnimation}/>
+      <div
+        ref={one => (this.one = one)}
+        style={boxStyles}
+        onClick={this.cancelAnimation}
+      />
     )
   }
 }
