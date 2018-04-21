@@ -8,12 +8,12 @@
     "flow": "./node_modules/.bin/flow",
     "test": "./node_modules/.bin/jest",
     "test:watch": "./node_modules/.bin/jest --watchAll",
-    "precommit": "npm run format",
     "format": "find src -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "all-contributors-cli": "^4.11.1",
     "babel-core": "^6.26.0",
     "babel-jest": "^23.0.0-alpha.0",
     "babel-plugin-transform-class-properties": "^6.24.1",

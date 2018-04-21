@@ -14,6 +14,8 @@
 
 * [x] Refactor the spring examples
 
+* [x] Refactor the Timeline API
+
 * [ ] Notes for creating animation tool
 
 * [x] createSpringWithBounciness

@@ -19,13 +19,9 @@ export class SpringCallback extends React.Component {
 			}
     })
     
-    spring.onRest = (inst) => {
-      spring.infinite(0, 1, 2000)
-		}
+    spring.onRest = (inst) => spring.infinite(0, 1, 2000)
 		
-		spring.onStart = (inst) => {
-			console.log('Motion started...')
-		}
+		spring.onStart = (inst) => console.log('Motion started...')
   }
   
   componentWillUnmount() {
@@ -37,12 +33,8 @@ export class SpringCallback extends React.Component {
 			<div style={{ margin: '0 auto', width: '50%' }}>
 				<div
 					ref={one => (this.one = one)}
-					onMouseUp={() => {
-						spring.setValue(0)
-          }}
-					onMouseDown={() => {
-						spring.setValue(1)
-					}}
+					onMouseUp={() => spring.setValue(0)}
+					onMouseDown={() => spring.setValue(1)}
 					style={boxStyles}
 				/>
 			</div>

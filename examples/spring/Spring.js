@@ -25,12 +25,8 @@ export class SpringSystem extends React.Component {
 			<div style={{ margin: '0 auto', width: '50%' }}>
 				<div
 					ref={one => (this.one = one)}
-					onMouseUp={() => {
-						spring.setValue(0)
-          }}
-					onMouseDown={() => {
-						spring.setValue(1)
-					}}
+					onMouseUp={() => spring.setValue(0)}
+					onMouseDown={() => spring.setValue(1)}
 					style={boxStyles}
 				/>
 			</div>

@@ -25,12 +25,8 @@ export class SpringVelocity extends React.Component {
 			<div style={{ margin: '0 auto', width: '50%' }}>
 				<div
 					ref={one => (this.one = one)}
-					onMouseUp={() => {
-						spring.setValueVelocity({ value: 0, velocity: 20 })
-          }}
-					onMouseDown={() => {
-						spring.setValueVelocity({ value: 1, velocity: 30 })
-					}}
+					onMouseUp={() => spring.setValueVelocity({ value: 0, velocity: 20 })}
+					onMouseDown={() => spring.setValueVelocity({ value: 1, velocity: 30 })}
 					style={boxStyles}
 				/>
 			</div>

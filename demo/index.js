@@ -23,19 +23,19 @@ import { ChangeSpeed } from '../examples/Extra/speed'
 
 import { Finish } from '../examples/Extra/Finish'
 
-// import { SpringSystem } from '../examples/spring/Spring'
+import { SpringSystem } from '../examples/spring/Spring'
 
 import { SpringInterpolate } from '../examples/spring/Interpolations'
 
-// import { SpringCallback } from '../examples/spring/Callback'
+import { SpringCallback } from '../examples/spring/Callback'
 
 import { SpringControls } from '../examples/spring/Controls'
 
-// import { SpringMultiple } from '../examples/spring/Multiple'
+import { SpringMultiple } from '../examples/spring/Multiple'
 
-// import { SpringStart } from '../examples/spring/Start'
+import { SpringStart } from '../examples/spring/Start'
 
-// import { SpringVelocity } from '../examples/spring/Velocity'
+import { SpringVelocity } from '../examples/spring/Velocity'
 
 import { SpringBounciness } from '../examples/spring/Bounciness'
 
