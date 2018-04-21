@@ -9,7 +9,7 @@
 		"test": "./node_modules/.bin/jest",
 		"test:watch": "./node_modules/.bin/jest --watchAll",
 		"format":
-			"find src -name '*.js' && find examples -name '*.js' && find demo -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
+			"find src -name '*.js' && find examples -name '*.js' && find demo -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote --arrow-parens<always>"
 	},
 	"author": "Nitin Tulswani <tulswani19@gmail.com>",
 	"license": "ISC",
