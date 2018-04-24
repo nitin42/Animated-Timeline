@@ -38,8 +38,7 @@ type callbackProps = {
   velocity: number,
   // Is at rest ?
   springAtRest: boolean,
-  //TODO:
-  // should oscillating ?
+  // Is overshoot clamping enabled ?
   isOscillating: boolean,
   // Exceeded the end value
   exceeded: boolean
@@ -57,19 +56,19 @@ type springOptions = {
 type interpolateOptions = {
   // Map values from one range to another range
   mapValues: (
-    value: number,
-    f1: number,
-    f2: number,
-    t1: number,
-    t2: number
+    value: number, // Spring value
+    f1: number, // From range one
+    f2: number, // From range two
+    t1: number, // Target range one
+    t2: number // Target range two
   ) => void,
   // Interpolate hex colors with or without an input range
   interpolateColor: (
-    value: number,
-    c1: string,
-    c2: string,
-    f1: number,
-    f2: number
+    value: number, // Spring value
+    c1: string, // Hex one
+    c2: string, // Hex two
+    f1?: number, // Input range one
+    f2?: number // Input range two
   ) => void,
   // Convert to degree
   radians: (radians: number) => {},
@@ -93,12 +92,12 @@ type interpolateOptions = {
 
 type animationOptions = {
   mapValues: {
-    input: Array<number>,
-    output: Array<any>
+    input: Array<number>, // Input ranges
+    output: Array<any> // Output ranges
   },
   interpolateColor: {
-    colors: Array<any>,
-    range?: Array<number>
+    colors: Array<any>, // Input color hex codes
+    range?: Array<number> // Input range to mix the colors
   }
 }
 
@@ -417,11 +416,9 @@ export function Spring(options: springOptions): SPRING {
     endValue: number,
     duration: number
   ): void => {
-    // Go forward
     spring.setValue(startValue)
 
     timeoutId = setTimeout(() => {
-      // Go back again
       spring.setValue(endValue)
     }, duration || 1200)
   }
