@@ -2,38 +2,39 @@ export const stringContains = (str, text) => {
   return str.indexOf(text) > -1
 }
 
-export const isArray = obj => Array.isArray(obj)
+export const isArray = (obj) => Array.isArray(obj)
 
 export const minMaxValue = (val, min, max) => Math.min(Math.max(val, min), max)
 
-export const isObject = object =>
+export const isObject = (object) =>
   stringContains(Object.prototype.toString.call(object), 'Object')
 
-export const isSVG = el => el instanceof SVGElement
+export const isSVG = (el) => el instanceof SVGElement
 
-export const isDOM = el => el.nodeType || isSVG(el)
+export const isDOM = (el) => el.nodeType || isSVG(el)
 
-export const isString = val => typeof val === 'string'
+export const isString = (val) => typeof val === 'string'
 
-export const isFunc = val => typeof val === 'function'
+export const isFunc = (val) => typeof val === 'function'
 
-export const isUnd = val => typeof val === 'undefined'
+export const isUnd = (val) => typeof val === 'undefined'
 
-export const isHex = val => /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(val)
+export const isHex = (val) => /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(val)
 
-export const isRgb = val => /^rgb/.test(val)
+export const isRgb = (val) => /^rgb/.test(val)
 
-export const isHsl = val => /^hsl/.test(val)
+export const isHsl = (val) => /^hsl/.test(val)
 
-export const isCol = val => isHex(val) || isRgb(val) || isHsl(val)
+export const isCol = (val) => isHex(val) || isRgb(val) || isHsl(val)
 
-export const isPath = val => isObject(val) && val.hasOwnProperty('totalLength')
+export const isPath = (val) =>
+  isObject(val) && val.hasOwnProperty('totalLength')
 
-export const stringToHyphens = str => {
+export const stringToHyphens = (str) => {
   return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
 }
 
-export const selectString = str => {
+export const selectString = (str) => {
   if (isCol(str)) return
   try {
     let elements = document.querySelectorAll(str)
@@ -58,11 +59,11 @@ export const filterArray = (arr, callback) => {
   return result
 }
 
-export const flattenArray = arr => {
+export const flattenArray = (arr) => {
   return arr.reduce((a, b) => a.concat(isArray(b) ? flattenArray(b) : b), [])
 }
 
-export const toArray = o => {
+export const toArray = (o) => {
   if (isArray(o)) return o
   if (isString(o)) o = selectString(o) || o
   if (o instanceof NodeList || o instanceof HTMLCollection)
@@ -71,10 +72,10 @@ export const toArray = o => {
 }
 
 export const arrayContains = (arr, val) => {
-  return arr.some(a => a === val)
+  return arr.some((a) => a === val)
 }
 
-export const clone = o => {
+export const clone = (o) => {
   let clone = {}
   for (let p in o) clone[p] = o[p]
   return clone
@@ -92,12 +93,12 @@ export const mergeObjects = (o1, o2) => {
   return o
 }
 
-export const rgbToRgba = rgbValue => {
+export const rgbToRgba = (rgbValue) => {
   const rgb = /rgb\((\d+,\s*[\d]+,\s*[\d]+)\)/g.exec(rgbValue)
   return rgb ? `rgba(${rgb[1]},1)` : rgbValue
 }
 
-export const hexToRgba = hexValue => {
+export const hexToRgba = (hexValue) => {
   const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
   const hex = hexValue.replace(rgx, (m, r, g, b) => r + r + g + g + b + b)
   const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -107,7 +108,7 @@ export const hexToRgba = hexValue => {
   return `rgba(${r},${g},${b},1)`
 }
 
-export const hslToRgba = hslValue => {
+export const hslToRgba = (hslValue) => {
   const hsl =
     /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(hslValue) ||
     /hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*([\d.]+)\)/g.exec(hslValue)
@@ -137,14 +138,15 @@ export const hslToRgba = hslValue => {
   return `rgba(${r * 255},${g * 255},${b * 255},${a})`
 }
 
-export const colorToRgb = val => {
+export const colorToRgb = (val) => {
   if (isRgb(val)) return rgbToRgba(val)
   if (isHex(val)) return hexToRgba(val)
   if (isHsl(val)) return hslToRgba(val)
 }
 
 // Get the unit from value
-export const getUnit = val => {
+export const getUnit = (val) => {
+  val = String(val)
   const split = /([\+\-]?[0-9#\.]+)(%|px|em|rem|in|cm|mm|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(
     val.replace(/\s/g, '')
   )
