@@ -36,15 +36,14 @@ export class SequenceTimeline extends React.Component {
         }),
         elasticity: 5000
       })
-
-    timeline.start()
+      .start()
   }
 
   render() {
     return (
       <div>
-        <div ref={one => (this.one = one)} style={boxStyles} />
-        <div ref={two => (this.two = two)} style={boxStyles} />
+        <div ref={(one) => (this.one = one)} style={boxStyles} />
+        <div ref={(two) => (this.two = two)} style={boxStyles} />
       </div>
     )
   }

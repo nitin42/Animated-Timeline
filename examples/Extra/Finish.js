@@ -28,9 +28,9 @@ export class Finish extends React.Component {
   render() {
     return (
       <div
-        ref={finish => (this.finish = finish)}
+        ref={(finish) => (this.finish = finish)}
         style={boxStyles}
-        onClick={e => timeline.finish()}
+        onClick={(e) => timeline.finish()}
       />
     )
   }

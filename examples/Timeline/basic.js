@@ -26,12 +26,9 @@ export class BasicTimeline extends React.Component {
   render() {
     return (
       <div
-        ref={one => (this.one = one)}
+        ref={(one) => (this.one = one)}
         style={boxStyles}
-        onClick={e => {
-          timeline.stop()
-          console.log(timeline.getCurrentTime())
-        }}
+        onClick={(e) => timeline.stop()}
       />
     )
   }

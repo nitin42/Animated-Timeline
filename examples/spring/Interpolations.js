@@ -49,7 +49,7 @@ export class SpringInterpolate extends React.Component {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
         <div
-          ref={one => (this.one = one)}
+          ref={(one) => (this.one = one)}
           onMouseUp={() => spring.setValue(0)}
           onMouseDown={() => spring.setValue(1)}
           style={{

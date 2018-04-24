@@ -2,6 +2,13 @@ import React, { Component } from 'react'
 
 import { Animate, helpers } from '../../src'
 
+const styles = {
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'pink',
+  marginTop: 30
+}
+
 export class AnimateControls extends Component {
   state = {
     start: false,
@@ -11,13 +18,6 @@ export class AnimateControls extends Component {
   }
 
   render() {
-    const styles = {
-      width: '20px',
-      height: '20px',
-      backgroundColor: 'pink',
-      marginTop: 30
-    }
-
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
         <Animate
@@ -36,28 +36,27 @@ export class AnimateControls extends Component {
           stop={!this.state.start}
           reverse={this.state.reverse}
           reset={this.state.reset}
-          restart={this.state.restart}
-        >
+          restart={this.state.restart}>
           <div style={styles} />
         </Animate>
         <button
-          onClick={e => this.setState(state => ({ start: !state.start }))}
-        >
+          onClick={(e) => this.setState((state) => ({ start: !state.start }))}>
           Start
         </button>
         <button
-          onClick={e => this.setState(state => ({ reverse: !state.reverse }))}
-        >
+          onClick={(e) =>
+            this.setState((state) => ({ reverse: !state.reverse }))
+          }>
           Reverse
         </button>
         <button
-          onClick={e => this.setState(state => ({ reset: !state.reset }))}
-        >
+          onClick={(e) => this.setState((state) => ({ reset: !state.reset }))}>
           Reset
         </button>
         <button
-          onClick={e => this.setState(state => ({ restart: !state.restart }))}
-        >
+          onClick={(e) =>
+            this.setState((state) => ({ restart: !state.restart }))
+          }>
           Restart
         </button>
       </div>

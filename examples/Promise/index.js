@@ -24,16 +24,16 @@ export class PromiseAPI extends React.Component {
       })
       .start()
 
-    timeline.onfinish.then(res => console.log(res))
+    timeline.onfinish.then((res) => console.log(res))
   }
 
   cancelAnimation = () =>
-    timeline.oncancel('#one').then(res => console.log(res))
+    timeline.oncancel(this.one).then((res) => console.log(res))
 
   render() {
     return (
       <div
-        ref={one => (this.one = one)}
+        ref={(one) => (this.one = one)}
         style={boxStyles}
         onClick={this.cancelAnimation}
       />

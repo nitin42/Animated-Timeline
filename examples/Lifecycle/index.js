@@ -47,10 +47,15 @@ export class Lifecycle extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    // Call this method when a 'setState' call is batched inside the lifecyle hook 'onUpdate'
+    timeline.clear()
+  }
+
   render() {
     return (
-      <div ref={one => (this.one = one)} style={boxStyles}>
-        {this.state.value}
+      <div ref={(one) => (this.one = one)} style={boxStyles}>
+        <p style={{ textAlign: 'center' }}>{this.state.value}</p>
       </div>
     )
   }
