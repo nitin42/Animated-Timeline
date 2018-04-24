@@ -81,7 +81,7 @@ let cancelled = false
 
 const minMaxValue = (val, min, max) => Math.min(Math.max(val, min), max)
 
-const log = args => console.log(args)
+const log = (args) => console.log(args)
 
 const isFunctionValue = (val, prop) => {
   invariant(
@@ -144,7 +144,7 @@ const decomposeValue = (val, unit) => {
 }
 
 // Parse the elements and returns an array of elements
-export const parseElements = elements => {
+export const parseElements = (elements) => {
   const elementsArray = elements
     ? flattenArray(
         isArray(elements) ? elements.map(toArray) : toArray(elements)
@@ -157,7 +157,7 @@ export const parseElements = elements => {
   )
 }
 
-export const getAnimatables = elements => {
+export const getAnimatables = (elements) => {
   const parsed = parseElements(elements)
   return parsed.map((t, i) => {
     return { element: t, id: i, total: parsed.length }
@@ -191,7 +191,7 @@ const normalizePropertyTweens = (prop, tweenSettings) => {
       if (isUnd(obj.delay)) obj.delay = delay
       return obj
     })
-    .map(k => mergeObjects(k, settings))
+    .map((k) => mergeObjects(k, settings))
 }
 
 // Get the animation properties
@@ -222,7 +222,7 @@ const normalizeTweenValues = (tween, animatable) => {
     let value = isFunctionValue(tween[p], p)
     // from > to based ?
     if (isArray(value)) {
-      value = value.map(v => isFunctionValue(v, p))
+      value = value.map((v) => isFunctionValue(v, p))
       if (value.length === 1) value = value[0]
     }
     t[p] = value
@@ -233,7 +233,7 @@ const normalizeTweenValues = (tween, animatable) => {
 }
 
 // If we have an array of control points, then create a custom bezier curve or return the easing name using the val
-const normalizeEasing = val => {
+const normalizeEasing = (val) => {
   return isArray(val) ? bezier.apply(this, val) : easings[val]
 }
 
@@ -241,7 +241,7 @@ const normalizeEasing = val => {
 const normalizeTweens = (prop, animatable) => {
   let previousTween
 
-  return prop.tweens.map(t => {
+  return prop.tweens.map((t) => {
     let tween = normalizeTweenValues(t, animatable)
     // This may be transform value like 360deg or from to based animation values like [1, 2]
     const tweenValue = tween.value
@@ -305,13 +305,13 @@ function createAnimation(animatable, prop) {
 function getAnimations(animatables, properties) {
   return filterArray(
     flattenArray(
-      animatables.map(animatable => {
-        return properties.map(prop => {
+      animatables.map((animatable) => {
+        return properties.map((prop) => {
           return createAnimation(animatable, prop)
         })
       })
     ),
-    a => !isUnd(a)
+    (a) => !isUnd(a)
   )
 }
 
@@ -321,7 +321,7 @@ function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
   if (animations.length) {
     return (isDelay ? Math.min : Math.max).apply(
       Math,
-      animations.map(anim => anim[type])
+      animations.map((anim) => anim[type])
     )
   } else {
     return isDelay
@@ -330,13 +330,13 @@ function getInstanceoffsets(type, animations, instanceSettings, tweenSettings) {
   }
 }
 
-const hasLifecycleHook = params => {
+const hasLifecycleHook = (params) => {
   const hooks = ['onStart', 'onUpdate', 'tick', 'onComplete']
 
   const errorMsg =
     'Lifecycle hook cannot be passed as a parameter to Timeline function. They are accessible only via the timeline instance.'
 
-  hooks.forEach(hook => {
+  hooks.forEach((hook) => {
     if (params.hasOwnProperty(hook)) {
       delete params[hook]
 
@@ -417,7 +417,7 @@ function animated(params = {}) {
   let res = null
 
   function createPromise() {
-    return window.Promise && new Promise(resolve => (res = resolve))
+    return window.Promise && new Promise((resolve) => (res = resolve))
   }
 
   let promise = createPromise()
@@ -474,7 +474,7 @@ function animated(params = {}) {
       let tween = tweens[tweenLength]
       // Only check for keyframes if there is more than one tween
       if (tweenLength)
-        tween = filterArray(tweens, t => insTime < t.end)[0] || tween
+        tween = filterArray(tweens, (t) => insTime < t.end)[0] || tween
       const elapsed =
         minMaxValue(insTime - tween.start - tween.delay, 0, tween.duration) /
         tween.duration
@@ -708,7 +708,7 @@ function animated(params = {}) {
   // Default speed
   instance.speed = 1
 
-  instance.setSpeed = speed => {
+  instance.setSpeed = (speed) => {
     invariant(
       typeof speed === 'number' || typeof speed === 'string',
       `setSpeed() expected a number or string value for speed but instead got ${typeof speed}.`
@@ -751,6 +751,9 @@ function animated(params = {}) {
     instance.reset()
     instance.start()
   }
+
+  // Use this method only when a 'setState' call is batched inside the lifecyle hook 'onUpdate' to avoid any memory leaks.
+  instance.clear = () => raf && cancelAnimationFrame(raf)
 
   // Timing APIs
 
@@ -858,11 +861,11 @@ function animated(params = {}) {
 
   instance.onfinish = promise
 
-  instance.oncancel = elements => {
+  instance.oncancel = (elements) => {
     let res = null
 
     function createPromise() {
-      return window.Promise && new Promise(resolved => (res = resolved))
+      return window.Promise && new Promise((resolved) => (res = resolved))
     }
 
     let prm = createPromise()
@@ -910,8 +913,8 @@ function animated(params = {}) {
   return instance
 }
 
-const removeHints = instances => {
-  instances.forEach(instance => {
+const removeHints = (instances) => {
+  instances.forEach((instance) => {
     instance.element.style['will-change'] = ''
   })
 }
@@ -921,11 +924,11 @@ function createTimeline(params) {
   tl.stop()
   tl.duration = 0
   tl.animate = function(instancesParams) {
-    tl.children.forEach(i => {
+    tl.children.forEach((i) => {
       i.began = true
       i.completed = true
     })
-    toArray(instancesParams).forEach(instanceParams => {
+    toArray(instancesParams).forEach((instanceParams) => {
       let insParams = mergeObjects(
         instanceParams,
         replaceObjectProps(getDefaultTweensParams(), params || {})
