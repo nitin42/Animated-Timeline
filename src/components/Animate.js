@@ -55,9 +55,7 @@ export class Animate extends React.Component {
     start: PropTypes.bool,
     reset: PropTypes.bool,
     restart: PropTypes.bool,
-    reverse: PropTypes.bool,
-
-    interactiveMode: PropTypes.bool
+    reverse: PropTypes.bool
   }
 
   static defaultProps = {
@@ -82,10 +80,7 @@ export class Animate extends React.Component {
     stop: false,
     reset: false,
     restart: false,
-    reverse: false,
-
-    // If set to 'true', then we can interactively change the animation position with an input value or callback function
-    interactiveMode: false
+    reverse: false
   }
 
   componentDidMount() {
@@ -109,10 +104,7 @@ export class Animate extends React.Component {
     // Animation controls (start, stop, reset, reverse, restart)
     this.enableControls(this.props, this.ctrl)
 
-    if (this.props.interactiveMode) {
-      // Change animation position by seeking the animation
-      this.seekAnimation()
-    }
+    this.seekAnimation()
   }
 
   componentDidUpdate() {

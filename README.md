@@ -20,11 +20,11 @@
 
 * [License](#license)
 
-## Introduction
+## Introduction 👋🏻
 
 **animated-timeline** is an animation library for React which makes it painless to create playback based animations. It is inspired from [animatedjs](https://github.com/animatedjs/animated) and [anime](https://github.com/juliangarnier/anime). It focuses on improving the developer experience.
 
-## Another animation library ?
+## Another animation library ? 👀
 
 No, it's not an animation library. Though you can use it as a library or extract some part of this project because `animated-timeline` exposes playback based APIs to perform animations and provides some other utilities like altering the animation position, APIs for performing spring based animations etc but the main goal of this project is to -
 
@@ -34,7 +34,7 @@ No, it's not an animation library. Though you can use it as a library or extract
 
 * provide APIs for composing animations that transition from one state to another, use loops, callbacks and timer APIs to create interactive animations.
 
-## Features
+## Features ☄️
 
 * Controls for time-based execution of an animation
 
@@ -42,19 +42,19 @@ No, it's not an animation library. Though you can use it as a library or extract
 
 * Change the animation position along the timeline by seeking the animation
 
-* Timing based animations
+* Keyframes
 
 * Promise based APIs
 
 * Interactive animations based on changing inputs
 
-## Performance
+## Performance 🔥
 
 * Style mutations and style reads are batched to speed up the performance and avoid document reflows.
 
 * Uses `will-change` but in an optimal way to avoid high memory consumption
 
-## Install
+## Install 👨🏼‍💻
 
 ```
 npm install animated-timeline
@@ -66,25 +66,25 @@ or if you use yarn
 yarn add animated-timeline
 ```
 
-> Note - It's not experimental and doesn't require a polyfill. See [browser usage](#browser-usage)
+> Note - This project is not experimental and doesn't require a polyfill. See [browser usage](#browser-usage).
 
-**This library also depends on `react` and `react-dom` so make sure you've them installed.**
+**This project also depends on `react` and `react-dom` so make sure you've them installed.**
 
-## Browser support
+## Browser support ⚙️
 
 | Chrome | Safari | IE / EDGE | Firefox | Opera |
 | ------ | :----: | --------: | ------: | ----: |
 | 24+    |   6+   |       10+ |     32+ |   15+ |
 
-## Usage
+## Usage 🎮
 
 `animated-timeline` provides three ways to do animations:
 
-* [Component API]()
+* [Component API](./docs/Component.md)
 
-* [Timeline API]()
+* [Timeline API](./docs/Timeline.md)
 
-* [Spring physics and bounciness]()
+* [Spring physics and bounciness](./docs/Spring.md)
 
 **Example usage with component API**
 
@@ -99,24 +99,20 @@ const styles = {
   marginTop: 30
 }
 
-class App extends Component {
-  render() {
-    return (
-      <Animate
-        // Timing model props
-        timingProps={{
-          duration: 1000
-        }}
-        // Animation model props
-        animationProps={{
-          rotate: {
-            value: helpers.transition({ from: 360, to: 180 })
-          }
-        }}>
-        <div style={styles} />
-      </Animate>
-    )
-  }
+export function App() {
+  return (
+    <Animate
+      timingProps={{
+        duration: 1000
+      }}
+      animationProps={{
+        rotate: {
+          value: helpers.transition({ from: 360, to: 180 })
+        }
+      }}>
+      <div style={styles} />
+    </Animate>
+  )
 }
 ```
 
@@ -214,6 +210,8 @@ export class SpringSystem extends React.Component {
   <img src="./media/spring.gif" />
 </p>
 
+[Read the detailed API reference for spring physics and bounciness]()
+
 ## Brief
 
 To animate an element, you will need to specify properties for timing model like `duration`, `delay`, `iterations` and animation model like `elements` for animating an element or an array of elements, `transform`, `color`, `opacity` etc.
@@ -226,19 +224,7 @@ The timing model describes the current time and an animation's progress.
 
 The animation model, on the other hand, describes how an animation could look like at any give time or it can be thought of as state of an animation at a particular point of time.
 
-## Animation types
-
-`animated-timeline` lets you perform:
-
-* Sequence based animations
-
-* Timing based animations
-
-* Keyframes
-
-* Provides controls for performing playback based animations
-
-* Spring based animations
+## Animation types 🌀
 
 ### Sequence based animations
 
@@ -295,13 +281,13 @@ See more examples for -
 <br/>
 **If that sounds interesting**, [**then let's dive into the detailed documentation which covers example use cases, API reference, and some more examples**](./docs)
 
-## Challenges / Todos
+## Challenges / Todos 😴
 
 * [ ] ReasonML port of the core engine
 
 * [ ] timing model based on scroll position and gestures ?
 
-## Contributing
+## Contributing 🤝
 
 [See the contributing guide](./CONTRIBUTING.md)
 
