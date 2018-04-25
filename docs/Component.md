@@ -9,7 +9,7 @@
 ## Usage
 
 ```js
-import React, { Component } from 'react'
+import React from 'react'
 
 import { Animate, helpers } from 'animated-timeline'
 
@@ -141,6 +141,9 @@ function App() {
 You can use `onUpdate` lifecycle hook to mutate the state by syncing it with the animation progress while seeking the animation. Below is an example -
 
 ```js
+import React from 'react'
+import { Animate } from 'animated-timeline'
+
 class App extends React.Component {
   state = {
     value: 0
@@ -177,7 +180,7 @@ class App extends React.Component {
 
 #### `onComplete`
 
-`onStart` is invoked when the animation starts.
+`onStart` is invoked when the animation completes.
 
 ```js
 function App() {

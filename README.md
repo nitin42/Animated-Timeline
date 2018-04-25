@@ -212,18 +212,6 @@ export class SpringSystem extends React.Component {
 
 [Read the detailed API reference for spring physics and bounciness]()
 
-## Brief
-
-To animate an element, you will need to specify properties for timing model like `duration`, `delay`, `iterations` and animation model like `elements` for animating an element or an array of elements, `transform`, `color`, `opacity` etc.
-
-**Timing model**
-
-The timing model describes the current time and an animation's progress.
-
-**Animation model**
-
-The animation model, on the other hand, describes how an animation could look like at any give time or it can be thought of as state of an animation at a particular point of time.
-
 ## Animation types 🌀
 
 ### Sequence based animations
