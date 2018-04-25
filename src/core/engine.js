@@ -7,22 +7,19 @@
  * 1. Lifecycle hooks
  * 2. Animation speed is now configured via different instances and via params passed to the main instance rather
  *    than relying on the singleton instance.
- * 3. Minimal API
- * 4. Serialised values for performing **from** - **to** animations (implemented in utils/fromTo.js).
- * 5. New defaults for instance and tweens parameters.
- * 6. Lifecycle hooks can no longer be passed through parameters. They are available as instance methods
+ * 3. Serialised values for performing **from** - **to** animations (implemented in utils/fromTo.js).
+ * 4. New defaults for instance and tweens parameters.
+ * 5. Lifecycle hooks can no longer be passed through parameters. They are available as instance methods
  *
  * Additions -
  *
  * 1. Style reads and writes are now batched so as to avoid layout calc. in each frame ✅
  * 2. Timing APIs
  * 3. Use 'will-change' prop to let the browser know that a new layer has to be created for a transform ✅
-      (don't use 'will-change' for all the properties so as to avoid memory consumption)
  * 4. APIs for getting information about active instances in an animation using getAnimation()
- * 5. Declarative API for Timeline component for React
+ * 5. Declarative API for Timeline component (React)
  * 6. Promise based API for oncancel event
- * 7. Now we can finish the animation immediately
- * 8. Spring based animations
+ * 7. Finish the animation immediately
  */
 
 import invariant from 'invariant'
@@ -714,7 +711,7 @@ function animated(params = {}) {
       `setSpeed() expected a number or string value for speed but instead got ${typeof speed}.`
     )
 
-    // Update both the coefficients (because a user can define params.speed, so we overwrite it.)
+    // Update both the coefficients (because a user can define params.speed, so we will overwrite it.)
     params.speed = speed
     instance.speed = speed
   }
