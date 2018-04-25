@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Spring } from '../../src/spring'
+import { Spring } from '../../src'
 
 import { boxStyles } from './../styles'
 
@@ -25,7 +25,7 @@ export class SpringStart extends React.Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <div ref={one => (this.one = one)} style={boxStyles} />
+        <div ref={(one) => (this.one = one)} style={boxStyles} />
       </div>
     )
   }

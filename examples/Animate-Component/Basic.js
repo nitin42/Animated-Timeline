@@ -14,13 +14,11 @@ export class AnimateBasic extends Component {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
         <Animate
-          // Timing model props
           timingProps={{
             duration: 1000,
             direction: 'alternate',
             iterations: Infinity
           }}
-          // Animation model props
           animationProps={{
             rotate: {
               value: helpers.transition({ from: 360, to: 180 })

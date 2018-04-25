@@ -26,7 +26,7 @@ export class Animate extends React.Component {
   // Animated instance
   ctrl = null
 
-  // seek the animation position
+  // seek the animation
   seek = null
 
   // Stores all the elements which will be animated
@@ -92,10 +92,14 @@ export class Animate extends React.Component {
     this.ctrl = animated({
       // Animate all the children
       element: this.elements,
+
+      // Props for both the models (timing and animation) are fragmented in core (src/core/engine.js)
       // Timeline model props
       ...this.props.timingProps,
       // Animation model props
       ...this.props.animationProps,
+
+      // autoplay the animation
       autoplay: this.props.autoplay || true
     })
 
@@ -105,7 +109,6 @@ export class Animate extends React.Component {
     // Animation controls (start, stop, reset, reverse, restart)
     this.enableControls(this.props, this.ctrl)
 
-    // This ensures that we mutate the instance fields (duration, progres, ...) in a separate mode rather than changing it when the animation starts when the component mounts
     if (this.props.interactiveMode) {
       // Change animation position by seeking the animation
       this.seekAnimation()
@@ -121,8 +124,10 @@ export class Animate extends React.Component {
   }
 
   componentWillUnmount() {
-    // Cancel the animation (doesn't remove the nodes)
+    // Cancel the animation
     this.ctrl && this.cancel(this.elements)
+    // Clear the subscriptions
+    this.ctrl.clear()
   }
 
   enableControls = (props, ctrl) => {
@@ -140,7 +145,7 @@ export class Animate extends React.Component {
     if (lifecycle.onUpdate) ctrl.onUpdate = lifecycle.onUpdate
   }
 
-  addElements = element => {
+  addElements = (element) => {
     this.elements = [...this.elements, element]
   }
 
@@ -162,9 +167,8 @@ export class Animate extends React.Component {
     }
   }
 
-  cancel = elements => {
-    // Cancel the animation of all active elements
-    this.ctrl.oncancel(elements).then(res => res)
+  cancel = (elements) => {
+    this.ctrl.oncancel(elements).then((res) => res)
   }
 
   render() {

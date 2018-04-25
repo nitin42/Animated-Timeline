@@ -4,12 +4,12 @@ API reference for `animated-timeline`
 
 ### `Timeline`
 
-Returns a new [Animated](#animated) instance which is used to animate the elements. `Timeline` function accepts an object of timeline properties.
+Returns a new `Timeline` instance which is used to animate the elements. `Timeline` function accepts an object of timeline properties.
 
 **Example**
 
 ```js
-const Animated = Timeline({
+const timeline = Timeline({
   delay: 2000,
   duration: 4000,
   direction: 'alternate',
@@ -31,44 +31,44 @@ Below are the timeline properties which you can pass to `Timeline` function.
 
 * `iterations` - Can be a number value or `Infinity`
 
-* `easing` - Eg - `easing: 'easeInSine'. ` Available `easing` curves are
+* `easing` - Eg - `easing: 'easeInSine'.` Available `easing` curves are
 
 ```js
 // Default
-"linear"
+'linear'
 
 // easeIn
-"easeInQuad"
-"easeInCubic"
-"easeInQuart"
-"easeInQuint"
-"easeInSine"
-"easeInExpo"
-"easeInCirc"
-"easeInBack"
-"easeInElastic"
+'easeInQuad'
+'easeInCubic'
+'easeInQuart'
+'easeInQuint'
+'easeInSine'
+'easeInExpo'
+'easeInCirc'
+'easeInBack'
+'easeInElastic'
 
 // easeOut
-"easeOutQuad"
-"easeOutCubic"
-"easeOutQuart"
-"easeOutQuint"
-"easeOutSine"
-"easeOutExpo"
-"easeOutCirc"
-"easeOutBack"
-"easeOutElastic"
+'easeOutQuad'
+'easeOutCubic'
+'easeOutQuart'
+'easeOutQuint'
+'easeOutSine'
+'easeOutExpo'
+'easeOutCirc'
+'easeOutBack'
+'easeOutElastic'
 
 // easeInOut
-"easeInOutQuad"
-"easeInOutCubic"
-"easeInOutQuart"
-"easeInOutQuint"
-"easeInOutSine"
-"easeInOutExpo"
-"easeInOutCirc"
-"easeInOutBack"
-"easeInOutElastic"
+'easeInOutQuad'
+'easeInOutCubic'
+'easeInOutQuart'
+'easeInOutQuint'
+'easeInOutSine'
+'easeInOutExpo'
+'easeInOutCirc'
+'easeInOutBack'
+'easeInOutElastic'
 ```
 
 * `elasticity` (`Number`)
@@ -122,15 +122,17 @@ To perform timing based animations, you will need to pass an offset value for an
 Animated.value({
   elements: '.one',
   ...props
-}).value({
-  elements: '.two',
-  // Start at 2000 after the previous animation ends
-  offset: helpers.startAfter(2000)
-}).value({
-  elements: '.three',
-  // Start at 2000 before the previous animation ends
-  offset: helpers.startBefore(1200)
 })
+  .value({
+    elements: '.two',
+    // Start at 2000 after the previous animation ends
+    offset: helpers.startAfter(2000)
+  })
+  .value({
+    elements: '.three',
+    // Start at 2000 before the previous animation ends
+    offset: helpers.startBefore(1200)
+  })
 ```
 
 Learn more about the methods [`startBefore`](#startBefore) and [`startAfter`](#startAfter)
@@ -238,6 +240,7 @@ Animated.value({
 ```
 
 * `offset` - Use this property when you want to start an animation at a specific time with respect to the previous animation. To add an offset value, use the helper methods -
+
   * [`startAfter(time)`]() - to start an animation at a specified time after the previous animation ends
 
   ```js
@@ -268,12 +271,12 @@ const x = new Keyframes()
     value: 200,
     duration: 4000,
     delay: 1000,
-    elasticity: 200,
+    elasticity: 200
   })
   .value({
     value: 0,
     offset: 0.4, // corresponds to the keyframes-selector value 40%
-    duration: 6000,
+    duration: 6000
   })
 ```
 
@@ -308,7 +311,7 @@ These limitations are due to the design decisions. If your use case involves jus
 class App extends React.Component {
   render() {
     return (
-      <Animate timingProps={{ duration: 2000 }} animationProps={{ scale: 2}}>
+      <Animate timingProps={{ duration: 2000 }} animationProps={{ scale: 2 }}>
         <h1>React</h1>
       </Animate>
     )
@@ -559,10 +562,10 @@ Animated.value({
   elements: this.one,
   translateX: transition({ from: 10, to: 120 }),
   opacity: transition({ from: 0.8, to: 0.2 }),
-  rotate: '20turn',
+  rotate: '20turn'
 }).start()
 
-Animated.onfinish.then(res => console.log(res))
+Animated.onfinish.then((res) => console.log(res))
 ```
 
 ## Promise: oncancel(elements|selectors)
@@ -571,7 +574,7 @@ Use `oncancel` promise API to cancel a running animation. It accepts an element 
 
 ```js
 // Cancel the animation
-Animated.oncancel('#xyz').then(res => console.log(res))
+Animated.oncancel('#xyz').then((res) => console.log(res))
 ```
 
 For instance, you can use `oncancel` to cancel an animation when an `onClick` event is fired.

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Spring } from '../../src/spring'
+import { Spring } from '../../src'
 
 import { boxStyles } from './../styles'
 

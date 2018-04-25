@@ -48,7 +48,7 @@ export class Lifecycle extends React.Component {
   }
 
   componentWillUnmount() {
-    // Call this method when a 'setState' call is batched inside the lifecyle hook 'onUpdate'
+    // Clear the subscriptions
     timeline.clear()
   }
 

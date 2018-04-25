@@ -1,16 +1,12 @@
-**WORK IN PROGRESS**
-
 # Animated Timeline
 
-> Create playback based animations in React
-
-<p align="center">
-  <img src="./media/Logo.png" />
-</p>
+> Create playback based animations in React 💫
 
 ## Table of contents
 
 * [Introduction](#introduction)
+
+* [Motivation](#another-animation-library)
 
 * [Install](#install)
 
@@ -26,25 +22,17 @@
 
 ## Introduction
 
-**animated-timeline** is an animation library for React which makes it painless to create playback based animations. It is inspired from [animatedjs](https://github.com/animatedjs/animated) and [anime](https://github.com/juliangarnier/anime). It focuses on improving the developer experience and has an API which is relatively similar to React Native. It also shares the same philosophy with React Native which is -
+**animated-timeline** is an animation library for React which makes it painless to create playback based animations. It is inspired from [animatedjs](https://github.com/animatedjs/animated) and [anime](https://github.com/juliangarnier/anime). It focuses on improving the developer experience.
 
-> **_focus on declarative relationships between inputs and outputs, with configurable transforms in between, and simple start/stop methods to control time-based animation execution._**
+## Another animation library ?
 
-Along with `start` and `stop` methods it also has -
+No, it's not an animation library. Though you can use it as a library or extract some part of this project because `animated-timeline` exposes playback based APIs to perform animations and provides some other utilities like altering the animation position, APIs for performing spring based animations etc but the main goal of this project is to -
 
-* `restart` - To replay the animation
+* provide utilities to create animation tools.
 
-* `reset` - To reset animation progress
+* create a fitting abstraction on top of this project.
 
-* `reverse` - To reverse the animation
-
-It also provides lifecycle hooks that gets executed during different phases of an animation. Read more [here](#lifecycle)
-
-## Motivation
-
-A year ago I created [this](https://github.com/nitin42/animate-components) animation library for React but it was very basic and lacked features to interactively control animation execution and dynamically setting the values.
-
-So I started playing with existing animation engines (`animatedjs` and `anime`) and decided to create this small library which combines both the models, **timing** and **animation**.
+* provide APIs for composing animations that transition from one state to another, use loops, callbacks and timer APIs to create interactive animations.
 
 ## Features
 
@@ -60,15 +48,11 @@ So I started playing with existing animation engines (`animatedjs` and `anime`) 
 
 * Interactive animations based on changing inputs
 
-## What's more ?
+## Performance
 
-* `animated-timeline` batches the style mutations and style reads to speed up the performance and avoid document reflows.
+* Style mutations and style reads are batched to speed up the performance and avoid document reflows.
 
-* It hints the browser to set up appropriate optimisations for an animation using `will-change` but in an optimal way to avoid high memory consumption
-
-* Provides APIs for getting information out of an animation
-
-But there are some challenges. Read more [here](#challenges).
+* Uses `will-change` but in an optimal way to avoid high memory consumption
 
 ## Install
 
@@ -94,40 +78,41 @@ yarn add animated-timeline
 
 ## Usage
 
-`animated-timeline` provides two ways to perform an animation:
+`animated-timeline` provides three ways to do animations:
 
-* A React component called [`Animate`]() which uses timeline and animation model properties and animate the children.
+* [Component API]()
 
-* and a [`Timeline`]() function which accepts elements to be animated and animation properties.
+* [Timeline API]()
 
-**Usage with `Animate` component**
+* [Spring physics and bounciness]()
+
+**Example usage with component API**
 
 ```js
 import React, { Component } from 'react'
 import { Animate, helpers } from 'animated-timeline'
 
+const styles = {
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'pink',
+  marginTop: 30
+}
+
 class App extends Component {
   render() {
-    const styles = {
-      width: '20px',
-      height: '20px',
-      backgroundColor: 'pink',
-      marginTop: 30,
-    }
-
     return (
       <Animate
         // Timing model props
         timingProps={{
-          duration: 1000,
+          duration: 1000
         }}
         // Animation model props
         animationProps={{
           rotate: {
-            value: helpers.transition({ from: 360, to: 180 }),
+            value: helpers.transition({ from: 360, to: 180 })
           }
-        }}
-      >
+        }}>
         <div style={styles} />
       </Animate>
     )
@@ -139,13 +124,19 @@ class App extends Component {
   <img src="./media/Animate.gif" />
 </p>
 
-**Usage with `Timeline` function**
+[Read the detailed API reference for `Animate` component]()
+
+**Example usage with `Timeline` API**
 
 ```js
 import React from 'react'
 import { Timeline, helpers } from 'animated-timeline'
 
-const { transition } = helpers
+const styles = {
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'pink'
+}
 
 // Define timeline model properties
 const Animated = Timeline({
@@ -158,26 +149,70 @@ class App extends React.Component {
     // Define animation model properties
     Animated.value({
       elements: this.one,
-      opacity: transition({ from: 0.2, to: 0.8 }),
+      opacity: helpers.transition({ from: 0.2, to: 0.8 }),
       rotate: {
-        value: transition({ from: 360, to: 180 })
+        value: helpers.transition({ from: 360, to: 180 })
       }
     }).start()
   }
 
   render() {
-    const styles = {
-      width: '20px',
-      height: '20px',
-      backgroundColor: 'pink'
-    }
-
-    return <div ref={one => (this.one = one)} style={styles} />
+    return <div ref={(one) => (this.one = one)} style={styles} />
   }
 }
 ```
 
 > **Note** - You can also use selectors like '.xyz' or '#xyz' along with refs or an array of elements like `[this.one, '.xyz', '#xyz']` and pass it to `elements` property.
+
+[Read the detailed API reference for `Timeline` API]()
+
+**Example usage with spring physics and bounciness**
+
+```js
+import React from 'react'
+
+import { Spring } from 'animated-timeline'
+
+const styles = {
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'pink'
+}
+
+const spring = Spring({ friction: 4, tension: 2 })
+
+export class SpringSystem extends React.Component {
+  componentDidMount() {
+    spring.animate({
+      element: this.one,
+      property: 'scale',
+      options: {
+        mapValues: {
+          input: [0, 1],
+          output: [1, 1.5]
+        }
+      }
+    })
+  }
+
+  render() {
+    return (
+      <div style={{ margin: '0 auto', width: '50%' }}>
+        <div
+          ref={(one) => (this.one = one)}
+          onMouseUp={() => spring.setValue(0)}
+          onMouseDown={() => spring.setValue(1)}
+          style={styles}
+        />
+      </div>
+    )
+  }
+}
+```
+
+<p align="center">
+  <img src="./media/spring.gif" />
+</p>
 
 ## Brief
 
@@ -205,7 +240,6 @@ The animation model, on the other hand, describes how an animation could look li
 
 * Spring based animations
 
-
 ### Sequence based animations
 
 [See example code for sequence based animations](./examples/Sequence.js)
@@ -217,7 +251,6 @@ The animation model, on the other hand, describes how an animation could look li
 ### Timing based animations
 
 [See example code for timing based animations](./examples/Timing.js)
-
 
 <p align="center">
   <img src="./media/timing.gif" />
@@ -264,9 +297,9 @@ See more examples for -
 
 ## Challenges / Todos
 
-* Complex layout animations ?
+* [ ] ReasonML port of the core engine
 
-* timing model based on scroll position and gestures ?
+* [ ] timing model based on scroll position and gestures ?
 
 ## Contributing
 

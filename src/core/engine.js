@@ -1,5 +1,5 @@
 /**
- * This is the core animation engine for this library.
+ * This is the core animation engine.
  * Most of the code is taken from https://github.com/juliangarnier/anime
  *
  * Modifications -

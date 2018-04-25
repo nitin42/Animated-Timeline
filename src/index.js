@@ -6,8 +6,9 @@ import { getAvailableTransforms } from './core/engine'
 import { Timeline } from './core/timeline'
 import { createMover } from './core/createMover'
 import { Animate } from './components/Animate'
+import { Spring } from './spring'
 
-// Helpers can be shared across instances of Timeline and Playback components and are used in creating animation values. (from - to, changin color values, creating bezier curves, sequencing by a offset value)
+// Helpers can be shared across instances of Timeline and Playback components (from - to, changing color values, creating bezier curves, sequencing by a offset value)
 export const helpers = {
   createEasingCurve,
   transition,
@@ -18,4 +19,4 @@ export const helpers = {
   getAvailableTransforms
 }
 
-export { Timeline, Keyframes, Animate, createMover }
+export { Timeline, Keyframes, Animate, createMover, Spring }
