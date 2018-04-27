@@ -4,7 +4,7 @@ import { boxStyles } from '../styles'
 
 import { Timeline, helpers } from '../../src'
 
-const timeline = Timeline({
+const t = Timeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
   iterations: Infinity,
@@ -12,9 +12,9 @@ const timeline = Timeline({
 })
 
 const animate = (one, two) => {
-  timeline
+  t
     .sequence([
-      timeline.animate({
+      t.animate({
         element: one,
         scale: helpers.transition({
           from: 2,
@@ -22,7 +22,7 @@ const animate = (one, two) => {
         })
       }),
 
-      timeline.animate({
+      t.animate({
         element: two,
         rotate: '360deg',
         offset: helpers.startBefore(1200)
@@ -39,7 +39,7 @@ export class ChangeSpeed extends React.Component {
 
     // Change the speed after 3s
     setTimeout(() => {
-      timeline.getAnimations().forEach((animation) => {
+      t.getAnimations().forEach((animation) => {
         animation.setSpeed(0.2)
       })
     }, 3000)

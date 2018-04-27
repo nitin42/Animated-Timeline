@@ -4,7 +4,7 @@ import { boxStyles } from '../styles'
 
 import { Timeline, helpers } from '../../src'
 
-const timeline = Timeline({
+const t = Timeline({
   easing: 'easeInOutSine',
   iterations: 1,
   direction: 'normal',
@@ -31,9 +31,9 @@ class Car extends React.Component {
 }
 
 const animate = ({ one, two, three }) => {
-  timeline
+  t
     .sequence([
-      timeline.animate({
+      t.animate({
         element: one,
         translateX: helpers.transition({
           from: 10,
@@ -41,7 +41,7 @@ const animate = ({ one, two, three }) => {
         })
       }),
 
-      timeline.animate({
+      t.animate({
         element: two,
         translateX: helpers.transition({
           from: 5,
@@ -50,7 +50,7 @@ const animate = ({ one, two, three }) => {
         offset: helpers.startAfter(200)
       }),
 
-      timeline.animate({
+      t.animate({
         element: three,
         translateX: helpers.transition({
           from: 2,

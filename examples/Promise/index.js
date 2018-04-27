@@ -4,7 +4,7 @@ import { boxStyles } from '../styles'
 
 import { Timeline, helpers } from '../../src'
 
-const timeline = Timeline({
+const t = Timeline({
   speed: 1,
   iterations: 1,
   direction: 'alternate',
@@ -14,7 +14,7 @@ const timeline = Timeline({
 
 export class PromiseAPI extends React.Component {
   componentDidMount() {
-    timeline
+    t
       .animate({
         element: this.one,
         scale: helpers.transition({
@@ -24,11 +24,11 @@ export class PromiseAPI extends React.Component {
       })
       .start()
 
-    timeline.onfinish.then((res) => console.log(res))
+    t.onfinish.then((res) => console.log(res))
   }
 
   cancelAnimation = () =>
-    timeline.oncancel(this.one).then((res) => console.log(res))
+    t.oncancel(this.one).then((res) => console.log(res))
 
   render() {
     return (

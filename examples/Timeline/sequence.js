@@ -4,7 +4,7 @@ import { boxStyles } from '../styles'
 
 import { Timeline, helpers } from '../../src'
 
-const timeline = Timeline({
+const t = Timeline({
   direction: 'alternate',
   speed: 0.7,
   easing: 'easeInOutSine',
@@ -12,9 +12,9 @@ const timeline = Timeline({
 })
 
 const animate = ({ one, two }) => {
-  timeline
+  t
     .sequence([
-      timeline.animate({
+      t.animate({
         element: one,
         translateX: helpers.transition({
           from: 20,
@@ -29,7 +29,7 @@ const animate = ({ one, two }) => {
         })
       }),
 
-      timeline.animate({
+      t.animate({
         element: two,
         translateY: helpers.transition({
           from: 100,

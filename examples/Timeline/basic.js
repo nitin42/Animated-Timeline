@@ -4,7 +4,7 @@ import { boxStyles } from '../styles'
 
 import { Timeline, helpers, Keyframes } from '../../src'
 
-const timeline = Timeline({
+const t = Timeline({
   iterations: 3,
   direction: 'alternate',
   easing: 'easeInOutSine'
@@ -12,7 +12,7 @@ const timeline = Timeline({
 
 export class BasicTimeline extends React.Component {
   componentDidMount() {
-    timeline
+    t
       .animate({
         element: this.one,
         scale: helpers.transition({

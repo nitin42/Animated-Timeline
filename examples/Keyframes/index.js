@@ -3,7 +3,7 @@ import React from 'react'
 import { Timeline, Keyframes, helpers } from '../../src'
 import { boxStyles } from '../styles'
 
-const timeline = Timeline({
+const t = Timeline({
   easing: 'easeInOutSine',
   direction: 'alternate'
 })
@@ -25,7 +25,7 @@ const x = new Keyframes()
 
 export class KeyframesExample extends React.Component {
   componentDidMount() {
-    timeline
+    t
       .animate({
         element: this.one,
         translateX: x.frames

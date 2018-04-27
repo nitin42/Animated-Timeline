@@ -4,7 +4,7 @@ import { boxStyles } from '../styles'
 
 import { Timeline, helpers } from '../../src'
 
-const timeline = Timeline({
+const t = Timeline({
   speed: 1,
   iterations: 1,
   direction: 'alternate',
@@ -18,7 +18,7 @@ export class Lifecycle extends React.Component {
   }
 
   componentDidMount() {
-    timeline
+    t
       .animate({
         element: this.one,
         scale: helpers.transition({
@@ -28,13 +28,13 @@ export class Lifecycle extends React.Component {
       })
       .start()
 
-    timeline.onStart = ({ began }) => {
+    t.onStart = ({ began }) => {
       if (began) {
         console.log('Started animation!')
       }
     }
 
-    timeline.onComplete = ({ completed, controller: { reverse, restart } }) => {
+    t.onComplete = ({ completed, controller: { reverse, restart } }) => {
       if (completed) {
         console.log('Completed... starting again!')
         reverse()
@@ -42,14 +42,14 @@ export class Lifecycle extends React.Component {
       }
     }
 
-    timeline.onUpdate = ({ progress }) => {
+    t.onUpdate = ({ progress }) => {
       this.setState({ value: Math.floor(Number(progress)) })
     }
   }
 
   componentWillUnmount() {
     // Clear the subscriptions
-    timeline.clear()
+    t.clear()
   }
 
   render() {

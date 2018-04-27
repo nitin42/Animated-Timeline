@@ -4,7 +4,7 @@ import { boxStyles } from '../styles'
 
 import { Timeline, helpers, createMover } from '../../src'
 
-const timeline = Timeline({
+const t = Timeline({
   speed: 1,
   iterations: 1,
   direction: 'alternate',
@@ -17,7 +17,7 @@ export class SeekBasic extends React.Component {
   state = { value: 0 }
 
   componentDidMount() {
-    timeline.animate({
+    t.animate({
       element: this.one,
       scale: helpers.transition({
         from: 4,
@@ -53,8 +53,8 @@ export class SeekBasic extends React.Component {
             value={this.state.value}
             onChange={this.handleChange}
           />
-          <button onClick={() => timeline.stop()}>Pause</button>
-          <button onClick={() => timeline.start()}>Play</button>
+          <button onClick={() => t.stop()}>Pause</button>
+          <button onClick={() => t.start()}>Play</button>
         </div>
       </div>
     )
