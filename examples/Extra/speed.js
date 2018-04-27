@@ -11,28 +11,35 @@ const timeline = Timeline({
   speed: 0.5
 })
 
-export class ChangeSpeed extends React.Component {
-  timer = null
-
-  componentDidMount() {
-    timeline
-      .animate({
-        element: '#speed-one',
+const animate = (one, two) => {
+  timeline
+    .sequence([
+      timeline.animate({
+        element: one,
         scale: helpers.transition({
           from: 2,
           to: 1
         })
-      })
-      .animate({
-        element: '#speed-two',
+      }),
+
+      timeline.animate({
+        element: two,
         rotate: '360deg',
         offset: helpers.startBefore(1200)
       })
-      .start()
+    ])
+    .start()
+}
+
+export class ChangeSpeed extends React.Component {
+  timer = null
+
+  componentDidMount() {
+    animate('#speed-one', '#speed-two')
 
     // Change the speed after 3s
     setTimeout(() => {
-      timeline.getAnimations().forEach(animation => {
+      timeline.getAnimations().forEach((animation) => {
         animation.setSpeed(0.2)
       })
     }, 3000)
@@ -40,10 +47,10 @@ export class ChangeSpeed extends React.Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <div id="speed-one" style={boxStyles} />
         <div id="speed-two" style={boxStyles} />
-      </div>
+      </React.Fragment>
     )
   }
 }

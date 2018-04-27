@@ -11,40 +11,47 @@ const timeline = Timeline({
   iterations: Infinity
 })
 
-export class SequenceTimeline extends React.Component {
-  componentDidMount() {
-    timeline
-      .animate({
-        element: this.one,
+const animate = ({ one, two }) => {
+  timeline
+    .sequence([
+      timeline.animate({
+        element: one,
         translateX: helpers.transition({
           from: 20,
           to: 10
         }),
         rotate: {
-          value: 360
+          value: 720
         },
         scale: helpers.transition({
           from: 2,
           to: 1
         })
-      })
-      .animate({
-        element: this.two,
+      }),
+
+      timeline.animate({
+        element: two,
         translateY: helpers.transition({
           from: 100,
           to: 50
         }),
         elasticity: 5000
       })
-      .start()
+    ])
+    .start()
+}
+
+export class SequenceTimeline extends React.Component {
+  componentDidMount() {
+    animate({ one: '#one', two: '#two' })
   }
 
   render() {
     return (
-      <div>
-        <div ref={(one) => (this.one = one)} style={boxStyles} />
-        <div ref={(two) => (this.two = two)} style={boxStyles} />
-      </div>
+      <React.Fragment>
+        <div id="one" style={boxStyles} />
+        <div id="two" style={boxStyles} />
+      </React.Fragment>
     )
   }
 }

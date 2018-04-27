@@ -749,6 +749,8 @@ function animated(params = {}) {
     instance.start()
   }
 
+  instance.sequence = (...args) => instance
+
   // Use this method only when a 'setState' call is batched inside the lifecyle hook 'onUpdate' to avoid any memory leaks.
   instance.clear = () => raf && cancelAnimationFrame(raf)
 
@@ -952,7 +954,6 @@ function createTimeline(params) {
     tl.seek(0)
     tl.reset()
     if (tl.autoplay) tl.restart()
-    return tl
   }
   return tl
 }
