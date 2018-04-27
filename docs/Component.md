@@ -4,16 +4,16 @@
 
 ## Examples
 
-[Check out the examples for using the component API](../examples/Animate-Component).
+[Check out all the examples of component API](../examples/Animate-Component).
 
 ## Usage
 
 ```js
 import React from 'react'
 
-import { Animate, helpers } from 'animated-timeline'
+import { Animate } from 'animated-timeline'
 
-export function App() {
+function App() {
   return (
     <Animate
       timingProps={{
@@ -23,10 +23,10 @@ export function App() {
       }}
       animationProps={{
         rotate: {
-          value: helpers.transition({ from: 360, to: 180 }),
+          value: 360,
           duration: 3000
         },
-        scale: helpers.transition({ from: 1, to: 2 })
+        scale: 2
       }}>
       <div style={styles} />
     </Animate>
@@ -64,7 +64,7 @@ Autoplay the animation. Default value is `true`.
 
 ### `seekAnimation`
 
-Accepts a number or a callback function that returns a number.
+Use this prop to change the animation position with an input value. Accepts a number or a callback function that returns a number.
 
 ```js
 state = { value: 10 }
@@ -138,7 +138,7 @@ function App() {
 }
 ```
 
-You can use `onUpdate` lifecycle hook to mutate the state by syncing it with the animation progress while seeking the animation. Below is an example -
+You can use `onUpdate` lifecycle hook to update an input value by syncing it with the animation progress while seeking the animation. Below is an example -
 
 ```js
 import React from 'react'
@@ -180,7 +180,7 @@ class App extends React.Component {
 
 #### `onComplete`
 
-`onStart` is invoked when the animation completes.
+`onComplete` is invoked when the animation completes.
 
 ```js
 function App() {
@@ -220,11 +220,11 @@ The above three lifecycle hooks receive the following props -
   began: boolean, // Animation started or not
   paused: boolean, // Is animation paused ?
   controller: {
-    start: Function, // Start the animation
-    stop: Function, // Stop the animation
-    restart: Function, // Restart the animation
-    reverse: Function, // Reverse the animation
-    reset: Function // Reset the animation
+    start: () => void, // Start the animation
+    stop: () => void, // Stop the animation
+    restart: () => void, // Restart the animation
+    reverse: () => void, // Reverse the animation
+    reset: () => void // Reset the animation
   }
 }
 ```
@@ -277,4 +277,100 @@ Restart the animation. Default is `false`
 state = { restart: false }
 
 <Animate restart={state.restart} />
+```
+
+## Extra
+
+### Using Keyframes with `Animate` component
+
+```js
+import { Animate, Keyframes } from 'animated-timeline'
+
+const x = new Keyframes()
+  .value({
+    value: 10,
+    duration: 1000
+  })
+  .value({
+    value: 50,
+    duration: 2000,
+    offset: 0.8
+  })
+  .value({
+    value: 0,
+    duration: 3000
+  })
+
+function App() {
+  return (
+    <Animate
+      timingProps={{
+        duration: 4000,
+      }}
+      animationProps={{
+        // Add frames to the property `translateX`
+        translateX: x.frames
+      }}
+    />
+      <div style={some_styles}
+    </Animate>
+  )
+}
+```
+
+[Read more about the `Keyframes` API]()
+
+### Using `helpers` object with `Animate` component
+
+```js
+import { Animate, helpers } from 'animated-timeline'
+
+function App() {
+  return (
+    <Animate
+      timingProps={{
+        duration: 4000,
+      }}
+      animationProps={{
+        translateX: helpers.transition({
+          from: 50,
+          to: 100
+        })
+      }}
+    />
+      <div style={some_styles}
+    </Animate>
+  )
+}
+```
+
+[Read more about the `helpers` object]()
+
+## FAQs
+
+* **I need to do something when an animation ends**
+
+Use `onComplete` lifecycle hook
+
+* **How can I sync an animation progress value with an input value ?**
+
+Use `onUpdate` lifecycle hook
+
+```js
+<Animate
+  {...props}
+  lifecycle={{
+    onUpdate: ({ progress }) => {
+      // do something here with the `progress` value
+      // onUpdate is called each frame
+    }
+  }}
+```
+
+* **I need to control the animation with changing input**
+
+Use `seekAnimation` prop.
+
+```js
+<Animate seekAnimation={input_value} />
 ```
