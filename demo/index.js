@@ -43,7 +43,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <SeekBasic />
+        <SequenceTimeline />
       </React.Fragment>
     )
   }

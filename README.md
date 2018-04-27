@@ -2,6 +2,7 @@
 
 > Create playback based animations in React 💫
 
+
 ## Table of contents
 
 * [Introduction](#introduction)
@@ -22,19 +23,15 @@
 
 * [Documentation](#documentation)
 
-* [TODOS](#todos)
-
-* [Contributing](#contributing)
-
-* [License](#license)
+* [Todos](#todos)
 
 ## Introduction 👋🏻
 
-**animated-timeline** is an animation library for React which makes it painless to create playback based animations. It is inspired from [animatedjs](https://github.com/animatedjs/animated) and [anime](https://github.com/juliangarnier/anime). It focuses on improving the developer experience.
+**animated-timeline** is an animation library for React which makes it painless to create playback based animations. It is inspired from [animatedjs](https://github.com/animatedjs/animated) and [anime](https://github.com/juliangarnier/anime).
 
 ## Another animation library ? 👀
 
-No, it's not an animation library. Though you can use it as a library or extract some part of this project because `animated-timeline` exposes playback based APIs to perform animations and provides some other utilities like altering the animation position, APIs for performing spring based animations etc but the main goal of this project is to -
+No, it's not an animation library. Though you can use it as a library or extract some part of this project because `animated-timeline` exposes playback based APIs to perform animations and provides some other utilities like changing the animation position along its timeline, APIs for performing spring based animations etc but the main goal of this project is to -
 
 * provide utilities to create animation tools.
 
@@ -55,6 +52,8 @@ No, it's not an animation library. Though you can use it as a library or extract
 * Promise based APIs
 
 * Interactive animations based on changing inputs
+
+* Spring physics and bounciness
 
 ## Performance 🔥
 
@@ -160,7 +159,7 @@ class App extends React.Component {
 }
 ```
 
-> **Note** - You can also use selectors like '.xyz' or '#xyz' along with refs or an array of elements.
+> **Note** - You can also use selectors like '.xyz' or '#xyz' along with refs or an array of elements via property `multilpeEl`.
 
 [Read the detailed API reference for `Timeline` API](./docs/Timeline.md)
 
@@ -179,7 +178,12 @@ const styles = {
 
 const spring = Spring({ friction: 4, tension: 2 })
 
-export class SpringSystem extends React.Component {
+// or
+
+// const spring = Spring({ bounciness: 14, speed: 12 })
+
+
+class SpringSystem extends React.Component {
   componentDidMount() {
     spring.animate({
       element: this.one,
@@ -195,14 +199,12 @@ export class SpringSystem extends React.Component {
 
   render() {
     return (
-      <div style={{ margin: '0 auto', width: '50%' }}>
-        <div
-          ref={(one) => (this.one = one)}
-          onMouseUp={() => spring.setValue(0)}
-          onMouseDown={() => spring.setValue(1)}
-          style={styles}
-        />
-      </div>
+      <div
+        ref={(one) => (this.one = one)}
+        onMouseUp={() => spring.setValue(0)}
+        onMouseDown={() => spring.setValue(1)}
+        style={styles}
+      />
     )
   }
 }
@@ -240,9 +242,9 @@ export class SpringSystem extends React.Component {
   <img src="./media/keyframes.gif" />
 </p>
 
-### Changing the animation duration
+### Changing the animation position
 
-You can also change the animation duration using an input value. In the below example, we are passing the value for the input type `range`.
+You can also change the animation position along its timeline using an input value.
 
 [See example code](./examples/Mover.js)
 
@@ -266,7 +268,7 @@ See more examples for -
 
 * [Using promise based APIs to control `initialisation` and `cancellation` events for an animation](./examples/Promise/index.js)
 
-* [Using Timer APIs](./examples/Extra/speed.js)
+* [Animations using timer APIs](./examples/Extra/speed.js)
 
 
 ## Documentation
@@ -278,11 +280,3 @@ See more examples for -
 * [ ] ReasonML port of the core engine
 
 * [ ] timing model based on scroll position and gestures ?
-
-## Contributing 🤝
-
-[See the contributing guide](./CONTRIBUTING.md)
-
-## License
-
-MIT
