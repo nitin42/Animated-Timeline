@@ -21,6 +21,8 @@
 
 * [Animation types](#animation-types)
 
+* [Animation values](#animation-values)
+
 * [Documentation](#documentation)
 
 * [Todos](#todos)
@@ -270,6 +272,65 @@ See more examples for -
 
 * [Animations using timer APIs](./examples/Extra/speed.js)
 
+## Animation values
+
+You can define animation values for a property -
+
+* Using transforms
+
+```js
+timeline.animate({
+  element: '.one',
+  scale: 1
+})
+```
+
+* Using css properties
+
+```js
+timeline.animate({
+  element: '.one',
+  width: '20px'
+})
+```
+
+* Using objects
+
+```js
+timeline.animate({
+  element: '.one',
+  rotate: {
+    value: 360, // 360deg
+    duration: 3000,
+    delay: 200,
+    direction: 'alternate'
+  }
+})
+```
+
+With objects, you have more control over defining the values.
+
+Check out [this]() list to see which properties you can use when defining the animation values using objects.
+
+* `from` - `to` based animation values
+
+```js
+import { timeline, helpers } from 'animated-timeline'
+
+Timeline({ duration: 2000, delay: 200 }).animate({
+  element: '.one',
+  scale: helpers.transition({ from: 2, to: 1})
+})
+```
+
+* Timing based animations
+
+```js
+import { timeline, helpers } from 'animated-timeline'
+
+Timeline({ duration: 2000 }).animate({ element: '.one',
+scale: 2 }).animate({ element: '.two', scale: 1, offset: helpers.startAfter(2000)})
+```
 
 ## Documentation
 

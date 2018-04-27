@@ -27,7 +27,7 @@ export const batchRead = (reads: Function): id => {
     return reads()
   })
 
-  return writeId
+  return readId
 }
 
 // In case we don't have the current node on which the mutations were applied, catch the exceptions.
