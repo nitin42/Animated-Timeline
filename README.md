@@ -6,7 +6,11 @@
 
 * [Introduction](#introduction)
 
-* [Motivation](#another-animation-library)
+* [Another animation library ?](#another-animation-library)
+
+* [Features](#features)
+
+* [Performance](#performance)
 
 * [Install](#install)
 
@@ -14,7 +18,11 @@
 
 * [Usage](#usage)
 
+* [Animation types](#animation-types)
+
 * [Documentation](#documentation)
+
+* [TODOS](#todos)
 
 * [Contributing](#contributing)
 
@@ -99,16 +107,14 @@ const styles = {
   marginTop: 30
 }
 
-export function App() {
+function App() {
   return (
     <Animate
       timingProps={{
         duration: 1000
       }}
       animationProps={{
-        rotate: {
-          value: helpers.transition({ from: 360, to: 180 })
-        }
+        rotate: helpers.transition({ from: 360, to: 180 })
       }}>
       <div style={styles} />
     </Animate>
@@ -120,7 +126,7 @@ export function App() {
   <img src="./media/Animate.gif" />
 </p>
 
-[Read the detailed API reference for `Animate` component]()
+[Read the detailed API reference for `Animate` component](./docs/Component.md)
 
 **Example usage with `Timeline` API**
 
@@ -134,21 +140,17 @@ const styles = {
   backgroundColor: 'pink'
 }
 
-// Define timeline model properties
-const Animated = Timeline({
+const timeline = Timeline({
   direction: 'alternate',
   iterations: 1
 })
 
 class App extends React.Component {
   componentDidMount() {
-    // Define animation model properties
-    Animated.value({
+    timeline.animate({
       elements: this.one,
       opacity: helpers.transition({ from: 0.2, to: 0.8 }),
-      rotate: {
-        value: helpers.transition({ from: 360, to: 180 })
-      }
+      rotate: helpers.transition({ from: 360, to: 180 })
     }).start()
   }
 
@@ -158,9 +160,9 @@ class App extends React.Component {
 }
 ```
 
-> **Note** - You can also use selectors like '.xyz' or '#xyz' along with refs or an array of elements like `[this.one, '.xyz', '#xyz']` and pass it to `elements` property.
+> **Note** - You can also use selectors like '.xyz' or '#xyz' along with refs or an array of elements.
 
-[Read the detailed API reference for `Timeline` API]()
+[Read the detailed API reference for `Timeline` API](./docs/Timeline.md)
 
 **Example usage with spring physics and bounciness**
 
@@ -210,7 +212,7 @@ export class SpringSystem extends React.Component {
   <img src="./media/spring.gif" />
 </p>
 
-[Read the detailed API reference for spring physics and bounciness]()
+[Read the detailed API reference for spring physics and bounciness](./docs/Spring.md)
 
 ## Animation types 🌀
 
@@ -260,16 +262,18 @@ You can also change the animation duration using an input value. In the below ex
 
 See more examples for -
 
-* [**Animating multiple instances**](./examples/MultipleInstance.js)
+* [Animation lifecycle](./examples/Lifecycle/index.js)
 
-* [**Managing animation lifecycle**](./examples/Lifecycle.js)
+* [Using promise based APIs to control `initialisation` and `cancellation` events for an animation](./examples/Promise/index.js)
 
-* [**Using promise based APIs to control `initialisation` and `cancellation` events for an animation**](./examples/PromiseAPI.js)
+* [Using Timer APIs](./examples/Extra/speed.js)
 
-<br/>
-**If that sounds interesting**, [**then let's dive into the detailed documentation which covers example use cases, API reference, and some more examples**](./docs)
 
-## Challenges / Todos 😴
+## Documentation
+
+[Check out the detailed documentation for `animated-timeline`.](./docs)
+
+## Todos 😴
 
 * [ ] ReasonML port of the core engine
 

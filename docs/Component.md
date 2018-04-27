@@ -381,3 +381,12 @@ Use `seekAnimation` prop.
 ```js
 <Animate seekAnimation={input_value} />
 ```
+
+## Trade-offs
+
+*  You cannot perform sequence based animations. Use [`Timeline API`](./Timeline.md) instead.
+
+* Promise based APIs for oncancel and onfinish events are not available. Use [`Timeline API`](./Timeline.md) instead.
+
+* Controls for time-based execution are directly not available on the instance, and they are accessible only via flags
+
