@@ -1,12 +1,12 @@
 # Component API
 
-`animated-timeline` provides an `Animate` component to animate the elements with a declarative API.
+`animated-timeline` provides an `Animate` component to animate the elements using a declarative API.
 
 ## Examples
 
 [Check out all the examples of component API](../examples/Animate-Component).
 
-## Usage
+## Basic example
 
 ```js
 import React from 'react'
@@ -16,16 +16,15 @@ import { Animate } from 'animated-timeline'
 function App() {
   return (
     <Animate
+      // Properties for timing model
       timingProps={{
         duration: 1000,
         direction: 'alternate',
         iterations: Infinity
       }}
+      // Properties for animation model
       animationProps={{
-        rotate: {
-          value: 360,
-          duration: 3000
-        },
+        rotate: '360deg',
         scale: 2
       }}>
       <div style={styles} />
@@ -34,11 +33,15 @@ function App() {
 }
 ```
 
+> [Learn more about animation and timing model]()
+
 ## Props
 
 ### `timingProps`
 
-Accepts an object of timing properties like `duration`, `delay`, `iterations` etc. Check out [this]() list of available timing properties.
+Accepts an object of timing properties like `duration`, `delay`, `iterations` etc.
+
+Check out [this]() list of available timing properties.
 
 ```js
 <Animate
@@ -48,7 +51,9 @@ Accepts an object of timing properties like `duration`, `delay`, `iterations` et
 
 ### `animationProps`
 
-Accepts an object of animation properties like `rotation`, `scale`, `width` and all other css and transform properties. Check out [this]() list of all the properties.
+Accepts an object of animation properties like `rotation`, `scale`, `width` and all other css and transform properties.
+
+Check out [this]() list of all the properties.
 
 ```js
 <Animate animationProps={{ rotate: 360, scale: 1 }} />
@@ -64,7 +69,7 @@ Autoplay the animation. Default value is `true`.
 
 ### `seekAnimation`
 
-Use this prop to change the animation position with an input value. Accepts a number or a callback function that returns a number.
+Use this prop to change the animation position along its timeline with an input value. Accepts a number or a callback function that returns a number.
 
 ```js
 state = { value: 10 }
@@ -97,6 +102,8 @@ function App() {
 ```
 
 ### `lifecycle`
+
+Accepts an object with following methods -
 
 #### `onStart`
 
@@ -318,7 +325,7 @@ function App() {
 }
 ```
 
-[Read more about the `Keyframes` API]()
+[Read more about the `Keyframes` API](Keyframes.md)
 
 ### Using `helpers` object with `Animate` component
 
@@ -344,7 +351,7 @@ function App() {
 }
 ```
 
-[Read more about the `helpers` object]()
+[Read more about the `helpers` object](./helpers.md)
 
 ## FAQs
 

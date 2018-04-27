@@ -36,7 +36,7 @@ The animation model, on the other hand, describes how an animation could look li
 
 `Timeline` function returns a timeline instance which is use to animate the element.
 
-**Specifying timing model properties**
+**Specifying properties for timing model**
 
 ```js
 import { Timeline } from 'animated-timeline'
@@ -49,9 +49,7 @@ const timeline = Timeline({
 })
 ```
 
-**Specifying animation model properties**
-
-Use the `timeline` instance to animate the element.
+**Specifying properties for animation model**
 
 ```js
 import { Timeline, helpers } from 'animated-timeline'

@@ -59,7 +59,7 @@ timeline.sequence([
     element: '#my-custom-id',
     translateX: '30px',
     scale: 2,
-    offset: helpers.startAfter(2000) // Start the animation after 2 seconds the.
+    offset: helpers.startAfter(2000) // Start the animation at 2 seconds after the previous animation ends.
   })
 ])
 ```
@@ -162,3 +162,45 @@ helpers.getAvailableTransforms()
 ```
 
 Returns an array of available transform properties.
+
+## API
+
+### `helpers.transition`
+
+A function that accepts an object with two properties, `from` and `to`.
+
+```js
+helpers.transition({ from: 1, to: 2})
+```
+
+### `helpers.startAfter`
+
+A function that accepts a timeout value.
+
+```js
+helpers.startAfter(2000)
+```
+
+### `helpers.startBefore`
+
+A function that accepts a timeout value.
+
+```js
+helpers.startBefore(2000)
+```
+
+### `helpers.times`
+
+A function that accepts a unit value.
+
+```js
+helpers.times(3)
+```
+
+### `helpers.createEasingCurve`
+
+A function that accepts two arguments, a curve name and an array of four control points and returns the curve.
+
+```js
+helpers.createEasingCurve('my_custom_curve', [1, 2, 3, 4])
+```

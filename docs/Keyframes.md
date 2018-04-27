@@ -53,7 +53,7 @@ For example -
 }
 ```
 
-The above css snippet will converted to -
+The above css snippet will be written as -
 
 ```js
 const xyz = new Keyframes().value({ offset: 0.45, height: '30px' })
@@ -92,7 +92,7 @@ div {
 }
 ```
 
-This will be written as -
+The above css snippet will be written as -
 
 ```js
 import { Animate, Keyframes } from 'animated-timeline'
@@ -108,7 +108,7 @@ const xyz = new Keyframes()
   })
   .value({
     offset: 1,
-    top: o,
+    top: 100,
     background: 'red'
   })
 

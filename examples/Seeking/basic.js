@@ -24,6 +24,8 @@ export class SeekBasic extends React.Component {
         to: 2
       })
     })
+
+    seekAnimation(0)
   }
 
   handleChange = (e) => {
@@ -51,6 +53,8 @@ export class SeekBasic extends React.Component {
             value={this.state.value}
             onChange={this.handleChange}
           />
+          <button onClick={() => timeline.stop()}>Pause</button>
+          <button onClick={() => timeline.start()}>Play</button>
         </div>
       </div>
     )
