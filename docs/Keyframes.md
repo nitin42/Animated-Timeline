@@ -56,7 +56,11 @@ For example -
 The above css snippet will be written as -
 
 ```js
-const xyz = new Keyframes().value({ offset: 0.45, height: '30px' })
+const xyz = new Keyframes().value({ offset: 0.45, value: 30 })
+
+const t = Timeline({ duration: 2000 })
+
+t.animate({ element: '#some_id', height: xyz.frames })
 ```
 
 with `Keyframes` constructor.
@@ -67,28 +71,19 @@ For multiple endpoints, chain the `.value({})` calls.
 @keyframes xyz {
   0% {
     top: 0px;
-    background: red;
   }
   25% {
     top: 0px;
-    background: blue;
   }
   50% {
     top: 100px;
-    background: yellow;
   }
   75% {
     top: 100px;
-    background: green;
   }
   100% {
     top: 0px;
-    background: red;
   }
-}
-
-div {
-  animation: xyz;
 }
 ```
 
@@ -98,18 +93,16 @@ The above css snippet will be written as -
 import { Animate, Keyframes } from 'animated-timeline'
 
 const xyz = new Keyframes()
-  .value({ top: 0, background: 'red' })
-  .value({ top: 100, offset: 0.25, background: 'blue' })
-  .value({ offset: 0.5, background: 'yellow', top: 100 })
+  .value({ value: 0 })
+  .value({ value: 100, offset: 0.25 })
+  .value({ offset: 0.5, value: 100 })
   .value({
     offset: 0.75,
-    top: 100,
-    background: 'green'
+    value: 100,
   })
   .value({
     offset: 1,
-    top: 100,
-    background: 'red'
+    value: 100,
   })
 
 function App() {
@@ -117,7 +110,7 @@ function App() {
     <Animate
       {...timingProps}
       animationProps={{
-        translateX: xyz.frames
+        top: xyz.frames
       }}
     />
       {children}
