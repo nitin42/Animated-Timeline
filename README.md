@@ -161,7 +161,7 @@ const t = Timeline({
 class App extends React.Component {
   componentDidMount() {
     t.animate({
-      elements: this.one,
+      element: this.one,
       opacity: helpers.transition({ from: 0.2, to: 0.8 }),
       rotate: helpers.transition({ from: 360, to: 180 })
     }).start()
@@ -351,3 +351,5 @@ scale: 2 }).animate({ element: '.two', scale: 1, offset: helpers.startAfter(2000
 * [ ] ReasonML port of the core engine
 
 * [ ] timing model based on scroll position and gestures ?
+
+* [ ] Chain all the call sites
