@@ -17,12 +17,12 @@ To perform `from` - `to` based animation i.e transitioning from one state to ano
 ```js
 import { Timeline, helpers } from 'animated-timeline'
 
-const timeline = Timeline({
+const t = Timeline({
   duration: 2000,
   iterations: 2
 })
 
-timeline.animate({
+t.animate({
   element: '#my-custom-id',
   translateX: helpers.transition({
     from: 20, // 20px
@@ -44,18 +44,18 @@ Use this method to start an animation at a specified time after the previous ani
 ```js
 import { Timeline, helpers } from 'animated-timeline'
 
-const timeline = Timeline({
+const t = Timeline({
   duration: 2000,
   iterations: 2
 })
 
-timeline.sequence([
-  timeline.animate({
+t.sequence([
+  t.animate({
     element: '#custom-element-id',
     scale: 2
   }),
 
-  timeline.animate({
+  t.animate({
     element: '#my-custom-id',
     translateX: '30px',
     scale: 2,
@@ -71,18 +71,18 @@ Use this method to start an animation at a specified time before the previous an
 ```js
 import { Timeline, helpers } from 'animated-timeline'
 
-const timeline = Timeline({
+const t = Timeline({
   duration: 2000,
   iterations: 2
 })
 
-timeline.sequence([
-  timeline.animate({
+t.sequence([
+  t.animate({
     element: '#custom-element-id',
     scale: 2
   }),
 
-  timeline.animate({
+  t.animate({
     element: '#my-custom-id',
     translateX: '30px',
     scale: 2,
@@ -98,18 +98,18 @@ Use this method to start animation at times after the previous animation ends
 ```js
 import { Timeline, helpers } from 'animated-timeline'
 
-const timeline = Timeline({
+const t = Timeline({
   duration: 2000,
   iterations: 2
 })
 
-timeline.sequence([
-  timeline.animate({
+t.sequence([
+  t.animate({
     element: '#custom-element-id',
     scale: 2
   }),
 
-  timeline.animate({
+  t.animate({
     element: '#my-custom-id',
     translateX: '30px',
     scale: 2,
@@ -133,13 +133,13 @@ const myCustomCurve = helpers.createEasingCurve('SampleCurve', [
   -0.98
 ])
 
-const timeline = Timeline({
+const t = Timeline({
   duration: 2000,
   iterations: 2,
   easing: myCustomCurve
 })
 
-timeline.animate({
+t.animate({
   element: '#custom-element-id',
   scale: 2
 })
