@@ -11,7 +11,7 @@ const t = Timeline({
   easing: 'easeInOutSine'
 })
 
-const seekAnimation = createMover(timeline)
+const seekAnimation = createMover(t)
 
 export class SeekBasic extends React.Component {
   state = { value: 0 }

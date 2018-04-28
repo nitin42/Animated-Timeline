@@ -954,6 +954,8 @@ function createTimeline(params) {
     tl.seek(0)
     tl.reset()
     if (tl.autoplay) tl.restart()
+    
+    return tl
   }
   return tl
 }

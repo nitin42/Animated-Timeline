@@ -133,4 +133,4 @@ console.log(xyz.frames)
 
 ## Examples
 
-[Check out the examples for using `Keyframes`](../examples/Keyframes)
+[Check out the examples for using `Keyframes`](../examples/Keyframes/index.js)
