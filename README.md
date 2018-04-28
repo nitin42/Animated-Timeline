@@ -126,7 +126,7 @@ function App() {
   <img src="./media/Animate.gif" />
 </p>
 
-[Read the detailed API reference for `Animate` component](./docs/Component.md)
+[Read the detailed API reference for Component API](./docs/Component.md)
 
 **Example usage with `Timeline` API**
 
@@ -221,7 +221,7 @@ class SpringSystem extends React.Component {
 
 ### Sequence based animations
 
-[See example code for sequence based animations](./examples/Sequence.js)
+[See example code for sequence based animations](./examples/Timeline/sequence.js)
 
 <p align="center">
   <img src="./media/sequence.gif" />
@@ -229,7 +229,7 @@ class SpringSystem extends React.Component {
 
 ### Timing based animations
 
-[See example code for timing based animations](./examples/Timing.js)
+[See example code for timing based animations](./examples/Timeline/timing.js)
 
 <p align="center">
   <img src="./media/timing.gif" />
@@ -237,7 +237,7 @@ class SpringSystem extends React.Component {
 
 ### Keyframes
 
-[**See example code for keyframes**](./examples/Keyframes.js)
+[**See example code for keyframes**](./examples/Keyframes/index.js)
 
 <p align="center">
   <img src="./media/keyframes.gif" />
@@ -247,7 +247,7 @@ class SpringSystem extends React.Component {
 
 You can also change the animation position along its timeline using an input value.
 
-[See example code](./examples/Mover.js)
+[See example code](./examples/Seeking/basic.js)
 
 <p align="center">
   <img src="./media/mover.gif" />
@@ -255,7 +255,7 @@ You can also change the animation position along its timeline using an input val
 
 ### Spring based animations
 
-[See example code for spring based animations](./examples/Spring.js)
+[See examples for spring based animations](./examples/Spring)
 
 <p align="center">
   <img src="./media/spring.gif" />
@@ -279,7 +279,8 @@ See more examples for -
 ```js
 t.animate({
   element: '.one',
-  scale: 1
+  scale: 1,
+  rotateX: '360deg' // or 360
 })
 ```
 
@@ -311,7 +312,7 @@ Check out [this](./docs/properties) list to see which properties you can use whe
 * `from` - `to` based animation values
 
 ```js
-import { timeline, helpers } from 'animated-timeline'
+import { Timeline, helpers } from 'animated-timeline'
 
 Timeline({ duration: 2000, delay: 200 }).animate({
   element: '.one',
@@ -322,7 +323,7 @@ Timeline({ duration: 2000, delay: 200 }).animate({
 * Timing based animation values
 
 ```js
-import { timeline, helpers } from 'animated-timeline'
+import { Timeline, helpers } from 'animated-timeline'
 
 Timeline({ duration: 2000 }).animate({ element: '.one',
 scale: 2 }).animate({ element: '.two', scale: 1, offset: helpers.startAfter(2000)})
