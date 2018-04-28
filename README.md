@@ -173,7 +173,7 @@ class App extends React.Component {
 }
 ```
 
-> **Note** - You can also use selectors like '.xyz' or '#xyz' along with refs or an array of elements via property `multilpeEl`.
+Along with refs, you can also use selectors like '.xyz' or '#xyz'. To animate multiple elements or an array of elements use the property `multilpeEl` instead of `element`.
 
 [Read the detailed API reference for `Timeline` API](./docs/Timeline.md)
 
@@ -276,16 +276,13 @@ You can also change the animation position along its timeline using an input val
 
 ### More examples
 
-See more examples for -
+* [Animation lifecycle hooks](./examples/Lifecycle/index.js)
 
-* [Animation lifecycle](./examples/Lifecycle/index.js)
-
-* [Using promise based APIs to control `initialisation` and `cancellation` events for an animation](./examples/Promise/index.js)
+* [Promise based APIs to manage `initialisation` and `cancellation` events for an animation](./examples/Promise/index.js)
 
 * [Animations using timer APIs](./examples/Extra/speed.js)
 
 ## Animation values
-
 
 * For transforms
 
@@ -327,7 +324,7 @@ Check out [this](./docs/properties) list to see which properties you can use whe
 ```js
 import { Timeline, helpers } from 'animated-timeline'
 
-Timeline({ duration: 2000, delay: 200 }).animate({
+t.animate({
   element: '.one',
   scale: helpers.transition({ from: 2, to: 1})
 })
@@ -338,7 +335,7 @@ Timeline({ duration: 2000, delay: 200 }).animate({
 ```js
 import { Timeline, helpers } from 'animated-timeline'
 
-Timeline({ duration: 2000 }).animate({ element: '.one',
+t.animate({ element: '.one',
 scale: 2 }).animate({ element: '.two', scale: 1, offset: helpers.startAfter(2000)})
 ```
 
