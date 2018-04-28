@@ -9,13 +9,13 @@
 
 * [Another animation library ?](#another-animation-library)
 
-* [Features](#features)
+* [Features](#features-%EF%B8%8F)
 
 * [Performance](#performance)
 
 * [Install](#install)
 
-* [Browser support](#browser-support)
+* [Browser support](#browser-support-%EF%B8%8F)
 
 * [Usage](#usage)
 
@@ -29,11 +29,11 @@
 
 ## Introduction 👋🏻
 
-**animated-timeline** is an animation library for React which makes it painless to create playback based animations. It is inspired from [animatedjs](https://github.com/animatedjs/animated) and [anime](https://github.com/juliangarnier/anime).
+**animated-timeline** is an animation library for React which makes it painless to create playback based animations.
 
 ## Another animation library ? 👀
 
-No, it's not an animation library. Though you can use it as a library or extract some part of this project because `animated-timeline` exposes playback based APIs to perform animations and provides some other utilities like changing the animation position along its timeline, APIs for performing spring based animations etc but the main goal of this project is to -
+Nope! Though you can use it as a library or extract some part of this project as `animated-timeline` provides playback based APIs to perform animations and some other utilities like changing the animation position along its timeline, APIs for performing spring based animations etc but the main goal of this project is to -
 
 * provide utilities to create animation tools.
 
@@ -93,19 +93,18 @@ yarn add animated-timeline
 
 * [Timeline API](./docs/Timeline.md)
 
-* [Spring physics and bounciness](./docs/Spring.md)
+* [Spring physics API](./docs/Spring.md)
 
 **Example usage with component API**
 
 ```js
-import React, { Component } from 'react'
+import React from 'react'
 import { Animate, helpers } from 'animated-timeline'
 
 const styles = {
   width: '20px',
   height: '20px',
   backgroundColor: 'pink',
-  marginTop: 30
 }
 
 function App() {
@@ -141,14 +140,14 @@ const styles = {
   backgroundColor: 'pink'
 }
 
-const timeline = Timeline({
+const t = Timeline({
   direction: 'alternate',
   iterations: 1
 })
 
 class App extends React.Component {
   componentDidMount() {
-    timeline.animate({
+    t.animate({
       elements: this.one,
       opacity: helpers.transition({ from: 0.2, to: 0.8 }),
       rotate: helpers.transition({ from: 360, to: 180 })
@@ -165,7 +164,7 @@ class App extends React.Component {
 
 [Read the detailed API reference for `Timeline` API](./docs/Timeline.md)
 
-**Example usage with spring physics and bounciness**
+**Example usage with spring physics**
 
 ```js
 import React from 'react'
@@ -192,7 +191,7 @@ class SpringSystem extends React.Component {
       property: 'scale',
       options: {
         mapValues: {
-          input: [0, 1],
+          input: [0, 1], // Input values via setValue()
           output: [1, 1.5]
         }
       }
@@ -216,7 +215,7 @@ class SpringSystem extends React.Component {
   <img src="./media/spring.gif" />
 </p>
 
-[Read the detailed API reference for spring physics and bounciness](./docs/Spring.md)
+[Read the detailed API reference for spring physics](./docs/Spring.md)
 
 ## Animation types 🌀
 
@@ -274,30 +273,29 @@ See more examples for -
 
 ## Animation values
 
-You can define animation values for a property -
 
-* Using transforms
+* For transforms
 
 ```js
-timeline.animate({
+t.animate({
   element: '.one',
   scale: 1
 })
 ```
 
-* Using css properties
+* For css properties
 
 ```js
-timeline.animate({
+t.animate({
   element: '.one',
   width: '20px'
 })
 ```
 
-* Using objects
+* Defining values using objects
 
 ```js
-timeline.animate({
+t.animate({
   element: '.one',
   rotate: {
     value: 360, // 360deg
@@ -308,9 +306,7 @@ timeline.animate({
 })
 ```
 
-With objects, you have more control over defining the values.
-
-Check out [this]() list to see which properties you can use when defining the animation values using objects.
+Check out [this](./docs/properties) list to see which properties you can use when defining the animation values using objects.
 
 * `from` - `to` based animation values
 
@@ -323,7 +319,7 @@ Timeline({ duration: 2000, delay: 200 }).animate({
 })
 ```
 
-* Timing based animations
+* Timing based animation values
 
 ```js
 import { timeline, helpers } from 'animated-timeline'
