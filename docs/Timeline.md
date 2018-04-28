@@ -201,7 +201,7 @@ Read more about the `offset` property and timing based functions [here](./helper
 
 ### Seeking the animation
 
-You can change an animation position along its timeline using `createMover` function. `createMover` creates a function that moves/changes an animation position.
+You can change an animation position along its timeline using `createMover` function. `createMover` accepts a timeline instance and creates a function that moves or changes an animation position.
 
 ```js
 import React from 'react'
@@ -379,4 +379,244 @@ The above three lifecycle hooks receive the following props -
     reset: () => void // Reset the animation
   }
 }
+```
+
+## Promise API
+
+**onfinish**
+
+`onfinish` is resolved after the animation is finished.
+
+```js
+const t = Timeline({ ...props })
+
+t.animate({ ...props }).start()
+
+t.onfinish.then((res) => console.log(res))
+```
+
+**oncancel**
+
+`oncancel` accepts an element (ref or selector) and is resolved when an animation is interrupted. It removes the current element which is being animated from the timeline.
+
+```js
+const t = Timeline({ ...props })
+
+t.animate({ ...props }).start()
+
+t.oncancel('.one').then((res) => console.log(res))
+```
+
+[Check out the detailed examples of using promise API](../examples/Promise/index.js)
+
+## Altering timing model
+
+In some cases, you might want to alter the timing model i.e the timing properties. For example - changing the speed of an animation after 3 seconds.
+
+In those cases, you will be using `getAnimations()` method. `getAnimations()` method returns an array of running animations. Below is an example -
+
+```js
+import React from 'react'
+
+import { Timeline, helpers } from 'animated-timeline'
+
+const t = Timeline({
+  direction: 'alternate',
+  easing: 'easeInOutSine',
+  iterations: Infinity,
+  speed: 0.5
+})
+
+const animate = (one, two) => {
+  t.sequence([
+    t.animate({
+      element: one,
+      scale: helpers.transition({
+        from: 2,
+        to: 1
+      })
+    }),
+
+    t.animate({
+      element: two,
+      rotate: '360deg',
+      offset: helpers.startBefore(1200)
+    })
+  ]).start()
+}
+
+class App extends React.Component {
+  componentDidMount() {
+    animate('#speed-one', '#speed-two')
+
+    // Change the speed after 3s
+    setTimeout(() => {
+      t.getAnimations().forEach((animation) => {
+        animation.setSpeed(0.2)
+      })
+    }, 3000)
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div id="speed-one" />
+        <div id="speed-two" />
+      </React.Fragment>
+    )
+  }
+}
+```
+
+## Changing animation speed
+
+To change the animation speed, use the method `setSpeed` which is accessible via a timeline instance.
+
+```js
+const t = Timeline({
+  duration: 200,
+  speed: 0.6
+})
+
+t.setSpeed(0.9)
+```
+
+## Animation controls
+
+**`start()`**
+
+Starts an animation
+
+```js
+const t = Timeline({ ...props })
+
+t.start()
+```
+
+**`stop()`**
+
+Stops an animation
+
+```js
+Timeline({ ...props }).stop()
+```
+
+**`finish()`**
+
+Immediately finish an animation
+
+```js
+Timeline({ ...props }).finish()
+```
+
+Checkout [this](../examples/Extra/Finish.js) example for `finish()` control.
+
+**`reset()`**
+
+Resets an animation
+
+```js
+Timeline({ ...props }).reset()
+```
+
+**`reverse()`**
+
+Reverse an animation
+
+```js
+Timeline({ ...props }).reverse()
+```
+
+**`restart()`**
+
+Restart an animation
+
+```js
+Timeline({ ...props }).restart()
+```
+
+**`clear()`**
+
+Clear all the subscription
+
+```js
+Timeline({ ...props }).clear()
+```
+
+Use `clear()` to clear the subscriptions when updating the component state inside the `onUpdate` lifecycle hook.
+
+
+## Utilities
+
+Some utility functions which are accessible via timeline instance.
+
+**`getAnimationTime()`**
+
+Returns the total running time of an animation.
+
+```js
+Timeline({...props}).getAnimationTime()
+```
+
+**`getAnimationTimeByElement()`**
+
+Returns the total running time of an animation by element.
+
+```js
+Timeline({...props}).getAnimationTimeByElement()
+```
+
+**`getCurrentTime()`**
+
+Returns the current time of an animation
+
+```js
+Timeline({ ...props }).getCurrentTime()
+```
+
+**`getCurrentTimeByElement`**
+
+Returns the current time of an animation by element.
+
+```js
+Timeline({...props}).getCurrentTimeByElement()
+```
+
+**`getAnimationProgress()`**
+
+Returns the current animation progress.
+
+```js
+Timeline({...props}).getAnimationProgress()
+```
+
+**`getAnimationProgressByElement()`**
+
+Returns the current animation progress by element.
+
+```js
+Timeline({...props}).getCurrentProgressByElement()
+```
+
+**`getComputedTiming()`**
+
+Returns an object of timing properties -
+
+```js
+{
+  activeTime, // Time in which animation will be active
+  currentTime, // Current time of animation
+  progress, // Current animation progress
+  currentIteration // Current iterations of an animation
+}
+```
+
+**`getAnimations()`**
+
+Returns an array of running animations.
+
+```js
+Timeline({...props}).getAnimations().forEach(animation => {
+  animation.setSpeed(0.5)
+})
 ```
