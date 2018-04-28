@@ -32,7 +32,7 @@ t.animate({
     from: 2,
     to: 1
   })
-})
+}).start()
 ```
 
 ## Timing based animations
@@ -61,7 +61,7 @@ t.sequence([
     scale: 2,
     offset: helpers.startAfter(2000) // Start the animation at 2 seconds after the previous animation ends.
   })
-])
+]).start()
 ```
 
 * **`startBefore`**
@@ -88,7 +88,7 @@ t.sequence([
     scale: 2,
     offset: helpers.startBefore(2000) // Start the animation at 2 seconds before the previous animation ends.
   })
-])
+]).start()
 ```
 
 * **`times`**
@@ -115,7 +115,7 @@ t.sequence([
     scale: 2,
     offset: helpers.times(2)
   })
-])
+]).start()
 ```
 
 ## Creating custom easing curves
@@ -142,7 +142,7 @@ const t = Timeline({
 t.animate({
   element: '#custom-element-id',
   scale: 2
-})
+}).start()
 ```
 
 ## Reading information
