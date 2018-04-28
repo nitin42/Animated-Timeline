@@ -33,7 +33,7 @@ function App() {
 }
 ```
 
-> [Learn more about animation and timing model]()
+> [Learn more about animation and timing model](../README.md#concepts)
 
 ## Props
 
@@ -41,7 +41,7 @@ function App() {
 
 Accepts an object of timing properties like `duration`, `delay`, `iterations` etc.
 
-Check out [this]() list of available timing properties.
+Check out [this](./properties.md#timing-properties) list of available timing properties.
 
 ```js
 <Animate
@@ -53,7 +53,7 @@ Check out [this]() list of available timing properties.
 
 Accepts an object of animation properties like `rotation`, `scale`, `width` and all other css and transform properties.
 
-Check out [this]() list of all the properties.
+Check out [this](./properties.md#animation-properties) list of all the properties.
 
 ```js
 <Animate animationProps={{ rotate: 360, scale: 1 }} />
@@ -88,7 +88,7 @@ or with a callback function
 ```js
 state = { value: 10 }
 
-function callback(duration) {
+function callback({ duration }) {
   return duration - state.value * 20
 }
 
@@ -103,7 +103,7 @@ function App() {
 
 ### `lifecycle`
 
-Accepts an object with following methods -
+An object with following methods -
 
 #### `onStart`
 

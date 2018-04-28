@@ -41,6 +41,19 @@ Nope! Though you can use it as a library or extract some part of this project as
 
 * provide APIs for composing animations that transition from one state to another, use loops, callbacks and timer APIs to create interactive animations.
 
+## Concepts
+
+`animated-timeline` combines both the models, timing and animation so as to harmonize timing and visual changes to the document.
+
+### Timing model
+
+Timing model manages the time and keeps track of current progress in a timeline.
+
+### Animation model
+
+Animation model, on the other hand, describes how an animation could look like at any give time or it can be thought of as state of an animation at a particular point of time.
+
+
 ## Features ☄️
 
 * Controls for time-based execution of an animation
