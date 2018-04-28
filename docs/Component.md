@@ -294,16 +294,16 @@ state = { restart: false }
 import { Animate, Keyframes } from 'animated-timeline'
 
 const x = new Keyframes()
-  .value({
+  .add({
     value: 10,
     duration: 1000
   })
-  .value({
+  .add({
     value: 50,
     duration: 2000,
     offset: 0.8
   })
-  .value({
+  .add({
     value: 0,
     duration: 3000
   })

@@ -8,16 +8,16 @@ Define keyframes for a property (css or transform) using the constructor functio
 import { Animate, Keyframes } from 'animated-timeline'
 
 const x = new Keyframes()
-  .value({
+  .add({
     value: 10,
     duration: 1000
   })
-  .value({
+  .add({
     value: 50,
     duration: 2000,
     offset: 0.8
   })
-  .value({
+  .add({
     value: 0,
     duration: 3000
   })
@@ -56,7 +56,7 @@ For example -
 The above css snippet will be written as -
 
 ```js
-const xyz = new Keyframes().value({ offset: 0.45, value: 30 })
+const xyz = new Keyframes().add({ offset: 0.45, value: 30 })
 
 const t = Timeline({ duration: 2000 })
 
@@ -65,7 +65,7 @@ t.animate({ element: '#some_id', height: xyz.frames })
 
 with `Keyframes` constructor.
 
-For multiple endpoints, chain the `.value({})` calls.
+For multiple endpoints, chain the `.add({})` calls.
 
 ```css
 @keyframes xyz {
@@ -93,14 +93,14 @@ The above css snippet will be written as -
 import { Animate, Keyframes } from 'animated-timeline'
 
 const xyz = new Keyframes()
-  .value({ value: 0 })
-  .value({ value: 100, offset: 0.25 })
-  .value({ offset: 0.5, value: 100 })
-  .value({
+  .add({ value: 0 })
+  .add({ value: 100, offset: 0.25 })
+  .add({ offset: 0.5, value: 100 })
+  .add({
     offset: 0.75,
     value: 100,
   })
-  .value({
+  .add({
     offset: 1,
     value: 100,
   })
@@ -126,7 +126,7 @@ function App() {
 Creates an object that has a property called `frames`
 
 ```js
-const xyz = new Keyframes().value({ ...props })
+const xyz = new Keyframes().add({ ...props })
 
 console.log(xyz.frames)
 ```

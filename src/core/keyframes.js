@@ -12,7 +12,7 @@ export function Keyframes() {
   this.frames = []
 }
 
-Keyframes.prototype.value = function(values: attributes): keyframes {
+Keyframes.prototype.add = function(values: attributes): keyframes {
   invariant(
     typeof values === 'object',
     `Expected values to be an object instead got a ${typeof values}.`
