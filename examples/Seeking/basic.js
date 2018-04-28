@@ -18,14 +18,11 @@ export class SeekBasic extends React.Component {
 
   componentDidMount() {
     t.animate({
-      element: this.one,
       scale: helpers.transition({
         from: 4,
         to: 2
       })
     })
-
-    seekAnimation(0)
   }
 
   handleChange = (e) => {
@@ -43,8 +40,8 @@ export class SeekBasic extends React.Component {
 
   render() {
     return (
-      <div>
-        <div ref={(one) => (this.one = one)} style={boxStyles} />
+      <React.Fragment>
+        <t.div style={boxStyles} />
         <div style={{ marginTop: '40' }}>
           <input
             type="range"
@@ -53,10 +50,8 @@ export class SeekBasic extends React.Component {
             value={this.state.value}
             onChange={this.handleChange}
           />
-          <button onClick={() => t.stop()}>Pause</button>
-          <button onClick={() => t.start()}>Play</button>
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

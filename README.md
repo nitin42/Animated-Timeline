@@ -349,4 +349,4 @@ scale: 2 }).animate({ element: '.two', scale: 1, offset: helpers.startAfter(2000
 
 * [ ] timing model based on scroll position and gestures ?
 
-* [ ] Chain all the call sites
+* [ ] Use data binding

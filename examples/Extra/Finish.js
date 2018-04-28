@@ -11,8 +11,6 @@ const t = Timeline({
 })
 
 export class Finish extends React.Component {
-	timer = null
-
 	componentDidMount() {
 		t
 			.animate({

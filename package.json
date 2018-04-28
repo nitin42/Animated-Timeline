@@ -8,8 +8,7 @@
     "flow": "./node_modules/.bin/flow",
     "test": "./node_modules/.bin/jest",
     "test:watch": "./node_modules/.bin/jest --watchAll",
-    "format":
-      "find src -name '*.js' && find examples -name '*.js' && find demo -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
+    "format": "find src -name '*.js' && find examples -name '*.js' && find demo -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
   "license": "ISC",
@@ -34,8 +33,10 @@
   },
   "dependencies": {
     "fastdom": "^1.0.8",
+    "html-tags": "^2.0.0",
     "invariant": "^2.2.4",
     "prop-types": "^15.6.1",
-    "rebound": "^0.1.0"
+    "rebound": "^0.1.0",
+    "svg-tag-names": "^1.1.1"
   }
 }

@@ -23,6 +23,9 @@
  */
 
 import invariant from 'invariant'
+import React from 'react'
+import tags from 'html-tags'
+import svgTags from 'svg-tag-names'
 import {
   isArray,
   isObject,
@@ -72,6 +75,10 @@ import {
 } from './batchMutations'
 
 let transformString
+
+let elements = []
+
+const DOMELEMENTS = [...tags, ...svgTags]
 
 // oncancel promise flag
 let cancelled = false
@@ -342,6 +349,31 @@ const hasLifecycleHook = (params) => {
   })
 }
 
+// Returns a React element which is then used for data binding
+function createElement(element) {
+  class Comp extends React.Component {
+    store = []
+
+    componentDidMount() {
+      elements = [...elements, this.store]
+    }
+
+    componentWillUnmount() {
+      elements = []
+    }
+
+    addElements = element => {
+      this.store = [...this.store, element]
+    }
+  
+    render() {
+      return React.createElement(element, { ...this.props, ref: this.addElements })
+    }
+  }
+
+  return Comp
+}
+
 // Create a new animation object which contains data about the element which will be animated and its animation properties, also the instance properties and tween properties.
 function createNewInstance(params) {
   // Lifecycle hook should not be an animation property
@@ -353,7 +385,7 @@ function createNewInstance(params) {
   )
   const tweenSettings = replaceObjectProps(getDefaultTweensParams(), params)
 
-  const animatables = getAnimatables(params.element || params.multipleEl)
+  const animatables = getAnimatables(params.element || params.multipleEl || elements)
 
   const properties = getProperties(instanceSettings, tweenSettings, params)
   const animations = getAnimations(animatables, properties)
@@ -668,6 +700,15 @@ function animated(params = {}) {
     }
   }
 
+  Object.assign(
+    instance,
+    DOMELEMENTS.reduce((getters, alias) => {
+      const lowerCaseAlias = alias.toLowerCase()
+      getters[alias] = createElement(lowerCaseAlias)
+      return getters
+    }, {})
+  )
+
   instance.reset = function() {
     const direction = instance.direction
     const loops = instance.iterations
@@ -752,7 +793,7 @@ function animated(params = {}) {
   instance.sequence = (...args) => instance
 
   // Use this method only when a 'setState' call is batched inside the lifecyle hook 'onUpdate' to avoid any memory leaks.
-  instance.clear = () => raf && cancelAnimationFrame(raf)
+  instance.cancel = () => raf && cancelAnimationFrame(raf)
 
   // Timing APIs
 
@@ -933,7 +974,7 @@ function createTimeline(params) {
         replaceObjectProps(getDefaultTweensParams(), params || {})
       )
       // TODO: multipleEl ?
-      insParams.element = insParams.element || params.element
+      insParams.element = insParams.element || params.element || elements
       const tlDuration = tl.duration
       const insoffset = insParams.offset
       insParams.autoplay = false
