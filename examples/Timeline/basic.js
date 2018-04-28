@@ -21,6 +21,8 @@ export class BasicTimeline extends React.Component {
         })
       })
       .start()
+
+    console.log(t)
   }
 
   render() {

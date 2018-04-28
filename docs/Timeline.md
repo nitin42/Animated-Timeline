@@ -620,3 +620,86 @@ Timeline({...props}).getAnimations().forEach(animation => {
   animation.setSpeed(0.5)
 })
 ```
+
+## API
+
+### `Timeline`
+
+Accepts an object of timing properties (optional) and creates a timeline object.
+
+```js
+const t = Timeline()
+
+// or
+
+// const t = Timeline({ duration: 200 })
+```
+
+### `animate`
+
+`animate` method is available on timeline object. It accepts an object of animation properties and element to animate.
+
+```js
+const t = Timeline()
+
+t.animate({
+  element: '#one',
+  scale: 2,
+  rotate: '360deg'
+})
+```
+
+### `sequence`
+
+`sequence` method is available on timeline object. It accepts an array of timeline objects.
+
+```js
+const t = Timeline()
+
+t.sequence([
+  t.animate({ element: '#id-one' }),
+
+  t.animate({ element: '#id-two' })
+]).start()
+```
+
+### `createMover`
+
+A function that accepts a timeline instance and returns a function that moves or changes the animation position. The returned function can be passed a number or a callback that returns a number.
+
+```js
+const t = Timeline()
+
+const seekAnimation = createMover(t)
+```
+
+**Using number**
+
+```js
+seekAnimation(40)
+```
+
+**Using callback function**
+
+```js
+const state = {
+  value: 10
+}
+
+function callback({ progress }) {
+  return state.value - progress * 10
+}
+```
+
+The callback function receives the following properties -
+
+```js
+{
+  duration, // Animation duration
+  iterations, // Total iterations
+  progress, // Animation progress
+  offset, // Offset value (for timing based animations)
+  delay, // Animation delay
+  currentTime // Current time of an animation
+}
+```
