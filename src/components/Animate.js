@@ -86,7 +86,7 @@ export class Animate extends React.Component {
   componentDidMount() {
     this.ctrl = animated({
       // Animate all the children
-      element: this.elements,
+      el: this.elements,
 
       // Props for both the models (timing and animation) are fragmented in core (src/core/engine.js)
       // Timeline model props

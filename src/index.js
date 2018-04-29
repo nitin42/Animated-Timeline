@@ -3,7 +3,7 @@ import { Keyframes } from './core/keyframes'
 import { transition, times, startAfter, startBefore } from './utils/properties'
 import { getAvailableEasings } from './utils/getEasings'
 import { getAvailableTransforms } from './core/engine'
-import { Timeline } from './core/timeline'
+import { Timeline as createTimeline } from './core/timeline'
 import { createMover } from './core/createMover'
 import { Animate } from './components/Animate'
 import { Spring } from './spring'
@@ -19,4 +19,4 @@ export const helpers = {
   getAvailableTransforms
 }
 
-export { Timeline, Keyframes, Animate, createMover, Spring }
+export { createTimeline, Keyframes, Animate, createMover, Spring }

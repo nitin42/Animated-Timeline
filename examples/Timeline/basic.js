@@ -2,9 +2,9 @@ import React from 'react'
 
 import { boxStyles } from '../styles'
 
-import { Timeline, helpers } from '../../src'
+import { createTimeline, helpers } from '../../src'
 
-const t = Timeline({
+const t = createTimeline({
 	iterations: Infinity,
 	direction: 'alternate',
 	duration: 2000,

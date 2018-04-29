@@ -1,15 +1,14 @@
 /**
- * This is the core animation engine.
- * Most of the code is taken from https://github.com/juliangarnier/anime
+ * Most part of the code is taken from https://github.com/juliangarnier/anime
  *
  * Modifications -
  *
  * 1. Lifecycle hooks
  * 2. Animation speed is now configured via different instances and via params passed to the main instance rather
  *    than relying on the singleton instance.
- * 3. Serialised values for performing **from** - **to** animations (implemented in utils/fromTo.js).
+ * 3. Serialised values for performing **from** - **to** animations
  * 4. New defaults for instance and tweens parameters.
- * 5. Lifecycle hooks can no longer be passed through parameters. They are available as instance methods
+ * 5. Lifecycle hooks can no longer be passed through parameters. They are available as instance methods.
  *
  * Additions -
  *
@@ -22,10 +21,11 @@
  * 7. Finish the animation immediately
  */
 
-import invariant from 'invariant'
 import React from 'react'
+import invariant from 'invariant'
 import tags from 'html-tags'
 import svgTags from 'svg-tag-names'
+
 import {
   isArray,
   isObject,
@@ -56,17 +56,21 @@ import {
   getRelativeValue,
   getUnit
 } from '../utils/engineUtils'
-import { easings } from './easing'
-import { bezier } from './bezier'
 import {
   getDefaultTweensParams,
   getDefaultInstanceParams
 } from '../utils/defaults'
+
+import { easings } from './easing'
+
+import { bezier } from './bezier'
+
 import {
   getTransformUnit,
   getTransformValue,
   validTransforms
 } from './transforms'
+
 import {
   batchMutation,
   batchRead,
@@ -76,8 +80,6 @@ import {
 
 let transformString
 
-let elements = []
-
 const DOMELEMENTS = [...tags, ...svgTags]
 
 // oncancel promise flag
@@ -85,22 +87,23 @@ let cancelled = false
 
 const minMaxValue = (val, min, max) => Math.min(Math.max(val, min), max)
 
-const log = (args) => console.log(args)
+const log = (...args) => console.log(args)
 
-const isFunctionValue = (val, prop) => {
-  invariant(
-    typeof val !== 'function',
-    `Animation property value for '${prop}' cannot be a function.`
-  )
-  return val
+const evaluateValue = (val, animatable) => {
+  if (typeof val !== 'function') return val;
+
+  // Useful for staggered animations
+  return val(animatable.target, animatable.id);
 }
 
+// Get the css value for the property from the style object
 export const getCSSValue = (el, prop) => {
   if (prop in el.style) {
     return getComputedStyle(el).getPropertyValue(stringToHyphens(prop)) || '0'
   }
 }
 
+// Get the animation type property i.e 'transform', 'css'
 export const getAnimationType = (el, prop) => {
   if (isDOM(el) && arrayContains(validTransforms, prop)) return 'transform'
   if (isDOM(el) && (el.getAttribute(prop) || (isSVG(el) && el[prop])))
@@ -109,6 +112,7 @@ export const getAnimationType = (el, prop) => {
   if (el[prop] != null) return 'object'
 }
 
+// Get the value of animation property of an element
 export const getOriginalelementValue = (element, propName) => {
   switch (getAnimationType(element, propName)) {
     case 'transform':
@@ -161,6 +165,7 @@ export const parseElements = (elements) => {
   )
 }
 
+// Returns an array of elements which will be animated
 export const getAnimatables = (elements) => {
   const parsed = parseElements(elements)
   return parsed.map((t, i) => {
@@ -223,10 +228,10 @@ const getProperties = (instanceSettings, tweenSettings, params) => {
 const normalizeTweenValues = (tween, animatable) => {
   let t = {}
   for (let p in tween) {
-    let value = isFunctionValue(tween[p], p)
+    let value = evaluateValue(tween[p], animatable)
     // from > to based ?
     if (isArray(value)) {
-      value = value.map((v) => isFunctionValue(v, p))
+      value = value.map((v) => evaluateValue(v, animatable))
       if (value.length === 1) value = value[0]
     }
     t[p] = value
@@ -273,14 +278,7 @@ const normalizeTweens = (prop, animatable) => {
 }
 
 const setTweenProgress = {
-  css: (el, p, v) => {
-    if (p === 'opacity' && el.style['will-change'] !== 'opacity') {
-      el.style['will-change'] = 'opacity'
-      return batchMutation(() => (el.style[p] = v))
-    }
-
-    return batchMutation(() => (t.style[p] = v))
-  },
+  css: (el, p, v) => batchMutation(() => (el.style[p] = v)),
   attribute: (el, p, v) => batchMutation(() => el.setAttribute(p, v)),
   object: (el, p, v) => (el[p] = v),
   transform: (el, p, v, transforms, id) => {
@@ -349,29 +347,38 @@ const hasLifecycleHook = (params) => {
   })
 }
 
-// Returns a React element which is then used for data binding
-function createElement(element) {
-  class Comp extends React.Component {
-    store = []
+// For data binding
+function createElement(element, instance) {
+  class _Timeline extends React.PureComponent {
+    targets = []
+
+    constructor(props) {
+      super(props)
+
+      if (!instance.elements || !Array.isArray(instance.elements)) {
+        instance.elements = []
+      }
+    }
 
     componentDidMount() {
-      elements = [...elements, this.store]
+      instance.elements = [...instance.elements, this.targets]
     }
 
     componentWillUnmount() {
-      elements = []
+      // Clear all the references so as to avoid any memory leaks.
+      instance.elements = []
     }
 
-    addElements = element => {
-      this.store = [...this.store, element]
+    addTargets = target => {
+      this.targets = [...this.targets, target]
     }
-  
+
     render() {
-      return React.createElement(element, { ...this.props, ref: this.addElements })
+      return React.createElement(element, { ...this.props, ref: this.addTargets })
     }
   }
 
-  return Comp
+  return _Timeline
 }
 
 // Create a new animation object which contains data about the element which will be animated and its animation properties, also the instance properties and tween properties.
@@ -383,12 +390,14 @@ function createNewInstance(params) {
     getDefaultInstanceParams(),
     params
   )
+
   const tweenSettings = replaceObjectProps(getDefaultTweensParams(), params)
 
-  const animatables = getAnimatables(params.element || params.multipleEl || elements)
+  const animatables = getAnimatables(params.el || params.multipleEl)
 
   const properties = getProperties(instanceSettings, tweenSettings, params)
   const animations = getAnimations(animatables, properties)
+
   return mergeObjects(instanceSettings, {
     children: [],
     animatables: animatables,
@@ -472,16 +481,6 @@ function animated(params = {}) {
 
   function batchStyleUpdates(instance, id, transforms, transformString) {
     let el = instance.animatables[id].element
-
-    if (el.style['will-change'] === 'opacity') {
-      el.style['will-change'] = el.style['will-change'].concat(', transform')
-    } else if (
-      el.style['will-change'] === 'opacity, transform' ||
-      el.style['will-change'] === 'transform'
-    ) {
-    } else {
-      el.style['will-change'] = 'transform'
-    }
 
     if (transforms[id]) {
       return batchMutation(
@@ -703,8 +702,7 @@ function animated(params = {}) {
   Object.assign(
     instance,
     DOMELEMENTS.reduce((getters, alias) => {
-      const lowerCaseAlias = alias.toLowerCase()
-      getters[alias] = createElement(lowerCaseAlias)
+      getters[alias] = createElement(alias.toLowerCase(), instance)
       return getters
     }, {})
   )
@@ -973,8 +971,8 @@ function createTimeline(params) {
         instanceParams,
         replaceObjectProps(getDefaultTweensParams(), params || {})
       )
-      // TODO: multipleEl ?
-      insParams.element = insParams.element || params.element || elements
+      // Use data binding when no elements are specified explicitly
+      insParams.el = insParams.el || insParams.multipleEl || (tl.elements || [])
       const tlDuration = tl.duration
       const insoffset = insParams.offset
       insParams.autoplay = false
@@ -995,7 +993,7 @@ function createTimeline(params) {
     tl.seek(0)
     tl.reset()
     if (tl.autoplay) tl.restart()
-    
+
     return tl
   }
   return tl

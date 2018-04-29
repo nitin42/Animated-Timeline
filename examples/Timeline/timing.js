@@ -2,9 +2,9 @@ import React from 'react'
 
 import { boxStyles } from '../styles'
 
-import { Timeline, helpers } from '../../src'
+import { createTimeline, helpers } from '../../src'
 
-const t = Timeline({
+const t = createTimeline({
 	easing: 'easeInOutSine',
 	iterations: 1,
 	direction: 'normal',
@@ -35,7 +35,7 @@ const animate = (one, two, three) => {
 	t
 		.sequence([
 			t.animate({
-				element: one,
+				el: one,
 				translateX: helpers.transition({
 					from: 10,
 					to: 420,
@@ -43,7 +43,7 @@ const animate = (one, two, three) => {
 			}),
 
 			t.animate({
-				element: two,
+				el: two,
 				translateX: helpers.transition({
 					from: 5,
 					to: 540,
@@ -52,7 +52,7 @@ const animate = (one, two, three) => {
 			}),
 
 			t.animate({
-				element: three,
+				el: three,
 				translateX: helpers.transition({
 					from: 2,
 					to: 640,
