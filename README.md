@@ -2,7 +2,6 @@
 
 > Create playback based animations in React 💫
 
-
 ## Table of contents
 
 * [Introduction](#introduction)
@@ -53,6 +52,7 @@ Timing model manages the time and keeps track of current progress in a timeline.
 
 Animation model, on the other hand, describes how an animation could look like at any give time or it can be thought of as state of an animation at a particular point of time.
 
+Using both the models, we can synchronise the timing and visual changes.
 
 ## Features ☄️
 
@@ -72,9 +72,7 @@ Animation model, on the other hand, describes how an animation could look like a
 
 ## Performance 🔥
 
-* Style mutations and style reads are batched to speed up the performance and avoid document reflows.
-
-* Uses `will-change` but in an optimal way to avoid high memory consumption
+Style mutations and style reads are batched to speed up the performance and avoid document reflows.
 
 ## Install 👨🏼‍💻
 
@@ -117,18 +115,22 @@ import { Animate, helpers } from 'animated-timeline'
 const styles = {
   width: '20px',
   height: '20px',
-  backgroundColor: 'pink',
+  backgroundColor: 'pink'
+}
+
+// Properties for timing model
+const timingProps = {
+  duration: 1000
+}
+
+// Properties for animation model
+const animationProps = {
+  rotate: helpers.transition({ from: 360, to: 180 })
 }
 
 function App() {
   return (
-    <Animate
-      timingProps={{
-        duration: 1000
-      }}
-      animationProps={{
-        rotate: helpers.transition({ from: 360, to: 180 })
-      }}>
+    <Animate timingProps={timingProps} animationProps={animationProps}>
       <div style={styles} />
     </Animate>
   )
@@ -145,7 +147,7 @@ function App() {
 
 ```js
 import React from 'react'
-import { Timeline, helpers } from 'animated-timeline'
+import { createTimeline, helpers } from 'animated-timeline'
 
 const styles = {
   width: '20px',
@@ -153,7 +155,7 @@ const styles = {
   backgroundColor: 'pink'
 }
 
-const t = Timeline({
+const t = createTimeline({
   direction: 'alternate',
   iterations: 1
 })
@@ -161,19 +163,16 @@ const t = Timeline({
 class App extends React.Component {
   componentDidMount() {
     t.animate({
-      element: this.one,
       opacity: helpers.transition({ from: 0.2, to: 0.8 }),
       rotate: helpers.transition({ from: 360, to: 180 })
     }).start()
   }
 
   render() {
-    return <div ref={(one) => (this.one = one)} style={styles} />
+    return <t.div style={styles} />
   }
 }
 ```
-
-Along with refs, you can also use selectors like '.xyz' or '#xyz'. To animate multiple elements or an array of elements use the property `multilpeEl` instead of `element`.
 
 [Read the detailed API reference for `Timeline` API](./docs/Timeline.md)
 
@@ -196,7 +195,6 @@ const spring = Spring({ friction: 4, tension: 2 })
 
 // const spring = Spring({ bounciness: 14, speed: 12 })
 
-
 class SpringSystem extends React.Component {
   componentDidMount() {
     spring.animate({
@@ -214,7 +212,7 @@ class SpringSystem extends React.Component {
   render() {
     return (
       <div
-        ref={(one) => (this.one = one)}
+        ref={one => (this.one = one)}
         onMouseUp={() => spring.setValue(0)}
         onMouseDown={() => spring.setValue(1)}
         style={styles}
@@ -288,7 +286,6 @@ You can also change the animation position along its timeline using an input val
 
 ```js
 t.animate({
-  element: '.one',
   scale: 1,
   rotateX: '360deg' // or 360
 })
@@ -298,7 +295,6 @@ t.animate({
 
 ```js
 t.animate({
-  element: '.one',
   width: '20px'
 })
 ```
@@ -307,7 +303,6 @@ t.animate({
 
 ```js
 t.animate({
-  element: '.one',
   rotate: {
     value: 360, // 360deg
     duration: 3000,
@@ -322,21 +317,24 @@ Check out [this](./docs/properties) list to see which properties you can use whe
 * `from` - `to` based animation values
 
 ```js
-import { Timeline, helpers } from 'animated-timeline'
+import { helpers } from 'animated-timeline'
 
 t.animate({
-  element: '.one',
-  scale: helpers.transition({ from: 2, to: 1})
+  scale: helpers.transition({ from: 2, to: 1 })
 })
 ```
 
 * Timing based animation values
 
 ```js
-import { Timeline, helpers } from 'animated-timeline'
+import { helpers } from 'animated-timeline'
 
-t.animate({ element: '.one',
-scale: 2 }).animate({ element: '.two', scale: 1, offset: helpers.startAfter(2000)})
+t
+  .animate({
+    el: '.one',
+    scale: 2
+  })
+  .animate({ el: '.two', scale: 1, offset: helpers.startAfter(2000) })
 ```
 
 ## Documentation

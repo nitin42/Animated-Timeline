@@ -15,15 +15,14 @@ A special object that contains various utilities for -
 To perform `from` - `to` based animation i.e transitioning from one state to another, use the method `transition`.
 
 ```js
-import { Timeline, helpers } from 'animated-timeline'
+import { createTimeline, helpers } from 'animated-timeline'
 
-const t = Timeline({
+const t = createTimeline({
   duration: 2000,
   iterations: 2
 })
 
 t.animate({
-  element: '#my-custom-id',
   translateX: helpers.transition({
     from: 20, // 20px
     to: 50 // 50px
@@ -37,26 +36,28 @@ t.animate({
 
 ## Timing based animations
 
+When performing timing based animations, data binding won't work. You'll have to use `el` property for specifying the element using `refs` or selectors (id or class name)
+
 * **`startAfter`**
 
 Use this method to start an animation at a specified time after the previous animation ends.
 
 ```js
-import { Timeline, helpers } from 'animated-timeline'
+import { createTimeline, helpers } from 'animated-timeline'
 
-const t = Timeline({
+const t = createTimeline({
   duration: 2000,
   iterations: 2
 })
 
 t.sequence([
   t.animate({
-    element: '#custom-element-id',
+    el: '#custom-element-id',
     scale: 2
   }),
 
   t.animate({
-    element: '#my-custom-id',
+    el: '#my-custom-id',
     translateX: '30px',
     scale: 2,
     offset: helpers.startAfter(2000) // Start the animation at 2 seconds after the previous animation ends.
@@ -78,12 +79,12 @@ const t = Timeline({
 
 t.sequence([
   t.animate({
-    element: '#custom-element-id',
+    el: '#custom-element-id',
     scale: 2
   }),
 
   t.animate({
-    element: '#my-custom-id',
+    el: '#my-custom-id',
     translateX: '30px',
     scale: 2,
     offset: helpers.startBefore(2000) // Start the animation at 2 seconds before the previous animation ends.
@@ -105,12 +106,12 @@ const t = Timeline({
 
 t.sequence([
   t.animate({
-    element: '#custom-element-id',
+    el: '#custom-element-id',
     scale: 2
   }),
 
   t.animate({
-    element: '#my-custom-id',
+    el: '#my-custom-id',
     translateX: '30px',
     scale: 2,
     offset: helpers.times(2)
@@ -140,7 +141,6 @@ const t = Timeline({
 })
 
 t.animate({
-  element: '#custom-element-id',
   scale: 2
 }).start()
 ```

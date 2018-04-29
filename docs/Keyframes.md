@@ -56,11 +56,11 @@ For example -
 The above css snippet will be written as -
 
 ```js
+const t = createTimeline({ duration: 2000 })
+
 const xyz = new Keyframes().add({ offset: 0.45, value: 30 })
 
-const t = Timeline({ duration: 2000 })
-
-t.animate({ element: '#some_id', height: xyz.frames })
+t.animate({ height: xyz.frames })
 ```
 
 with `Keyframes` constructor.

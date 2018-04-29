@@ -13,21 +13,23 @@ import React from 'react'
 
 import { Animate } from 'animated-timeline'
 
+// Properties for timing model
+const timingProps = {
+  duration: 1000,
+  direction: 'alternate',
+  iterations: Infinity
+}
+
+// Properties for animation model
+const animationProps = {
+  rotate: '360deg',
+  scale: 2
+}
+
 function App() {
   return (
-    <Animate
-      // Properties for timing model
-      timingProps={{
-        duration: 1000,
-        direction: 'alternate',
-        iterations: Infinity
-      }}
-      // Properties for animation model
-      animationProps={{
-        rotate: '360deg',
-        scale: 2
-      }}>
-      <div style={styles} />
+    <Animate timingProps={timingProps} animationProps={animationProps}>
+      <div>Hello World</div>
     </Animate>
   )
 }
@@ -53,7 +55,7 @@ Check out [this](./properties.md#timing-properties) list of available timing pro
 
 Accepts an object of animation properties like `rotation`, `scale`, `width` and all other css and transform properties.
 
-Check out [this](./properties.md#animation-properties) list of all the properties.
+Check out [this](./properties.md#animation-properties) list of all the animation properties.
 
 ```js
 <Animate animationProps={{ rotate: 360, scale: 1 }} />
@@ -88,8 +90,8 @@ or with a callback function
 ```js
 state = { value: 10 }
 
-function callback({ duration }) {
-  return duration - state.value * 20
+function callback(props) {
+  return props.duration - state.value * 20
 }
 
 function App() {
@@ -199,9 +201,6 @@ function App() {
             console.log('Animation completed!')
 
             console.log('Restarting the animation...')
-
-            // Reverse the direction
-            props.controller.reverse()
 
             // Restart the animation
             props.controller.restart()
@@ -389,4 +388,3 @@ Use `seekAnimation` prop.
 * Promise based APIs for oncancel and onfinish events are not available. Use [`Timeline API`](./Timeline.md) instead.
 
 * Controls for time-based execution are directly not available on the instance, and they are accessible only via flags
-
