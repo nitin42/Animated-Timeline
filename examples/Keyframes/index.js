@@ -4,6 +4,8 @@ import { createTimeline, Keyframes, helpers } from "../../src";
 import { boxStyles } from "../styles";
 
 const t = createTimeline({
+  duration: 3000,
+  elasticity: 1900,
   easing: "easeInOutSine",
   direction: "alternate",
   iterations: Infinity
@@ -11,24 +13,27 @@ const t = createTimeline({
 
 const x = new Keyframes()
   .add({
-    value: 50,
-    duration: 1000
+    value: 1,
+  }).add({
+    value: 10,
+    offset: 0.25,
+  }).add({
+    value: 20,
+    offset: 0.5
+  }).add({
+    value: 30,
+    offset: 1
   })
-  .add({
-    value: 90,
-    duration: 2000,
-    offset: 0.8
-  })
-  .add({
-    value: 0,
-    duration: 3000
-  });
 
 export class KeyframesExample extends React.Component {
   componentDidMount() {
     t
       .animate({
-        translateX: x.frames
+        borderRadius: x.frames,
+        backgroundColor: helpers.transition({
+          from: '#f989a7',
+          to: '#f9b570'
+        })
       })
       .start();
   }
