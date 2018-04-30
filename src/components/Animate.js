@@ -118,8 +118,6 @@ export class Animate extends React.Component {
   componentWillUnmount() {
     // Cancel the animation
     this.ctrl && this.cancel(this.elements)
-    // Clear the subscriptions
-    this.ctrl.clear()
   }
 
   enableControls = (props, ctrl) => {
