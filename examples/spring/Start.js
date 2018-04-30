@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Spring } from '../../src'
+import { Spring } from '../../build/animated-timeline.min.js'
 
 import { boxStyles } from './../styles'
 

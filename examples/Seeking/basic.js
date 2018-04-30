@@ -2,7 +2,7 @@ import React from 'react'
 
 import { boxStyles } from '../styles'
 
-import { createTimeline, helpers, createMover } from '../../src'
+import { createTimeline, helpers, createMover } from '../../build/animated-timeline.min.js'
 
 const t = createTimeline({
   speed: 1,

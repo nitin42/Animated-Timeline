@@ -1,6 +1,7 @@
 import React from "react";
 
-import { createTimeline, Keyframes, helpers } from "../../src";
+import { createTimeline, Keyframes, helpers } from '../../build/animated-timeline.min.js'
+
 import { boxStyles } from "../styles";
 
 const t = createTimeline({

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Animate, helpers } from '../../src'
+import { Animate, helpers } from '../../build/animated-timeline.min.js'
 
 import { boxStyles } from '../styles'
 
