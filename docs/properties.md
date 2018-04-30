@@ -17,7 +17,7 @@ createTimeline({ delay: 200 })
 * `iterations` - A number value or `Infinity` for defining iterations of an animation.
 
 ```js
-createTimeline({ iterations: 2}) // or Timeline({ iterations: Infinity })
+createTimeline({ iterations: 2}) // or createTimeline({ iterations: Infinity })
 ```
 
 * `speed` - animation speed

@@ -70,9 +70,9 @@ t.sequence([
 Use this method to start an animation at a specified time before the previous animation ends
 
 ```js
-import { Timeline, helpers } from 'animated-timeline'
+import { createTimeline, helpers } from 'animated-timeline'
 
-const t = Timeline({
+const t = createTimeline({
   duration: 2000,
   iterations: 2
 })
@@ -97,9 +97,9 @@ t.sequence([
 Use this method to start animation at times after the previous animation ends
 
 ```js
-import { Timeline, helpers } from 'animated-timeline'
+import { createTimeline, helpers } from 'animated-timeline'
 
-const t = Timeline({
+const t = createTimeline({
   duration: 2000,
   iterations: 2
 })
@@ -124,7 +124,7 @@ t.sequence([
 Create a custom easing curve with **4** control points.
 
 ```js
-import { Timeline, helpers } from 'animated-timeline'
+import { createTimeline, helpers } from 'animated-timeline'
 
 // Registers the curve name `SampleCurve`
 const myCustomCurve = helpers.createEasingCurve('SampleCurve', [
@@ -134,7 +134,7 @@ const myCustomCurve = helpers.createEasingCurve('SampleCurve', [
   -0.98
 ])
 
-const t = Timeline({
+const t = createTimeline({
   duration: 2000,
   iterations: 2,
   easing: myCustomCurve

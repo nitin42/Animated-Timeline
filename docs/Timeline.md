@@ -497,7 +497,7 @@ class App extends React.Component {
 To change the animation speed, use the method `setSpeed` which is accessible via the timeline instance.
 
 ```js
-const t = Timeline({
+const t = createTimeline({
   duration: 200,
   speed: 0.6
 })
@@ -512,7 +512,7 @@ t.setSpeed(0.9)
 Starts an animation
 
 ```js
-const t = Timeline({ ...props })
+const t = createTimeline({ ...props })
 
 t.start()
 ```
@@ -522,7 +522,7 @@ t.start()
 Stops an animation
 
 ```js
-Timeline({ ...props }).stop()
+createTimeline({ ...props }).stop()
 ```
 
 **`finish()`**
@@ -530,7 +530,7 @@ Timeline({ ...props }).stop()
 Immediately finish an animation
 
 ```js
-Timeline({ ...props }).finish()
+createTimeline({ ...props }).finish()
 ```
 
 Checkout [this](../examples/Extra/Finish.js) example for `finish()` control.
@@ -540,7 +540,7 @@ Checkout [this](../examples/Extra/Finish.js) example for `finish()` control.
 Resets an animation
 
 ```js
-Timeline({ ...props }).reset()
+createTimeline({ ...props }).reset()
 ```
 
 **`reverse()`**
@@ -548,7 +548,7 @@ Timeline({ ...props }).reset()
 Reverse an animation
 
 ```js
-Timeline({ ...props }).reverse()
+createTimeline({ ...props }).reverse()
 ```
 
 **`restart()`**
@@ -556,7 +556,7 @@ Timeline({ ...props }).reverse()
 Restart an animation
 
 ```js
-Timeline({ ...props }).restart()
+createTimeline({ ...props }).restart()
 ```
 
 **`clear()`**
@@ -564,7 +564,7 @@ Timeline({ ...props }).restart()
 Clear all the subscription
 
 ```js
-Timeline({ ...props }).clear()
+createTimeline({ ...props }).clear()
 ```
 
 Use `clear()` to clear the subscriptions when updating the component state inside the `onUpdate` lifecycle hook.
