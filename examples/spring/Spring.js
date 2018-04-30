@@ -4,12 +4,11 @@ import { Spring } from '../../src'
 
 import { boxStyles } from './../styles'
 
-const spring = Spring({ friction: 4, tension: 2 })
+const spring = Spring({ bounciness: 26, speed: 4 })
 
 export class SpringSystem extends React.Component {
   componentDidMount() {
     spring.animate({
-      element: this.one,
       property: 'scale',
       options: {
         mapValues: {
@@ -23,8 +22,7 @@ export class SpringSystem extends React.Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <div
-          ref={(one) => (this.one = one)}
+        <spring.div
           onMouseUp={() => spring.setValue(0)}
           onMouseDown={() => spring.setValue(1)}
           style={boxStyles}

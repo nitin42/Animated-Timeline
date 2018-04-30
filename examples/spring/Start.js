@@ -10,7 +10,6 @@ export class SpringStart extends React.Component {
   componentDidMount() {
     spring
       .animate({
-        element: this.one,
         property: 'scale',
         options: {
           mapValues: {
@@ -25,7 +24,7 @@ export class SpringStart extends React.Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <div ref={(one) => (this.one = one)} style={boxStyles} />
+        <spring.div style={boxStyles} />
       </div>
     )
   }

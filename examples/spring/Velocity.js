@@ -9,7 +9,6 @@ const spring = Spring({ friction: 4, tension: 2 })
 export class SpringVelocity extends React.Component {
   componentDidMount() {
     spring.animate({
-      element: this.one,
       property: 'scale',
       options: {
         mapValues: {
@@ -23,8 +22,7 @@ export class SpringVelocity extends React.Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <div
-          ref={(one) => (this.one = one)}
+        <spring.div
           onMouseUp={() => spring.setValueVelocity({ value: 0, velocity: 20 })}
           onMouseDown={() =>
             spring.setValueVelocity({ value: 1, velocity: 30 })

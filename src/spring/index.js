@@ -2,9 +2,11 @@
 
 import _R from 'rebound'
 import invariant from 'invariant'
+import * as React from 'react'
 
 import { getAnimationType } from '../core/engine'
 import { batchMutation } from '../core/batchMutations'
+import { DOMELEMENTS } from '../utils/engineUtils'
 
 import {
   deg,
@@ -142,6 +144,42 @@ const createSpringWithBounciness = (
 ): SPRING =>
   new _R.SpringSystem().createSpringWithBouncinessAndSpeed(bounciness, speed)
 
+// For data binding
+const createElement = (
+  element: string,
+  instance: SPRING
+): React.ComponentType<any> => {
+  class SpringElement extends React.Component<void, void> {
+    target: HTMLElement | null
+
+    componentDidMount() {
+      // Assignment to forwardref.current means, this will throw an error for legacy API for ref.
+      instance.element =
+        this.props.forwardref === null
+          ? this.target
+          : this.props.forwardref.current
+    }
+
+    addRef = target => {
+      // When using refs, access the node using .target property.
+      this.target = target
+    }
+
+    render(): React.Node {
+      const { forwardref, ...rest } = this.props
+
+      return React.createElement(element, {
+        ...rest,
+        ref: forwardref === null ? this.addRef : forwardref
+      })
+    }
+  }
+
+  return React.forwardRef((props, ref) => (
+    <SpringElement {...props} forwardref={ref} />
+  ))
+}
+
 export function Spring(options: springOptions): SPRING {
   let spring
 
@@ -185,6 +223,14 @@ export function Spring(options: springOptions): SPRING {
     spring = defaultSpring()
   }
 
+  Object.assign(
+    spring,
+    DOMELEMENTS.reduce((getters, alias) => {
+      getters[alias.toLowerCase()] = createElement(alias.toLowerCase(), spring)
+      return getters
+    }, {})
+  )
+
   // Map values from one range to another range
   const mapValues = _R.MathUtil.mapValueInRange
 
@@ -198,7 +244,7 @@ export function Spring(options: springOptions): SPRING {
   let timeoutId: TimeoutID
 
   spring.animate = ({
-    element, // Can be ref or selector (id or classname)
+    el, // Can be ref or selector (id or classname)
     property, // Property to be animated
     options = {
       mapValues: { input: [0, 1], output: [1, 1.5] },
@@ -207,17 +253,16 @@ export function Spring(options: springOptions): SPRING {
     interpolate = (style, value, options) => {},
     shouldOscillate = true // Flag to toggle oscillations in-between
   }: {
-    element: element,
+    el: element,
     property: any, // $FlowFixMe
     options: animationOptions,
     interpolate: interpolate,
     shouldOscillate: boolean
   }) => {
     invariant(
-      !Array.isArray(element) ||
-        typeof element === 'string' ||
-        typeof element === 'object',
-      'Can only pass a selector (id or class) or a reference to the element. To animate multiple elements, chain animate({}) calls.'
+      !Array.isArray(el) || typeof el === 'string' || typeof el === 'object',
+      typeof spring.element !== undefined,
+      'Can only pass a selector (id or class) or a reference to the property "el" or use data binding instead.'
     )
 
     invariant(
@@ -233,31 +278,34 @@ export function Spring(options: springOptions): SPRING {
     if (!shouldOscillate) spring.setOvershootClampingEnabled(true)
 
     // Reference to the element which will be animated
-    let el
+    let element
 
     // Property type (css or transform)
     let type = ''
 
     // type: HTMLElement
-    if (typeof element === 'object') {
+    if (typeof el === 'object') {
       // must be a 'ref'
-      el = element
-    } else if (typeof element === 'string') {
+      element = el
+    } else if (typeof el === 'string') {
       // id or classname
-      el = document.querySelector(element)
+      element = document.querySelector(el)
+    } else if (spring.element !== undefined) {
+      // Data binding
+      element = spring.element
     } else {
       throw new Error(`Received an invalid element type ${typeof element}.`)
     }
 
-    if (getAnimationType(el, property) === 'transform') {
+    if (getAnimationType(element, property) === 'transform') {
       type = 'transform'
-    } else if (getAnimationType(el, property) === 'css') {
+    } else if (getAnimationType(element, property) === 'css') {
       type = 'css'
     }
 
     // Set the initial styles of the animation property of the element we want to animate
     // The values are derived from the options (mapValues or interpolateColor)
-    setInitialStyles(el, {
+    setInitialStyles(element, {
       property,
       value: isColorProperty(property)
         ? options.interpolateColor.colors[0]
@@ -324,7 +372,7 @@ export function Spring(options: springOptions): SPRING {
           interpolate(
             // Pass style object of the element
             // We can either use setState to update the element style or directly mutate the DOM element
-            el.style,
+            element.style,
             !isColorProperty(property)
               ? Number(parseValue(String(val))[1]) || val
               : val,
@@ -350,16 +398,16 @@ export function Spring(options: springOptions): SPRING {
           )
 
           if (type === 'transform') {
-            if (!el.style.transform.includes(property)) {
+            if (!element.style.transform.includes(property)) {
               // If interpolation callback initializes 'transform' property, then simply append the required property.
-              el.style.transform = el.style.transform.concat(
+              element.style.transform = element.style.transform.concat(
                 `${property}(${val})`
               )
             } else {
-              el.style.transform = `${property}(${val})`
+              element.style.transform = `${property}(${val})`
             }
           } else if (type === 'css') {
-            el.style[property] = `${val}`
+            element.style[property] = `${val}`
           }
         })
       }
@@ -455,10 +503,10 @@ export function Spring(options: springOptions): SPRING {
 
   // Promise based API for cancelling/deregistering a spring
   spring.oncancel = () => {
-    let res = (args) => {}
+    let res = args => {}
 
     function createPromise() {
-      return window.Promise && new Promise((resolve) => (res = resolve))
+      return window.Promise && new Promise(resolve => (res = resolve))
     }
 
     const promise = createPromise()

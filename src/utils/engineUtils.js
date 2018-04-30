@@ -1,3 +1,8 @@
+import tags from 'html-tags'
+import svgTags from 'svg-tag-names'
+
+export const DOMELEMENTS = [...tags, ...svgTags]
+
 export const stringContains = (str, text) => {
   return str.indexOf(text) > -1
 }

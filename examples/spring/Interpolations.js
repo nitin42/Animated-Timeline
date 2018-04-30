@@ -14,12 +14,11 @@ export class SpringInterpolate extends React.Component {
 
   componentDidMount() {
     spring.animate({
-      element: this.one,
       property: 'border-radius',
       options: {
         mapValues: {
           input: [0, 1],
-          output: ['3px', '40px']
+          output: ['1px', '40px']
         }
       },
       interpolate: (style, value, options) =>
@@ -48,8 +47,7 @@ export class SpringInterpolate extends React.Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <div
-          ref={(one) => (this.one = one)}
+        <spring.div
           onMouseUp={() => spring.setValue(0)}
           onMouseDown={() => spring.setValue(1)}
           style={{

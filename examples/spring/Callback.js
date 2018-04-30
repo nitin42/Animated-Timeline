@@ -9,7 +9,6 @@ const spring = Spring({ friction: 4, tension: 2 })
 export class SpringCallback extends React.Component {
   componentDidMount() {
     spring.animate({
-      element: this.one,
       property: 'scale',
       options: {
         mapValues: {
@@ -31,8 +30,7 @@ export class SpringCallback extends React.Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <div
-          ref={(one) => (this.one = one)}
+        <spring.div
           onMouseUp={() => spring.setValue(0)}
           onMouseDown={() => spring.setValue(1)}
           style={boxStyles}

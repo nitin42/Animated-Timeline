@@ -7,10 +7,17 @@ import { boxStyles } from './../styles'
 const spring = Spring({ friction: 4, tension: 2 })
 
 export class SpringMultiple extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.one = React.createRef()
+    this.two = React.createRef()
+  }
+
   componentDidMount() {
     spring
       .animate({
-        element: this.one,
+        el: this.one.current,
         property: 'scale',
         options: {
           mapValues: {
@@ -20,7 +27,7 @@ export class SpringMultiple extends React.Component {
         }
       })
       .animate({
-        element: this.two,
+        el: this.two.current,
         property: 'rotate',
         options: {
           mapValues: {
@@ -35,12 +42,12 @@ export class SpringMultiple extends React.Component {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
         <div
-          ref={(one) => (this.one = one)}
+          ref={this.one}
           onMouseUp={() => spring.setValue(0)}
           onMouseDown={() => spring.setValue(1)}
           style={boxStyles}
         />
-        <div ref={(two) => (this.two = two)} style={boxStyles} />
+        <div ref={this.two} style={boxStyles} />
       </div>
     )
   }
