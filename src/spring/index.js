@@ -353,7 +353,7 @@ export function Spring(options: springOptions): SPRING {
           if (range && (Array.isArray(range) && range.length === 2)) {
             // Value is converted to RGB scale
 
-            val = interpolateColor(
+            val = springInterpolateColor(
               val,
               colors[0],
               colors[1],
