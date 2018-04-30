@@ -12,7 +12,7 @@ import type { attributes, AnimationEngine } from '../types'
  *
  * Eg-
  *
- * const Animated = Timeline({
+ * const Animated = createTimeline({
  *    ...timelineprops
  * })
  *
