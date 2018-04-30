@@ -11,11 +11,15 @@ const t = createTimeline({
 	iterations: Infinity,
 })
 
-const animate = (one, two) => {
+const one = React.createRef()
+
+const two = React.createRef()
+
+const animate = () => {
 	t
 		.sequence([
 			t.animate({
-				el: one,
+				el: one.current,
 				translateX: helpers.transition({
 					from: 20,
 					to: 10,
@@ -30,7 +34,7 @@ const animate = (one, two) => {
 			}),
 
 			t.animate({
-				el: two,
+				el: two.current,
 				translateY: helpers.transition({
 					from: 100,
 					to: 50,
@@ -43,14 +47,14 @@ const animate = (one, two) => {
 
 export class SequenceTimeline extends React.Component {
 	componentDidMount() {
-		animate('#one', '#two')
+		animate()
 	}
 
 	render() {
 		return (
 			<React.Fragment>
-				<div id="one" style={boxStyles} />
-				<div id="two" style={boxStyles} />
+				<div ref={one} style={boxStyles} />
+				<div ref={two} style={boxStyles} />
 			</React.Fragment>
 		)
 	}

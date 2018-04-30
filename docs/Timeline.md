@@ -109,10 +109,14 @@ const t = createTimeline({
   direction: 'alternate'
 })
 
+const one = React.createRef()
+
+const two = React.createRef()
+
 const animate = (one, two) => {
   t.sequence([
     t.animate({
-      el: one,
+      el: one.current,
       scale: helpers.transition({
         from: 2,
         to: 1
@@ -120,7 +124,7 @@ const animate = (one, two) => {
     }),
 
     t.animate({
-      el: two,
+      el: two.current,
       rotate: '360deg'
     })
   ]).start()
@@ -128,14 +132,14 @@ const animate = (one, two) => {
 
 class App extends React.Component {
   componentDidMount() {
-    animate(this.one, this.two)
+    animate()
   }
 
   render() {
     return (
       <React.Fragment>
-        <div ref={(one) => (this.one = one)} />
-        <div ref={(two) => (this.two = two)} />
+        <div ref={one} />
+        <div ref={two} />
       </React.Fragment>
     )
   }
@@ -160,10 +164,14 @@ const t = createTimeline({
   direction: 'alternate'
 })
 
+const one = React.createRef()
+
+const two = React.createRef()
+
 const animate = (one, two) => {
   t.sequence([
     t.animate({
-      el: one,
+      el: one.current,
       scale: helpers.transition({
         from: 2,
         to: 1
@@ -171,7 +179,7 @@ const animate = (one, two) => {
     }),
 
     t.animate({
-      el: two,
+      el: two.current,
       rotate: '360deg',
       // Start this animation at 2 seconds after the previous animation ends.
       offset: helpers.startAfter(2000)
@@ -181,14 +189,14 @@ const animate = (one, two) => {
 
 class App extends React.Component {
   componentDidMount() {
-    animate(this.one, this.two)
+    animate()
   }
 
   render() {
     return (
       <React.Fragment>
-        <div ref={(one) => (this.one = one)} />
-        <div ref={(two) => (this.two = two)} />
+        <div ref={one} />
+        <div ref={two} />
       </React.Fragment>
     )
   }

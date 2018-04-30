@@ -198,7 +198,6 @@ const spring = Spring({ friction: 4, tension: 2 })
 class SpringSystem extends React.Component {
   componentDidMount() {
     spring.animate({
-      element: this.one,
       property: 'scale',
       options: {
         mapValues: {
@@ -211,8 +210,7 @@ class SpringSystem extends React.Component {
 
   render() {
     return (
-      <div
-        ref={one => (this.one = one)}
+      <spring.div
         onMouseUp={() => spring.setValue(0)}
         onMouseDown={() => spring.setValue(1)}
         style={styles}
