@@ -50,7 +50,7 @@ const t = createTimeline({
 })
 ```
 
-**`instance.animate({ ...animationProps })`**
+**`createTimeline().animate({ ...animationProps })`**
 
 `animate` accepts an object of animation properties and one or more elements when performing sequence based animations or timing based animations.
 

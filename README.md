@@ -193,14 +193,14 @@ const s = Spring({ friction: 4, tension: 2 })
 
 // or
 
-// const spring = Spring({ bounciness: 14, speed: 12 })
+// const s = Spring({ bounciness: 14, speed: 12 })
 
 class SpringSystem extends React.Component {
   componentDidMount() {
     s.animate({
       property: 'scale',
       mapValues: {
-        input: [0, 1], // Input values via setValue()
+        input: [0, 1],
         output: [1, 1.5]
       }
     })
@@ -272,7 +272,7 @@ You can also change the animation position along its timeline using an input val
 
 * [Animation lifecycle hooks](./examples/Lifecycle/index.js)
 
-* [Promise based APIs to manage `initialisation` and `cancellation` events for an animation](./examples/Promise/index.js)
+* [Promise based APIs to manage `completion` and `cancellation` events for an animation](./examples/Promise/index.js)
 
 * [Animations using timer APIs](./examples/Extra/speed.js)
 
@@ -283,7 +283,7 @@ You can also change the animation position along its timeline using an input val
 ```js
 t.animate({
   scale: 1,
-  rotateX: '360deg' // or 360
+  rotateX: '360deg' // use any unit
 })
 ```
 
