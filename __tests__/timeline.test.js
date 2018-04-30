@@ -1,6 +1,6 @@
-import { Timeline } from '../src'
+import { createTimeline } from '../src'
 
-describe('Timeline', () => {
+describe('createTimeline', () => {
   it('Should create a timeline instance', () => {
     const props = {
       delay: 200,
@@ -9,7 +9,7 @@ describe('Timeline', () => {
       duration: 1000
     }
 
-    const timeline = Timeline(props)
+    const timeline = createTimeline(props)
 
     expect(typeof timeline).toEqual('object')
     expect(timeline).toMatchSnapshot()

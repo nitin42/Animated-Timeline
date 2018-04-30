@@ -199,11 +199,9 @@ class SpringSystem extends React.Component {
   componentDidMount() {
     spring.animate({
       property: 'scale',
-      options: {
-        mapValues: {
-          input: [0, 1], // Input values via setValue()
-          output: [1, 1.5]
-        }
+      mapValues: {
+        input: [0, 1], // Input values via setValue()
+        output: [1, 1.5]
       }
     })
   }
