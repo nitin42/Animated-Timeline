@@ -1,6 +1,6 @@
 # Animated Timeline
 
-> Create playback based animations in React 💫
+> Create playback based animations in React
 
 ## Table of contents
 
@@ -8,13 +8,13 @@
 
 * [Another animation library ?](#another-animation-library)
 
-* [Features](#features-%EF%B8%8F)
+* [Features](#features)
 
 * [Performance](#performance)
 
 * [Install](#install)
 
-* [Browser support](#browser-support-%EF%B8%8F)
+* [Browser support](#browser-support)
 
 * [Usage](#usage)
 
@@ -26,11 +26,11 @@
 
 * [Todos](#todos)
 
-## Introduction 👋🏻
+## Introduction
 
 **animated-timeline** is an animation library for React which makes it painless to create playback based animations.
 
-## Another animation library ? 👀
+## Another animation library ?
 
 Nope! Though you can use it as a library or extract some part of this project as `animated-timeline` provides playback based APIs to perform animations and some other utilities like changing the animation position along its timeline, APIs for performing spring based animations etc but the main goal of this project is to -
 
@@ -42,7 +42,7 @@ Nope! Though you can use it as a library or extract some part of this project as
 
 ## Concepts
 
-`animated-timeline` combines both the models, timing and animation so as to harmonize timing and visual changes to the document.
+`animated-timeline` works on two models, timing and animation model.
 
 ### Timing model
 
@@ -52,9 +52,9 @@ Timing model manages the time and keeps track of current progress in a timeline.
 
 Animation model, on the other hand, describes how an animation could look like at any give time or it can be thought of as state of an animation at a particular point of time.
 
-Using both the models, we can synchronise the timing and visual changes.
+Using both the models, we can synchronize the timing and visual changes.
 
-## Features ☄️
+## Features
 
 * Controls for time-based execution of an animation
 
@@ -70,11 +70,11 @@ Using both the models, we can synchronise the timing and visual changes.
 
 * Spring physics and bounciness
 
-## Performance 🔥
+## Performance
 
 Style mutations and style reads are batched to speed up the performance and avoid document reflows.
 
-## Install 👨🏼‍💻
+## Install
 
 ```
 npm install animated-timeline
@@ -90,13 +90,13 @@ yarn add animated-timeline
 
 **This project also depends on `react` and `react-dom` so make sure you've them installed.**
 
-## Browser support ⚙️
+## Browser support
 
 | Chrome | Safari | IE / EDGE | Firefox | Opera |
 | ------ | :----: | --------: | ------: | ----: |
 | 24+    |   6+   |       10+ |     32+ |   15+ |
 
-## Usage 🎮
+## Usage
 
 `animated-timeline` provides three ways to do animations:
 
@@ -189,7 +189,7 @@ const styles = {
   backgroundColor: 'pink'
 }
 
-const spring = Spring({ friction: 4, tension: 2 })
+const s = Spring({ friction: 4, tension: 2 })
 
 // or
 
@@ -197,7 +197,7 @@ const spring = Spring({ friction: 4, tension: 2 })
 
 class SpringSystem extends React.Component {
   componentDidMount() {
-    spring.animate({
+    s.animate({
       property: 'scale',
       mapValues: {
         input: [0, 1], // Input values via setValue()
@@ -208,9 +208,9 @@ class SpringSystem extends React.Component {
 
   render() {
     return (
-      <spring.div
-        onMouseUp={() => spring.setValue(0)}
-        onMouseDown={() => spring.setValue(1)}
+      <s.div
+        onMouseUp={() => s.setValue(0)}
+        onMouseDown={() => s.setValue(1)}
         style={styles}
       />
     )
@@ -224,7 +224,7 @@ class SpringSystem extends React.Component {
 
 [Read the detailed API reference for spring physics](./docs/Spring.md)
 
-## Animation types 🌀
+## Animation types
 
 ### Sequence based animations
 
@@ -337,7 +337,7 @@ t
 
 [Check out the detailed documentation for `animated-timeline`.](./docs)
 
-## Todos 😴
+## Todos
 
 * [ ] ReasonML port of the core engine
 
