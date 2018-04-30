@@ -11,11 +11,9 @@ export class SpringStart extends React.Component {
     spring
       .animate({
         property: 'scale',
-        options: {
-          mapValues: {
-            input: [0, 1],
-            output: [1, 1.5]
-          }
+        mapValues: {
+          input: [0, 1],
+          output: [1, 1.5]
         }
       })
       .startAt(1)

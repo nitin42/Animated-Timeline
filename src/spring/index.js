@@ -1,8 +1,8 @@
 // @flow
 
-import _R from 'rebound'
 import invariant from 'invariant'
 import * as React from 'react'
+import _R from 'rebound'
 
 import { getAnimationType } from '../core/engine'
 import { batchMutation } from '../core/batchMutations'
@@ -92,17 +92,6 @@ type interpolateOptions = {
   rem: (value: number) => string
 }
 
-type animationOptions = {
-  mapValues: {
-    input: Array<number>, // Input ranges
-    output: Array<any> // Output ranges
-  },
-  interpolateColor: {
-    colors: Array<any>, // Input color hex codes
-    range?: Array<number> // Input range to mix the colors
-  }
-}
-
 type interpolate = (
   style: Object,
   value: string | number,
@@ -149,11 +138,14 @@ const createElement = (
   element: string,
   instance: SPRING
 ): React.ComponentType<any> => {
+  // $FlowFixMe
   class SpringElement extends React.Component<void, void> {
     target: HTMLElement | null
 
     componentDidMount() {
       // Assignment to forwardref.current means, this will throw an error for legacy API for ref.
+      // TODO: Refactor
+      // $FlowFixMe
       instance.element =
         this.props.forwardref === null
           ? this.target
@@ -166,8 +158,10 @@ const createElement = (
     }
 
     render(): React.Node {
+      // $FlowFixMe
       const { forwardref, ...rest } = this.props
 
+      // $FlowFixMe
       return React.createElement(element, {
         ...rest,
         ref: forwardref === null ? this.addRef : forwardref
@@ -175,6 +169,7 @@ const createElement = (
     }
   }
 
+  // $FlowFixMe
   return React.forwardRef((props, ref) => (
     <SpringElement {...props} forwardref={ref} />
   ))
@@ -225,37 +220,43 @@ export function Spring(options: springOptions): SPRING {
 
   Object.assign(
     spring,
-    DOMELEMENTS.reduce((getters, alias) => {
+    DOMELEMENTS.reduce((getters: Object, alias: string): Object => {
       getters[alias.toLowerCase()] = createElement(alias.toLowerCase(), spring)
       return getters
     }, {})
   )
 
   // Map values from one range to another range
-  const mapValues = _R.MathUtil.mapValueInRange
+  const springMap = _R.MathUtil.mapValueInRange
 
   // Interpolate color (hex value) using the value received from instance.getCurrentValue()
-  const interpolateColor = _R.util.interpolateColor
+  const springInterpolateColor = _R.util.interpolateColor
 
   // rAF
   let id = null
 
-  // TimeoutID for running infinite iterations of an animation
+  // Timeout id for running infinite iterations of an animation
   let timeoutId: TimeoutID
 
   spring.animate = ({
-    el, // Can be ref or selector (id or classname)
+    el, // Can be ref or selector (id or classname). Use this property only when chaining .animate({}) calls (in other cases, you'll be relying on data binding)
     property, // Property to be animated
-    options = {
-      mapValues: { input: [0, 1], output: [1, 1.5] },
-      interpolateColor: { colors: ['#183a72', '#85c497'], range: [] }
-    },
+    mapValues={ input: [0, 1], output: [1, 1.5] },
+    interpolateColor={ colors: ['#183a72', '#85c497'], range: [] },
     interpolate = (style, value, options) => {},
     shouldOscillate = true // Flag to toggle oscillations in-between
   }: {
     el: element,
-    property: any, // $FlowFixMe
-    options: animationOptions,
+    // $FlowFixMe
+    property: any,
+    mapValues: {
+      input: Array<number>, // Input ranges
+      output: Array<any> // Output ranges
+    },
+    interpolateColor: {
+      colors: Array<any>, // Input color hex codes
+      range?: Array<number> // Input range to mix the colors
+    },
     interpolate: interpolate,
     shouldOscillate: boolean
   }) => {
@@ -308,8 +309,8 @@ export function Spring(options: springOptions): SPRING {
     setInitialStyles(element, {
       property,
       value: isColorProperty(property)
-        ? options.interpolateColor.colors[0]
-        : options.mapValues.output[0],
+        ? interpolateColor.colors[0]
+        : mapValues.output[0],
       type
     })
 
@@ -331,7 +332,7 @@ export function Spring(options: springOptions): SPRING {
 
         if (!isColorProperty(property)) {
           // For transforms, layout and other props
-          const { input, output } = options.mapValues
+          const { input, output } = mapValues
 
           // Get the unit from the value
           const unit =
@@ -343,10 +344,10 @@ export function Spring(options: springOptions): SPRING {
           const t2 = Number(parseValue(output[1])[1]) || 1.5
 
           // Map the values from input range to output range
-          val = String(mapValues(val, input[0], input[1], t1, t2)).concat(unit)
+          val = String(springMap(val, input[0], input[1], t1, t2)).concat(unit)
         } else if (isColorProperty(property)) {
           // For color props only
-          const { colors, range } = options.interpolateColor
+          const { colors, range } = interpolateColor
 
           // Interpolate hex values with an input range
           if (range && (Array.isArray(range) && range.length === 2)) {
@@ -361,7 +362,7 @@ export function Spring(options: springOptions): SPRING {
             )
           } else {
             // Ignore the input range
-            val = interpolateColor(val, colors[0], colors[1])
+            val = springInterpolateColor(val, colors[0], colors[1])
           }
         }
 

@@ -10,11 +10,9 @@ export class SpringCallback extends React.Component {
   componentDidMount() {
     spring.animate({
       property: 'scale',
-      options: {
-        mapValues: {
-          input: [0, 1],
-          output: [1, 1.5]
-        }
+      mapValues: {
+        input: [0, 1],
+        output: [1, 1.5]
       }
     })
 
