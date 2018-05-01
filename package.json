@@ -1,16 +1,16 @@
 {
   "name": "animated-timeline",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "Timeline based animations in React",
   "main": "build/animated-timeline.min.js",
   "files": [
     "build"
   ],
   "scripts": {
-    "start": "npm run build && ./node_modules/.bin/parcel demo/index.html",
+    "start": "./node_modules/.bin/parcel demo/index.html",
     "flow": "./node_modules/.bin/flow",
     "test": "./node_modules/.bin/jest",
-    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js --progress",
+    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js --progress -w",
     "format": "find src -name '*.js' && find examples -name '*.js' && find demo -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",

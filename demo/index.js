@@ -14,6 +14,7 @@ import { KeyframesExample } from '../examples/Keyframes'
 import { SeekBasic } from '../examples/Seeking/basic'
 import { Lifecycle } from '../examples/Lifecycle'
 import { PromiseAPI } from '../examples/Promise'
+import { Staggered } from '../examples/Timeline/Staggered'
 import { ChangeSpeed } from '../examples/Extra/speed'
 import { Finish } from '../examples/Extra/Finish'
 import { SpringSystem } from '../examples/spring/Spring'
@@ -31,7 +32,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <SequenceTimeline />
+        <Staggered />
       </React.Fragment>
     )
   }

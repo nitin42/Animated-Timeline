@@ -91,9 +91,8 @@ const log = (...args) => console.log(args)
 
 const evaluateValue = (val, animatable) => {
   if (typeof val !== 'function') return val;
-
   // Useful for staggered animations
-  return val(animatable.target, animatable.id);
+  return val(animatable.element, animatable.id);
 }
 
 // Get the css value for the property from the style object

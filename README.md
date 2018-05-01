@@ -35,11 +35,11 @@
 
 Nope! Though you can use it as a library or extract some part of this project as `animated-timeline` provides playback based APIs to perform animations and some other utilities like changing the animation position along its timeline, APIs for performing spring based animations etc but the main goal of this project is to -
 
-* provide utilities to create animation tools.
+* provide utilities to create animation tools
 
-* create a fitting abstraction on top of this project.
+* create a fitting abstraction on top of this project
 
-* provide APIs for composing animations that transition from one state to another, use loops, callbacks and timer APIs to create interactive animations.
+* provide APIs for composing animations that transition from one state to another, use loops, callbacks and timer APIs to create interactive animations
 
 ## Concepts
 
@@ -88,8 +88,6 @@ or if you use yarn
 ```
 yarn add animated-timeline
 ```
-
-> Note - This project is not experimental and doesn't require a polyfill. See [browser usage](#browser-usage).
 
 **This project also depends on `react` and `react-dom` so make sure you've them installed.**
 
@@ -231,23 +229,23 @@ class SpringSystem extends React.Component {
 
 ### Sequence based animations
 
-[See example code for sequence based animations](./examples/Timeline/sequence.js)
-
 <p align="center">
   <img src="./media/sequence.gif" />
 </p>
 
 ### Timing based animations
 
-[See example code for timing based animations](./examples/Timeline/timing.js)
-
 <p align="center">
   <img src="./media/timing.gif" />
 </p>
 
-### Keyframes
+### Staggered animation
 
-[**See example code for keyframes**](./examples/Keyframes/index.js)
+<p align="center">
+  <img src="./media/Staggered.gif" />
+</p>
+
+### Keyframes
 
 <p align="center">
   <img src="./media/keyframes.gif" />
@@ -255,9 +253,7 @@ class SpringSystem extends React.Component {
 
 ### Changing the animation position
 
-You can also change the animation position along its timeline using an input value.
-
-[See example code](./examples/Seeking/basic.js)
+You can also change the animation position along its timeline with an input value.
 
 <p align="center">
   <img src="./media/mover.gif" />
@@ -265,23 +261,21 @@ You can also change the animation position along its timeline using an input val
 
 ### Spring based animations
 
-[See examples for spring based animations](./examples/Spring)
-
 <p align="center">
   <img src="./media/spring.gif" />
 </p>
 
 ### More examples
 
-* [Animation lifecycle hooks](./examples/Lifecycle/index.js)
+* [Using animation lifecycle hooks](./examples/Lifecycle/index.js)
 
-* [Promise based APIs to manage `completion` and `cancellation` events for an animation](./examples/Promise/index.js)
+* [Using promise based APIs to manage `completion` and `cancellation` events for an animation](./examples/Promise/index.js)
 
-* [Animation using timer APIs](./examples/Extra/speed.js)
+* [Using timer APIs to perform Animation](./examples/Extra/speed.js)
 
 ## Animation values
 
-* For transforms
+* **For transforms**
 
 ```js
 t.animate({
@@ -290,7 +284,7 @@ t.animate({
 })
 ```
 
-* For css properties
+* **For css properties**
 
 ```js
 t.animate({
@@ -298,7 +292,7 @@ t.animate({
 })
 ```
 
-* Defining values using objects
+* **Defining values using objects**
 
 ```js
 t.animate({
@@ -313,7 +307,7 @@ t.animate({
 
 Check out [this](./docs/properties) list to see which properties you can use when defining the animation values using objects.
 
-* `from` - `to` based animation values
+* **`from` - `to` based animation values**
 
 ```js
 import { helpers } from 'animated-timeline'
@@ -323,7 +317,9 @@ t.animate({
 })
 ```
 
-* Timing based animation values
+Read more about `helpers` object [here](./docs/helpers.md).
+
+* **Timing based animation values**
 
 Use property `offset` to perform timing animations
 
@@ -337,6 +333,8 @@ t
   })
   .animate({ el: '.two', scale: 1, offset: helpers.startAfter(2000) })
 ```
+
+You can set a value for a property with or without any unit such as `px`, `em`, `rem`, `in`, `cm`, `mm`, `vw`, `vh`, `vmin`, `vmax`, `deg`, `rad`, `turn` etc.
 
 ## Documentation
 
