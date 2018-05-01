@@ -253,11 +253,11 @@ Check out [this](../examples/spring/Controls
 
 **`infinite(startValue, endValue, duration)`**
 
-Running infinite iterations of spring animation
+Run infinite iterations of spring animation. Accepts a start value to start the animation from, an end value to terminate the animation at and a duration value. Check out [this](../examples/spring/Callback.js) example.
 
-**`setValueVelocity`**
+**`setValueVelocity({ value: some_value, velocity: some_velocity_value })`**
 
-Sets both, value and velocity.
+Sets both, value and velocity, and starts the animation.
 
 **`remove()`**
 
@@ -265,7 +265,7 @@ Clears all the subscriptions and deregister the spring.
 
 **`exceeded()`**
 
-Determines whether the spring exceeded the input value passed to `setValue`.
+Returns true or false. It determines whether the spring exceeded the input value passed to `setValue` or not.
 
 **`state()`**
 
@@ -286,9 +286,9 @@ Returns an object (given below) which describes the current state of a spring.
   velocity: number,
   // Is at rest ?
   springAtRest: boolean,
-  // Is overshoot clamping enabled ?
+  // Is oscillating ?
   isOscillating: boolean,
-  // Exceeded the end value
+  // Exceeded the end value ?
   exceeded: boolean
 }
 ```

@@ -29,7 +29,7 @@
 
 ## Introduction
 
-**animated-timeline** is an animation library for React which makes it painless to create playback based animations.
+**animated-timeline** is an animation library (not really) for React which makes it painless to create playback based animations.
 
 ## Another animation library ?
 

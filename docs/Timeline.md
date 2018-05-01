@@ -276,18 +276,18 @@ The callback function passed to `seekAnimation` receives the following propertie
 
 ```js
 {
-  duration, // Animation duration
-  iterations, // Total iterations
-  progress, // Animation progress
-  offset, // Offset value (for timing based animations)
-  delay, // Animation delay
-  currentTime // Current time of an animation
+  duration: number, // Animation duration
+  iterations: number, // Total iterations
+  progress: number, // Animation progress
+  offset: number, // Offset value (for timing based animations)
+  delay: number, // Animation delay
+  currentTime: number // Current time of an animation
 }
 ```
 
 ### Animation lifecycle
 
-Lifecycle hooks gets executed during different phases of an animation.They are accessible directly via the timeline instance.
+Animation lifecycle hooks gets executed during different phases of an animation.They are accessible directly via the timeline instance.
 
 **`onStart`**
 
