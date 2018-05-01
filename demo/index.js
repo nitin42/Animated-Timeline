@@ -24,12 +24,14 @@ import { SpringMultiple } from '../examples/spring/Multiple'
 import { SpringStart } from '../examples/spring/Start'
 import { SpringVelocity } from '../examples/spring/Velocity'
 import { SpringBounciness } from '../examples/spring/Bounciness'
+import { SpringBlend } from '../examples/spring/Blend'
+import { SpringPromise } from '../examples/spring/SpringPromise'
 
 class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <SpringBounciness />
+        <SpringPromise />
       </React.Fragment>
     )
   }

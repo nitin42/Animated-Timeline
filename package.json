@@ -7,7 +7,7 @@
     "build"
   ],
   "scripts": {
-    "start": "./node_modules/.bin/parcel demo/index.html",
+    "start": "npm run build && ./node_modules/.bin/parcel demo/index.html",
     "flow": "./node_modules/.bin/flow",
     "test": "./node_modules/.bin/jest",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js --progress",
@@ -27,6 +27,7 @@
     "flow-bin": "^0.69.0",
     "husky": "^0.14.3",
     "jest": "^22.4.2",
+    "parcel-bundler": "^1.7.1",
     "prettier": "^1.12.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.0",

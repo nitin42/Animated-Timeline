@@ -4,7 +4,7 @@ import { Spring } from '../../build/animated-timeline.min.js'
 
 import { boxStyles } from './../styles'
 
-const spring = Spring({ friction: 4, tension: 2 })
+const s = Spring({ friction: 4, tension: 2 })
 
 export class SpringControls extends React.Component {
   state = {
@@ -12,9 +12,9 @@ export class SpringControls extends React.Component {
   }
 
   componentDidMount() {
-    spring.animate({
+    s.animate({
       property: 'translateX',
-      mapValues: {
+      map: {
         input: [0, 1],
         output: ['0px', '30px']
       }
@@ -23,16 +23,16 @@ export class SpringControls extends React.Component {
 
   handleChange = (e) => {
     const value = e.target.value
-    spring.seek(value)
+    s.seek(value)
     this.setState({ value })
   }
 
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <spring.div
-          onMouseUp={() => spring.setValue(0)}
-          onMouseDown={() => spring.setValue(1)}
+        <s.div
+          onMouseUp={() => s.setValue(0)}
+          onMouseDown={() => s.setValue(1)}
           style={boxStyles}
         />
         <input
@@ -42,10 +42,10 @@ export class SpringControls extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
         />
-        <button onClick={() => spring.reset()}>Reset</button>
-        <button onClick={() => spring.start()}>Start</button>
-        <button onClick={() => spring.stop()}>Stop</button>
-        <button onClick={() => spring.reverse()}>Reverse</button>
+        <button onClick={() => s.reset()}>Reset</button>
+        <button onClick={() => s.start()}>Start</button>
+        <button onClick={() => s.stop()}>Stop</button>
+        <button onClick={() => s.reverse()}>Reverse</button>
       </div>
     )
   }

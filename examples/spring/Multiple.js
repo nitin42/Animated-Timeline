@@ -4,7 +4,7 @@ import { Spring } from '../../build/animated-timeline.min.js'
 
 import { boxStyles } from './../styles'
 
-const spring = Spring({ friction: 4, tension: 2 })
+const s = Spring({ friction: 4, tension: 2 })
 
 export class SpringMultiple extends React.Component {
   constructor(props) {
@@ -15,11 +15,11 @@ export class SpringMultiple extends React.Component {
   }
 
   componentDidMount() {
-    spring
+    s
       .animate({
         el: this.one.current,
         property: 'scale',
-        mapValues: {
+        map: {
           input: [0, 1],
           output: [1, 1.5]
         }
@@ -27,7 +27,7 @@ export class SpringMultiple extends React.Component {
       .animate({
         el: this.two.current,
         property: 'rotate',
-        mapValues: {
+        map: {
           input: [0, 1],
           output: ['180deg', '360deg']
         }
@@ -39,8 +39,8 @@ export class SpringMultiple extends React.Component {
       <div style={{ margin: '0 auto', width: '50%' }}>
         <div
           ref={this.one}
-          onMouseUp={() => spring.setValue(0)}
-          onMouseDown={() => spring.setValue(1)}
+          onMouseUp={() => s.setValue(0)}
+          onMouseDown={() => s.setValue(1)}
           style={boxStyles}
         />
         <div ref={this.two} style={boxStyles} />

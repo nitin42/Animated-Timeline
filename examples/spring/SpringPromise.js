@@ -4,9 +4,9 @@ import { Spring } from '../../build/animated-timeline.min.js'
 
 import { boxStyles } from './../styles'
 
-const s = Spring({ bounciness: 26, speed: 4 })
+const s = Spring({ friction: 4, tension: 2 })
 
-export class SpringSystem extends React.Component {
+export class SpringPromise extends React.Component {
   componentDidMount() {
     s.animate({
       property: 'scale',
@@ -21,10 +21,13 @@ export class SpringSystem extends React.Component {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
         <s.div
+          style={boxStyles}
           onMouseUp={() => s.setValue(0)}
           onMouseDown={() => s.setValue(1)}
-          style={boxStyles}
         />
+        <button onClick={() => s.oncancel().then(res => console.log(res))}>
+          Cancel
+        </button>
       </div>
     )
   }

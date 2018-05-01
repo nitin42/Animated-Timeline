@@ -25,9 +25,6 @@ type property = string
 // Main spring instance
 type SPRING = Object
 
-// Spring callback function (invoked during different phases of animation)
-type callback = (spring: SPRING) => void
-
 // Element to animate
 type element = HTMLElement
 
@@ -54,7 +51,7 @@ type springOptions = {
   speed?: number
 }
 
-// Options passed to interpolate callback function
+// Options passed to interpolation callback function
 type interpolateOptions = {
   // Map values from one range to another range
   mapValues: (
@@ -92,7 +89,7 @@ type interpolateOptions = {
   rem: (value: number) => string
 }
 
-type interpolate = (
+type interpolation = (
   style: Object,
   value: string | number,
   options: interpolateOptions
@@ -241,24 +238,24 @@ export function Spring(options: springOptions): SPRING {
   spring.animate = ({
     el, // Can be ref or selector (id or classname). Use this property only when chaining .animate({}) calls (in other cases, you'll be relying on data binding)
     property, // Property to be animated
-    mapValues={ input: [0, 1], output: [1, 1.5] },
-    interpolateColor={ colors: ['#183a72', '#85c497'], range: [] },
-    interpolate = (style, value, options) => {},
+    map={ input: [0, 1], output: [1, 1.5] },
+    blend={ colors: ['#183a72', '#85c497'], range: [] },
+    interpolation = (style, value, options) => {},
     shouldOscillate = true // Flag to toggle oscillations in-between
   }: {
-    el: element,
+    el?: element,
     // $FlowFixMe
     property: any,
-    mapValues: {
+    map?: {
       input: Array<number>, // Input ranges
       output: Array<any> // Output ranges
     },
-    interpolateColor: {
+    blend?: {
       colors: Array<any>, // Input color hex codes
       range?: Array<number> // Input range to mix the colors
     },
-    interpolate: interpolate,
-    shouldOscillate: boolean
+    interpolation?: interpolation,
+    shouldOscillate?: boolean
   }) => {
     invariant(
       !Array.isArray(el) || typeof el === 'string' || typeof el === 'object',
@@ -272,8 +269,8 @@ export function Spring(options: springOptions): SPRING {
     )
 
     invariant(
-      typeof interpolate === 'function',
-      `Expected interpolate to be a function but instead got a ${typeof interpolate}.`
+      typeof interpolation === 'function',
+      `Expected interpolate to be a function but instead got a ${typeof interpolation}.`
     )
 
     if (!shouldOscillate) spring.setOvershootClampingEnabled(true)
@@ -305,12 +302,12 @@ export function Spring(options: springOptions): SPRING {
     }
 
     // Set the initial styles of the animation property of the element we want to animate
-    // The values are derived from the options (mapValues or interpolateColor)
+    // The values are derived from the options (map or blend)
     setInitialStyles(element, {
       property,
       value: isColorProperty(property)
-        ? interpolateColor.colors[0]
-        : mapValues.output[0],
+        ? blend.colors[0]
+        : map.output[0],
       type
     })
 
@@ -332,7 +329,7 @@ export function Spring(options: springOptions): SPRING {
 
         if (!isColorProperty(property)) {
           // For transforms, layout and other props
-          const { input, output } = mapValues
+          const { input, output } = map
 
           // Get the unit from the value
           const unit =
@@ -347,7 +344,7 @@ export function Spring(options: springOptions): SPRING {
           val = String(springMap(val, input[0], input[1], t1, t2)).concat(unit)
         } else if (isColorProperty(property)) {
           // For color props only
-          const { colors, range } = interpolateColor
+          const { colors, range } = blend
 
           // Interpolate hex values with an input range
           if (range && (Array.isArray(range) && range.length === 2)) {
@@ -370,7 +367,7 @@ export function Spring(options: springOptions): SPRING {
           // Interpolations are batched first because they may re-initialise the 'transform' property.
 
           // Callback should receive unitless values (units can be appended afterwards using the options)
-          interpolate(
+          interpolation(
             // Pass style object of the element
             // We can either use setState to update the element style or directly mutate the DOM element
             element.style,

@@ -4,7 +4,7 @@ import { Spring } from '../../build/animated-timeline.min.js'
 
 import { boxStyles } from './../styles'
 
-const spring = Spring({ friction: 15, tension: 3 })
+const s = Spring({ friction: 15, tension: 3 })
 
 export class SpringInterpolate extends React.Component {
   state = {
@@ -13,20 +13,20 @@ export class SpringInterpolate extends React.Component {
   }
 
   componentDidMount() {
-    spring.animate({
+    s.animate({
       property: 'border-radius',
-      mapValues: {
+      map: {
         input: [0, 1],
         output: ['1px', '40px']
       },
-      interpolate: (style, value, options) =>
+      interpolation: (style, value, options) =>
         this.handleInterpolations(value, options),
       shouldOscillate: true
     })
   }
 
   componentWillUnmount() {
-    spring.remove()
+    s.remove()
   }
 
   handleInterpolations = (value, options) => {
@@ -45,9 +45,9 @@ export class SpringInterpolate extends React.Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <spring.div
-          onMouseUp={() => spring.setValue(0)}
-          onMouseDown={() => spring.setValue(1)}
+        <s.div
+          onMouseUp={() => s.setValue(0)}
+          onMouseDown={() => s.setValue(1)}
           style={{
             ...boxStyles,
             transform: `translateX(${this.state.translateX})`,
