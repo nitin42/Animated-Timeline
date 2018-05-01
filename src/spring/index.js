@@ -143,7 +143,7 @@ const createElement = (
     target: HTMLElement | null
 
     componentDidMount() {
-      // Assignment to forwardref.current means, this will throw an error for legacy API for ref.
+      // Assignment to forwardref.current means this will throw an error for legacy ref API
       // TODO: Refactor
       // $FlowFixMe
       instance.element =
@@ -469,11 +469,10 @@ export function Spring(options: springOptions): SPRING {
 
     timeoutId = setTimeout(() => {
       spring.setValue(endValue)
-    }, duration || 1200)
+    }, duration || 1000)
   }
 
-  // This ensures that we don't cause a memory leak when the setState calls are batched inside the interpolations
-  // If we need to update the state inside the interpolation method, then this method MUST be called inside the componentWillUnmount() hook.
+  // This ensures that we don't cause a memory leak
   spring.remove = () => {
     // Deregister the spring
     spring.removeAllListeners()
