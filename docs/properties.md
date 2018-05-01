@@ -91,3 +91,15 @@ Use [`helpers.getAvailableTransforms()`](./helpers.md#reading-information) to se
 **CSS properties**
 
 Checkout [this](https://docs.google.com/spreadsheets/d/1Hvi0nu2wG3oQ51XRHtMv-A_ZlidnwUYwgQsPQUg1R2s/pub?single=true&gid=0&output=html) list of CSS properties by style operation.
+
+See next ▶️
+
+[Component API](./Component.md)
+
+[Timeline API](./Timeline.md)
+
+[helpers API](./Keyframes.md)
+
+[Spring API](./Spring.md)
+
+[Keyframes API](./Keyframes.md)

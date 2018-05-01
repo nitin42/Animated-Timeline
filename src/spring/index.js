@@ -70,9 +70,9 @@ type interpolateOptions = {
     f2?: number // Input range two
   ) => void,
   // Convert to degree
-  radians: (radians: number) => {},
+  radiansToDegrees: (radians: number) => {},
   // Convert to radian
-  degrees: (degrees: number) => {},
+  degreesToRadians: (degrees: number) => {},
   // Convert to pixel
   px: (value: number) => string,
   // Convert to degrees
@@ -382,8 +382,8 @@ export function Spring(options: springOptions): SPRING {
               interpolateColor: _R.util.interpolateColor,
 
               // Convert degrees and radians
-              radians: _R.util.radiansToDegrees,
-              degrees: _R.util.degreesToRadians,
+              radiansToDegrees: _R.util.radiansToDegrees,
+              degreesToRadians: _R.util.degreesToRadians,
 
               px, // Convert to pixel
               deg, // Convert to degrees

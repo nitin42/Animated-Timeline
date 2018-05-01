@@ -644,3 +644,15 @@ createTimeline({...props}).getAnimations().forEach(animation => {
   animation.setSpeed(0.5)
 })
 ```
+
+See next ▶️
+
+[Component API](./Component.md)
+
+[Spring API](./Spring.md)
+
+[Keyframes API](./Keyframes.md)
+
+[helpers object](./helpers.md)
+
+[Animation properties](./properties.md)

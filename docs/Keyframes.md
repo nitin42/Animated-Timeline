@@ -134,3 +134,15 @@ console.log(xyz.frames)
 ## Examples
 
 [Check out the examples for using `Keyframes`](../examples/Keyframes/index.js)
+
+See next ▶️
+
+[Component API](./Component.md)
+
+[Timeline API](./Timeline.md)
+
+[helpers API](./helpers.md)
+
+[Spring API](./Spring.md)
+
+[Animation properties](./properties.md)

@@ -4,9 +4,13 @@
 
 ## Examples
 
-[Check out all the examples of component API](../examples/Animate-Component).
+* [Basic example](../examples/Animate-Component/Basic.js)
 
-## Basic example
+* [Advance example](../examples/Animate-Component/Advance.js)
+
+* [Playback controls](../examples/Animate-Component/Controls.js)
+
+## Example usage
 
 ```js
 import React from 'react'
@@ -35,7 +39,11 @@ function App() {
 }
 ```
 
-> [Learn more about animation and timing model](../README.md#concepts)
+<p align='center'>
+  <img src='../media/basic-2.gif' />
+</p>
+
+[Learn more about animation and timing model](../README.md#concepts)
 
 ## Props
 
@@ -388,3 +396,15 @@ Use `seekAnimation` prop.
 * Promise based APIs for oncancel and onfinish events are not available. Use [`Timeline API`](./Timeline.md) instead.
 
 * Controls for time-based execution are directly not available on the instance, and they are accessible only via flags
+
+See next ▶️
+
+[Timeline API](./Timeline.md)
+
+[Spring API](./Spring.md)
+
+[Keyframes API](./Keyframes.md)
+
+[helpers object](./helpers.md)
+
+[Animation properties](./properties.md)

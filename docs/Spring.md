@@ -142,7 +142,7 @@ Check out [this](../examples/spring/Blend.js) example.
 
 **`interpolation`**
 
-To handle interpolations, use the callback `interpolation`. The callback function receives the `style` object of the element being animated, the current spring `value` and [helper options]().
+To handle interpolations, use the callback `interpolation`. The callback function receives the `style` object of the element being animated, the current spring `value` and [helper options](#helper-options).
 
 ```js
 const s = Spring({ friction: 15, tension: 3 })
@@ -272,10 +272,6 @@ Determines whether the spring exceeded the input value passed to `setValue`.
 ```js
 const s = Spring()
 
-s.animate({...props})
-
-s.setValue(value)
-
 s.state()
 ```
 
@@ -310,7 +306,7 @@ Spring callback functions are invoked during different phases of animation.
 invoked when the animation starts
 
 ```js
-Spring().onStart = (props) => console.log('Animation started...')
+Spring().onStart = props => console.log('Animation started...')
 ```
 
 **`onRest`**
@@ -320,5 +316,91 @@ invoked when the spring is at rest.
 ```js
 const s = Spring()
 
-s.onRest = (props) => s.infinite(0, 1, 2000)
+s.onRest = props => s.infinite(0, 1, 2000)
 ```
+
+### Helper options
+
+`interpolation` callback also receives some helper options which are given below -
+
+* **`mapValues(value: number, fromLow: number, fromHigh: number, toLow: number, toHigh: number)`**
+
+Accepts spring value, `from range` and `to range`. `from range` is usually the input range defined in `map`.
+
+Example -
+
+```js
+const s = Spring()
+
+function applyInterpolation(value, options) {
+  setState({
+    translateX: options.mapValues(value, 0, 1, 10, 20)
+  })
+}
+
+s.animate({
+  property: 'scale',
+  map: {
+    input: [0, 1],
+    output: [1, 2]
+  },
+  interpolation: (style, value, options) => applyInterpolation(value, options)
+})
+```
+
+* **`interpolateColor(value: number, startColorStr: string, endColorStr: string, fromLow: number = 0, fromHigh: number = 1)`**
+
+Accepts spring value, `startColorStr`, `endColorStr` and an optional input range `fromLow` and `fromHigh`.
+
+Example -
+
+```js
+const s = Spring()
+
+function applyInterpolation(value, options) {
+  setState({
+    backgroundColor: options.interpolateColor(value, '#4286f4', '#3a774f', 0, 200)
+  })
+}
+
+s.animate({
+  property: 'scale',
+  map: {
+    input: [0, 1],
+    output: [1, 2]
+  },
+  interpolation: (style, value, options) => applyInterpolation(value, options)
+})
+```
+
+* **`radiansToDegrees(radians: number)`** - Convert radians to degrees.
+
+* **`degreesToRadians(degrees: number)`** - Convert degrees to radians.
+
+* **`em`** - Convert value to em
+
+* **`px`** - Convert value to px
+
+* **`deg`** - Convert value to deg
+
+* **`rem`** - Convert value to rem
+
+* **`rad`** - Convert value to rad
+
+* **`grad`** - Convert value to grad
+
+* **`turn`** - Convert value to turn
+
+Check out [this](../examples/spring/Interpolations.js) example for more details about helper options
+
+See next ▶️
+
+[Component API](./Component.md)
+
+[Timeline API](./Timeline.md)
+
+[Keyframes API](./Keyframes.md)
+
+[helpers object](./helpers.md)
+
+[Animation properties](./properties.md)

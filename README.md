@@ -1,6 +1,6 @@
 # Animated Timeline
 
-![author](https://img.shields.io/badge/author-Nitin%20Tulswani-blue.svg) ![size](https://img.shields.io/badge/size-35.5%20KB-brightgreen.svg) [![Build Status](https://travis-ci.org/nitin42/Timeline.svg?branch=beta0)](https://travis-ci.org/nitin42/Timeline) 
+![author](https://img.shields.io/badge/author-Nitin%20Tulswani-blue.svg) ![size](https://img.shields.io/badge/size-35.5%20KB-brightgreen.svg) [![Build Status](https://travis-ci.org/nitin42/Timeline.svg?branch=beta0)](https://travis-ci.org/nitin42/Timeline)
 > Create playback based animations in React
 
 ## Table of contents
@@ -53,13 +53,15 @@ Timing model manages the time and keeps track of current progress in a timeline.
 
 Animation model, on the other hand, describes how an animation could look like at any give time or it can be thought of as state of an animation at a particular point of time.
 
-Using both the models, we can synchronize the timing and visual changes.
+Using both the models, we can synchronize the timing and visual changes to the document.
 
 ## Features
 
 * Controls for time-based execution of an animation
 
 * Create sequence based animations
+
+* Timing based animations
 
 * Change the animation position along the timeline by seeking the animation
 
@@ -73,7 +75,7 @@ Using both the models, we can synchronize the timing and visual changes.
 
 ## Performance
 
-Style mutations and style reads are batched to speed up the performance and avoid document reflows.
+Style mutations and style reads are batched internally to speed up the performance and avoid document reflows.
 
 ## Install
 
@@ -200,7 +202,7 @@ class SpringSystem extends React.Component {
   componentDidMount() {
     s.animate({
       property: 'scale',
-      mapValues: {
+      map: {
         input: [0, 1],
         output: [1, 1.5]
       }
@@ -275,7 +277,7 @@ You can also change the animation position along its timeline using an input val
 
 * [Promise based APIs to manage `completion` and `cancellation` events for an animation](./examples/Promise/index.js)
 
-* [Animations using timer APIs](./examples/Extra/speed.js)
+* [Animation using timer APIs](./examples/Extra/speed.js)
 
 ## Animation values
 
@@ -284,7 +286,7 @@ You can also change the animation position along its timeline using an input val
 ```js
 t.animate({
   scale: 1,
-  rotateX: '360deg' // use any unit
+  rotateX: '360deg' // with or without unit
 })
 ```
 
@@ -322,6 +324,8 @@ t.animate({
 ```
 
 * Timing based animation values
+
+Use property `offset` to perform timing animations
 
 ```js
 import { helpers } from 'animated-timeline'

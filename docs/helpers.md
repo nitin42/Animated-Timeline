@@ -204,3 +204,15 @@ A function that accepts two arguments, a curve name and an array of four control
 ```js
 helpers.createEasingCurve('my_custom_curve', [1, 2, 3, 4])
 ```
+
+See next ▶️
+
+[Component API](./Component.md)
+
+[Timeline API](./Timeline.md)
+
+[Keyframes API](./Keyframes.md)
+
+[Spring API](./Spring.md)
+
+[Animation properties](./properties.md)
