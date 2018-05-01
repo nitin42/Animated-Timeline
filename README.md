@@ -1,5 +1,6 @@
 # Animated Timeline
 
+![author](https://img.shields.io/badge/author-Nitin%20Tulswani-blue.svg) ![size](https://img.shields.io/badge/size-35.5%20KB-brightgreen.svg) [![Build Status](https://travis-ci.org/nitin42/Timeline.svg?branch=beta0)](https://travis-ci.org/nitin42/Timeline) 
 > Create playback based animations in React
 
 ## Table of contents
