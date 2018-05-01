@@ -343,4 +343,4 @@ t
 
 * [ ] timing model based on scroll position and gestures ?
 
-* [ ] Use data binding
+* [x] Use data binding
