@@ -11,7 +11,7 @@
     "flow": "./node_modules/.bin/flow",
     "test": "./node_modules/.bin/jest",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js --progress -w",
-    "format": "find src -name '*.js' && find examples -name '*.js' && find demo -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
+    "format": "find src -name '*.js' | xargs ./node_modules/.bin/prettier --write --no-semi --single-quote"
   },
   "author": "Nitin Tulswani <tulswani19@gmail.com>",
   "license": "ISC",
