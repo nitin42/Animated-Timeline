@@ -238,8 +238,8 @@ export function Spring(options: springOptions): SPRING {
   spring.animate = ({
     el, // Can be ref or selector (id or classname). Use this property only when chaining .animate({}) calls (in other cases, you'll be relying on data binding)
     property, // Property to be animated
-    map={ input: [0, 1], output: [1, 1.5] },
-    blend={ colors: ['#183a72', '#85c497'], range: [] },
+    map = { input: [0, 1], output: [1, 1.5] },
+    blend = { colors: ['#183a72', '#85c497'], range: [] },
     interpolation = (style, value, options) => {},
     shouldOscillate = true // Flag to toggle oscillations in-between
   }: {
@@ -305,9 +305,7 @@ export function Spring(options: springOptions): SPRING {
     // The values are derived from the options (map or blend)
     setInitialStyles(element, {
       property,
-      value: isColorProperty(property)
-        ? blend.colors[0]
-        : map.output[0],
+      value: isColorProperty(property) ? blend.colors[0] : map.output[0],
       type
     })
 

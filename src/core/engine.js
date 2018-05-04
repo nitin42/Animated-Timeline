@@ -205,10 +205,7 @@ const getProperties = (instanceSettings, tweenSettings, params) => {
   // Merge instance params and tween params
   const settings = mergeObjects(instanceSettings, tweenSettings)
   for (let p in params) {
-    if (
-      !settings.hasOwnProperty(p) &&
-      (p !== 'el' || p !== 'multipleEl')
-    ) {
+    if (!settings.hasOwnProperty(p) && (p !== 'el' || p !== 'multipleEl')) {
       properties.push({
         name: p,
         offset: settings['offset'],
@@ -593,17 +590,18 @@ function animated(params = {}) {
       finish
     }
 
-    if (instance[cb]) instance[cb]({
-      completed,
-      progress,
-      duration,
-      remaining,
-      reversed,
-      currentTime,
-      began,
-      paused,
-      controller
-    })
+    if (instance[cb])
+      instance[cb]({
+        completed,
+        progress,
+        duration,
+        remaining,
+        reversed,
+        currentTime,
+        began,
+        paused,
+        controller
+      })
   }
 
   function countIteration() {

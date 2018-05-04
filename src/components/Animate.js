@@ -138,7 +138,7 @@ export class Animate extends React.Component {
     if (lifecycle.onUpdate) ctrl.onUpdate = lifecycle.onUpdate
   }
 
-  addElements = (element) => {
+  addElements = element => {
     this.elements = [...this.elements, element]
   }
 
@@ -160,8 +160,8 @@ export class Animate extends React.Component {
     }
   }
 
-  cancel = (elements) => {
-    this.ctrl.oncancel(elements).then((res) => res)
+  cancel = elements => {
+    this.ctrl.oncancel(elements).then(res => res)
   }
 
   render() {
