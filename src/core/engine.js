@@ -754,6 +754,7 @@ function animated(params = {}) {
     instance.speed = speed
   }
 
+  // Use createMover instead with more options to change the animation position.
   instance.seek = function(time) {
     setInstanceProgress(adjustTime(time))
   }
@@ -787,6 +788,7 @@ function animated(params = {}) {
     instance.start()
   }
 
+  // Identity function
   instance.sequence = (...args) => instance
 
   // Use this method only when a 'setState' call is batched inside the lifecyle hook 'onUpdate' to avoid any memory leaks.

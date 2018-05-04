@@ -8,7 +8,7 @@ const t = createTimeline({
   direction: 'alternate',
   easing: 'easeInOutSine',
   iterations: Infinity,
-  speed: 0.5
+  speed: 0.75
 })
 
 const animate = (one, two) => {
@@ -40,7 +40,7 @@ export class ChangeSpeed extends React.Component {
     // Change the speed after 3s
     setTimeout(() => {
       t.getAnimations().forEach((animation) => {
-        animation.setSpeed(0.2)
+        animation.setSpeed(0.65)
       })
     }, 3000)
   }

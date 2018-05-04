@@ -14,25 +14,32 @@ const t = createTimeline({
 export class Staggered extends React.Component {
 	componentDidMount() {
 		t.animate({
-      multipleEl: ['#one', '#two', '#three'],
 			scale: helpers.transition({
 				from: 2,
 				to: 1,
 			}),
-      delay: this.staggered
+      delay: (element, i) => i * 750
 		}).start()
 	}
 
-  // Delay by 150ms
-  staggered = (element, i) => i * 150
+	renderNodes = (n) => {
+		let children = []
+
+		for (let i = 0; i < n; i++) {
+			children.push(React.createElement(
+				t.div,
+				{ style: boxStyles, key: i }
+			))
+		}
+
+		return children
+	}
 
 	render() {
 		return (
-			<div>
-        <div id='one' style={boxStyles} />
-        <div id='two' style={boxStyles} />
-        <div id='three' style={boxStyles} />
-      </div>
+			<React.Fragment>
+				{this.renderNodes(3)}
+      </React.Fragment>
 		)
 	}
 }

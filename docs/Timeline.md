@@ -13,6 +13,10 @@ To animate an element using the `Timeline` API, you will need to specify propert
 
 * [Offset based animations](../examples/Timeline/timing.js)
 
+* [Staggered animation](../examples/Timeline/SStaggered.js)
+
+* [Multiple elements with one Timeline instance](../examples/Timeline/Multiple.js)
+
 * [Seeking the animation position](../examples/Seeking/basic.js)
 
 * [Promise based API](../examples/Promise/index.js)
@@ -49,6 +53,8 @@ const t = createTimeline({
   direction: 'alternate'
 })
 ```
+
+Check out [this](./properties.md#timing-properties) list of all the timing properties.
 
 **`createTimeline().animate({ ...animationProps })`**
 
@@ -91,6 +97,8 @@ class App extends React.Component {
 }
 ```
 
+Check out [this](./properties.md#animation-properties) list of all the animation properties.
+
 ### Sequence based animations
 
 **`createTimeline().sequence([t1, t2, ...])`**
@@ -100,6 +108,8 @@ class App extends React.Component {
 When performing sequence based animations, data binding won't work. You will have to specify the element explicitly using `el` property when animating only one element or `multipleEl` when animating multiple elements.
 
 ```js
+import React from 'react'
+
 import { createTimeline, helpers } from 'animated-timeline'
 
 const t = createTimeline({
@@ -155,6 +165,8 @@ Use property `offset` to perform timing based animations.
 When performing timing based animations, data binding won't work. You will have to specify the element explicitly using `el` property when animating only one element or `multipleEl` when animating multiple elements.
 
 ```js
+import React from 'react'
+
 import { createTimeline, helpers } from 'animated-timeline'
 
 const t = createTimeline({
@@ -204,6 +216,94 @@ class App extends React.Component {
 ```
 
 Read more about the `offset` property and timing based functions [here](./helpers#timing-based-animations)
+
+### Animating multiple elements
+
+**With data binding**
+
+```js
+import React from 'react'
+
+import { createTimeline, helpers } from 'animated-timeline'
+
+const t = createTimeline({
+	iterations: Infinity,
+	direction: 'alternate',
+	duration: 2000,
+	easing: 'easeInOutSine',
+})
+
+class MultipleElem extends React.Component {
+	componentDidMount() {
+		t.animate({
+			scale: helpers.transition({
+				from: 2,
+				to: 1,
+			}),
+      delay: (element, i) => i * 750
+		}).start()
+	}
+
+	renderNodes = (n) => {
+		let children = []
+
+		for (let i = 0; i < n; i++) {
+			children.push(React.createElement(
+				t.div,
+				{ style: { width: 50, height: 50, backgroundColor: 'mistyrose' }, key: i }
+			))
+		}
+
+		return children
+	}
+
+	render() {
+		return (
+			<React.Fragment>
+				{this.renderNodes(3)}
+      </React.Fragment>
+		)
+	}
+}
+```
+
+**With `multipleEl` property**
+
+```js
+import React from 'react'
+
+import { boxStyles } from '../styles'
+
+import { createTimeline, helpers } from '../../build/animated-timeline.min.js'
+
+const t = createTimeline({
+	iterations: Infinity,
+	direction: 'alternate',
+	duration: 2000,
+	easing: 'easeInOutSine',
+})
+
+export class Staggered extends React.Component {
+	componentDidMount() {
+		t.animate({
+      multipleEl: ['.two', 'one'],
+			rotate: helpers.transition({
+				from: 180,
+				to: 360,
+			})
+		}).start()
+	}
+
+	render() {
+		return (
+			<React.Fragment>
+        <div id='one' style={{ width: 50, height: 50, backgroundColor: 'mistyrose' }} />
+        <p className='two'>Hello World</p>
+      </React.Fragment>
+		)
+	}
+}
+```
 
 ### Seeking the animation
 
@@ -321,6 +421,7 @@ You can use `onUpdate` lifecycle hook to update an input value by syncing it wit
 
 ```js
 import React from 'react'
+
 import { createTimeline, createMover } from 'animated-timeline'
 
 const t = createTimeline({ duration: 2000 })
@@ -405,7 +506,7 @@ The above three lifecycle hooks receive the following props -
 
 **`onfinish`**
 
-`onfinish` is resolved after the animation is finished.
+`onfinish` is resolved when the animation is finished.
 
 ```js
 const t = createTimeline({ ...props })
@@ -567,7 +668,7 @@ Clear all the subscription
 createTimeline({ ...props }).clear()
 ```
 
-Use `clear()` to clear the subscriptions when updating the component state inside the `onUpdate` lifecycle hook.
+Use `clear()` to cancel the animaton when updating the state inside the `onUpdate` lifecycle hook.
 
 
 ## Utilities

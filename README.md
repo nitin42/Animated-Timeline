@@ -1,6 +1,7 @@
 # Animated Timeline
 
 ![author](https://img.shields.io/badge/author-Nitin%20Tulswani-blue.svg) ![size](https://img.shields.io/badge/size-35.5%20KB-brightgreen.svg) [![Build Status](https://travis-ci.org/nitin42/Timeline.svg?branch=beta0)](https://travis-ci.org/nitin42/Timeline)
+
 > Create playback based animations in React
 
 ## Table of contents
@@ -33,13 +34,13 @@
 
 ## Another animation library ?
 
-Nope! Though you can use it as a library or extract some part of this project as `animated-timeline` provides playback based APIs to perform animations and some other utilities like changing the animation position along its timeline, APIs for performing spring based animations etc but the main goal of this project is to -
+Nope! Though you can use it as a library, the main goal of this project is to provide -
 
-* provide utilities to create animation tools
+* utilities to create animation tools
 
-* create a fitting abstraction on top of this project
+* low-level APIs to create a fitting abstraction on top of this project
 
-* provide APIs for composing animations that transition from one state to another, use loops, callbacks and timer APIs to create interactive animations
+* APIs for composing animations that transition from one state to another, use loops, callbacks and timer APIs to create interactive animations
 
 ## Concepts
 
@@ -163,10 +164,12 @@ const t = createTimeline({
 
 class App extends React.Component {
   componentDidMount() {
-    t.animate({
-      opacity: helpers.transition({ from: 0.2, to: 0.8 }),
-      rotate: helpers.transition({ from: 360, to: 180 })
-    }).start()
+    t
+      .animate({
+        opacity: helpers.transition({ from: 0.2, to: 0.8 }),
+        rotate: helpers.transition({ from: 360, to: 180 })
+      })
+      .start()
   }
 
   render() {
@@ -327,11 +330,15 @@ Use property `offset` to perform timing animations
 import { helpers } from 'animated-timeline'
 
 t
-  .animate({
-    el: '.one',
-    scale: 2
-  })
-  .animate({ el: '.two', scale: 1, offset: helpers.startAfter(2000) })
+  .sequence([
+    t.animate({
+      el: '.one',
+      scale: 2
+    }),
+
+    t.animate({ el: '.two', scale: 1, offset: helpers.startAfter(2000) })
+  ])
+  .start()
 ```
 
 You can set a value for a property with or without any unit such as `px`, `em`, `rem`, `in`, `cm`, `mm`, `vw`, `vh`, `vmin`, `vmax`, `deg`, `rad`, `turn` etc.
