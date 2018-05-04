@@ -3,7 +3,6 @@
 import invariant from 'invariant'
 
 import { createTimeline } from './engine'
-import type { attributes, AnimationEngine } from '../types'
 
 /**
  * Creates a new 'Animated' instance with timeline properties (delay, duration, iterations) and bridges both the models,
@@ -19,8 +18,8 @@ import type { attributes, AnimationEngine } from '../types'
  * Animated.value({ ...animationprops })
  */
 
-export const Timeline = (attributes: attributes): AnimationEngine => {
-  attributes = attributes || {}
+export const Timeline = (timingProps: Object): Object => {
+  timingProps = timingProps || {}
 
-  return createTimeline(attributes)
+  return createTimeline(timingProps)
 }

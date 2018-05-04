@@ -4,7 +4,6 @@ Using the `Timeline` API, you can create interactive animations using loops, cal
 
 To animate an element using the `Timeline` API, you will need to specify properties for **timing model** like `duration`, `delay`, `iterations` and **animation model** like `transform`, `color`, `opacity` etc. You can read more about the timing and animation properties [here.](./properties.md)
 
-
 ## Examples
 
 * [Basic](../examples/Timeline/basic.js)
@@ -83,12 +82,14 @@ const t = createTimeline({
 
 class App extends React.Component {
   componentDidMount() {
-    t.animate({
-      scale: helpers.transition({
-        from: 2,
-        to: 1
+    t
+      .animate({
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
       })
-    }).start()
+      .start()
   }
 
   render() {
@@ -124,20 +125,22 @@ const one = React.createRef()
 const two = React.createRef()
 
 const animate = (one, two) => {
-  t.sequence([
-    t.animate({
-      el: one.current,
-      scale: helpers.transition({
-        from: 2,
-        to: 1
-      })
-    }),
+  t
+    .sequence([
+      t.animate({
+        el: one.current,
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
+      }),
 
-    t.animate({
-      el: two.current,
-      rotate: '360deg'
-    })
-  ]).start()
+      t.animate({
+        el: two.current,
+        rotate: '360deg'
+      })
+    ])
+    .start()
 }
 
 class App extends React.Component {
@@ -181,22 +184,24 @@ const one = React.createRef()
 const two = React.createRef()
 
 const animate = (one, two) => {
-  t.sequence([
-    t.animate({
-      el: one.current,
-      scale: helpers.transition({
-        from: 2,
-        to: 1
-      })
-    }),
+  t
+    .sequence([
+      t.animate({
+        el: one.current,
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
+      }),
 
-    t.animate({
-      el: two.current,
-      rotate: '360deg',
-      // Start this animation at 2 seconds after the previous animation ends.
-      offset: helpers.startAfter(2000)
-    })
-  ]).start()
+      t.animate({
+        el: two.current,
+        rotate: '360deg',
+        // Start this animation at 2 seconds after the previous animation ends.
+        offset: helpers.startAfter(2000)
+      })
+    ])
+    .start()
 }
 
 class App extends React.Component {
@@ -227,43 +232,43 @@ import React from 'react'
 import { createTimeline, helpers } from 'animated-timeline'
 
 const t = createTimeline({
-	iterations: Infinity,
-	direction: 'alternate',
-	duration: 2000,
-	easing: 'easeInOutSine',
+  iterations: Infinity,
+  direction: 'alternate',
+  duration: 2000,
+  easing: 'easeInOutSine'
 })
 
 class MultipleElem extends React.Component {
-	componentDidMount() {
-		t.animate({
-			scale: helpers.transition({
-				from: 2,
-				to: 1,
-			}),
-      delay: (element, i) => i * 750
-		}).start()
-	}
+  componentDidMount() {
+    t
+      .animate({
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        }),
+        delay: (element, i) => i * 750
+      })
+      .start()
+  }
 
-	renderNodes = (n) => {
-		let children = []
+  renderNodes = n => {
+    let children = []
 
-		for (let i = 0; i < n; i++) {
-			children.push(React.createElement(
-				t.div,
-				{ style: { width: 50, height: 50, backgroundColor: 'mistyrose' }, key: i }
-			))
-		}
+    for (let i = 0; i < n; i++) {
+      children.push(
+        React.createElement(t.div, {
+          style: { width: 50, height: 50, backgroundColor: 'mistyrose' },
+          key: i
+        })
+      )
+    }
 
-		return children
-	}
+    return children
+  }
 
-	render() {
-		return (
-			<React.Fragment>
-				{this.renderNodes(3)}
-      </React.Fragment>
-		)
-	}
+  render() {
+    return <React.Fragment>{this.renderNodes(3)}</React.Fragment>
+  }
 }
 ```
 
@@ -277,31 +282,36 @@ import { boxStyles } from '../styles'
 import { createTimeline, helpers } from '../../build/animated-timeline.min.js'
 
 const t = createTimeline({
-	iterations: Infinity,
-	direction: 'alternate',
-	duration: 2000,
-	easing: 'easeInOutSine',
+  iterations: Infinity,
+  direction: 'alternate',
+  duration: 2000,
+  easing: 'easeInOutSine'
 })
 
 export class Staggered extends React.Component {
-	componentDidMount() {
-		t.animate({
-      multipleEl: ['.two', 'one'],
-			rotate: helpers.transition({
-				from: 180,
-				to: 360,
-			})
-		}).start()
-	}
+  componentDidMount() {
+    t
+      .animate({
+        multipleEl: ['.two', 'one'],
+        rotate: helpers.transition({
+          from: 180,
+          to: 360
+        })
+      })
+      .start()
+  }
 
-	render() {
-		return (
-			<React.Fragment>
-        <div id='one' style={{ width: 50, height: 50, backgroundColor: 'mistyrose' }} />
-        <p className='two'>Hello World</p>
+  render() {
+    return (
+      <React.Fragment>
+        <div
+          id="one"
+          style={{ width: 50, height: 50, backgroundColor: 'mistyrose' }}
+        />
+        <p className="two">Hello World</p>
       </React.Fragment>
-		)
-	}
+    )
+  }
 }
 ```
 
@@ -338,7 +348,7 @@ class App extends React.Component {
     })
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       value: e.target.value
     })
@@ -394,11 +404,11 @@ Animation lifecycle hooks gets executed during different phases of an animation.
 `onStart` is invoked when the animation starts.
 
 ```js
-const t = createTimeline({...props})
+const t = createTimeline({ ...props })
 
-t.animate({...props}).start()
+t.animate({ ...props }).start()
 
-t.onStart = (props) => {
+t.onStart = props => {
   console.log(`Animation started: ${props.began}`)
 }
 ```
@@ -408,11 +418,11 @@ t.onStart = (props) => {
 `onUpdate` is invoked when the animation updates (called each frame).
 
 ```js
-const t = createTimeline({...props})
+const t = createTimeline({ ...props })
 
-t.animate({...props}).start()
+t.animate({ ...props }).start()
 
-t.onUpdate = (props) => {
+t.onUpdate = props => {
   console.log('Updating...')
 }
 ```
@@ -434,12 +444,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    t.animate({
-      scale: {
-        value: 2,
-        duration: 4000
-      }
-    }).start()
+    t
+      .animate({
+        scale: {
+          value: 2,
+          duration: 4000
+        }
+      })
+      .start()
 
     t.onUpdate = ({ progress }) => {
       this.state.value = progress
@@ -455,7 +467,7 @@ class App extends React.Component {
           min="0"
           max="100"
           value={this.state.value}
-          onChange={(e) => {
+          onChange={e => {
             this.setState({ value: e.target.value })
             seekAnimation(this.state.value)
           }}
@@ -471,11 +483,11 @@ class App extends React.Component {
 `onComplete` is invoked when the animation completes.
 
 ```js
-const t = createTimeline({...props})
+const t = createTimeline({ ...props })
 
-t.animate({...props}).start()
+t.animate({ ...props }).start()
 
-t.onComplete = (props) => {
+t.onComplete = props => {
   console.log(`Animation completed: ${props.completed}`)
 }
 ```
@@ -497,7 +509,8 @@ The above three lifecycle hooks receive the following props -
     stop: () => void, // Stop the animation
     restart: () => void, // Restart the animation
     reverse: () => void, // Reverse the animation
-    reset: () => void // Reset the animation
+    reset: () => void, // Reset the animation
+    finish: () => void // Finish the animation immediately
   }
 }
 ```
@@ -513,7 +526,7 @@ const t = createTimeline({ ...props })
 
 t.animate({ ...props }).start()
 
-t.onfinish.then((res) => console.log(res))
+t.onfinish.then(res => console.log(res))
 ```
 
 **`oncancel`**
@@ -525,7 +538,7 @@ const t = createTimeline({ ...props })
 
 t.animate({ ...props }).start()
 
-t.oncancel('.one').then((res) => console.log(res))
+t.oncancel('.one').then(res => console.log(res))
 ```
 
 [Check out the detailed examples of using promise API](../examples/Promise/index.js)
@@ -551,21 +564,23 @@ const t = createTimeline({
 })
 
 const animate = (one, two) => {
-  t.sequence([
-    t.animate({
-      el: one,
-      scale: helpers.transition({
-        from: 2,
-        to: 1
-      })
-    }),
+  t
+    .sequence([
+      t.animate({
+        el: one,
+        scale: helpers.transition({
+          from: 2,
+          to: 1
+        })
+      }),
 
-    t.animate({
-      el: two,
-      rotate: '360deg',
-      offset: helpers.startBefore(1200)
-    })
-  ]).start()
+      t.animate({
+        el: two,
+        rotate: '360deg',
+        offset: helpers.startBefore(1200)
+      })
+    ])
+    .start()
 }
 
 class App extends React.Component {
@@ -574,7 +589,7 @@ class App extends React.Component {
 
     // Change the speed after 3s
     setTimeout(() => {
-      t.getAnimations().forEach((animation) => {
+      t.getAnimations().forEach(animation => {
         animation.setSpeed(0.2)
       })
     }, 3000)
@@ -670,7 +685,6 @@ createTimeline({ ...props }).clear()
 
 Use `clear()` to cancel the animaton when updating the state inside the `onUpdate` lifecycle hook.
 
-
 ## Utilities
 
 Some utility functions which are accessible via the timeline instance.
@@ -680,7 +694,7 @@ Some utility functions which are accessible via the timeline instance.
 Returns the total running time of an animation.
 
 ```js
-createTimeline({...props}).getAnimationTime()
+createTimeline({ ...props }).getAnimationTime()
 ```
 
 **`getAnimationTimeByElement(element)`**
@@ -688,7 +702,7 @@ createTimeline({...props}).getAnimationTime()
 Returns the total running time of an animation by element.
 
 ```js
-createTimeline({...props}).getAnimationTimeByElement('.one')
+createTimeline({ ...props }).getAnimationTimeByElement('.one')
 ```
 
 **`getCurrentTime()`**
@@ -704,7 +718,7 @@ createTimeline({ ...props }).getCurrentTime()
 Returns the current time of an animation by element.
 
 ```js
-createTimeline({...props}).getCurrentTimeByElement('.one')
+createTimeline({ ...props }).getCurrentTimeByElement('.one')
 ```
 
 **`getAnimationProgress()`**
@@ -712,7 +726,7 @@ createTimeline({...props}).getCurrentTimeByElement('.one')
 Returns the current animation progress.
 
 ```js
-createTimeline({...props}).getAnimationProgress()
+createTimeline({ ...props }).getAnimationProgress()
 ```
 
 **`getAnimationProgressByElement(element)`**
@@ -720,7 +734,7 @@ createTimeline({...props}).getAnimationProgress()
 Returns the current animation progress by element.
 
 ```js
-createTimeline({...props}).getCurrentProgressByElement('.one')
+createTimeline({ ...props }).getCurrentProgressByElement('.one')
 ```
 
 **`getComputedTiming()`**
@@ -730,9 +744,9 @@ Returns an object of timing properties -
 ```js
 {
   activeTime, // Time in which animation will be active
-  currentTime, // Current time of animation
-  progress, // Current animation progress
-  currentIteration // Current iterations of an animation
+    currentTime, // Current time of animation
+    progress, // Current animation progress
+    currentIteration // Current iterations of an animation
 }
 ```
 
@@ -741,9 +755,11 @@ Returns an object of timing properties -
 Returns an array of running animations.
 
 ```js
-createTimeline({...props}).getAnimations().forEach(animation => {
-  animation.setSpeed(0.5)
-})
+createTimeline({ ...props })
+  .getAnimations()
+  .forEach(animation => {
+    animation.setSpeed(0.5)
+  })
 ```
 
 See next ▶️

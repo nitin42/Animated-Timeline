@@ -14,7 +14,14 @@ export class AnimateControls extends Component {
     start: false,
     reset: false,
     reverse: false,
-    restart: false
+    restart: false,
+    finish: false
+  }
+
+  handleStateUpdate = (which) => {
+    this.setState((state) => ({
+      [which]: !state[which]
+    }))
   }
 
   render() {
@@ -36,28 +43,29 @@ export class AnimateControls extends Component {
           stop={!this.state.start}
           reverse={this.state.reverse}
           reset={this.state.reset}
+          finish={this.state.finish}
           restart={this.state.restart}>
           <div style={styles} />
         </Animate>
         <button
-          onClick={(e) => this.setState((state) => ({ start: !state.start }))}>
+          onClick={(e) => this.handleStateUpdate('start')}>
           Start
         </button>
         <button
-          onClick={(e) =>
-            this.setState((state) => ({ reverse: !state.reverse }))
-          }>
+          onClick={(e) => this.handleStateUpdate('reverse')}>
           Reverse
         </button>
         <button
-          onClick={(e) => this.setState((state) => ({ reset: !state.reset }))}>
+          onClick={(e) => this.handleStateUpdate('reset')}>
           Reset
         </button>
         <button
-          onClick={(e) =>
-            this.setState((state) => ({ restart: !state.restart }))
-          }>
+          onClick={(e) => this.handleStateUpdate('restart')}>
           Restart
+        </button>
+        <button
+          onClick={(e) => this.handleStateUpdate('finish')}>
+          finish
         </button>
       </div>
     )

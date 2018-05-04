@@ -588,7 +588,8 @@ function animated(params = {}) {
       stop,
       restart,
       reverse,
-      reset
+      reset,
+      finish
     } = instance
 
     // Methods to control execution of an animation
@@ -597,7 +598,8 @@ function animated(params = {}) {
       stop,
       restart,
       reverse,
-      reset
+      reset,
+      finish
     }
 
     // Props received by a lifecyle hook

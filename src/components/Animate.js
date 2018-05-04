@@ -55,7 +55,8 @@ export class Animate extends React.Component {
     start: PropTypes.bool,
     reset: PropTypes.bool,
     restart: PropTypes.bool,
-    reverse: PropTypes.bool
+    reverse: PropTypes.bool,
+    finish: PropTypes.bool
   }
 
   static defaultProps = {
@@ -80,7 +81,8 @@ export class Animate extends React.Component {
     stop: false,
     reset: false,
     restart: false,
-    reverse: false
+    reverse: false,
+    finish: false
   }
 
   componentDidMount() {
@@ -126,6 +128,7 @@ export class Animate extends React.Component {
     if (props.reverse) ctrl.reverse()
     if (props.reset) ctrl.reset()
     if (props.restart) ctrl.restart()
+    if (props.finish) ctrl.finish()
   }
 
   addLifecycle = (lifecycle, ctrl) => {

@@ -238,7 +238,8 @@ The above three lifecycle hooks receive the following props -
     stop: () => void, // Stop the animation
     restart: () => void, // Restart the animation
     reverse: () => void, // Reverse the animation
-    reset: () => void // Reset the animation
+    reset: () => void, // Reset the animation
+    finish: () => void // Finish the animation immediately
   }
 }
 ```
@@ -281,6 +282,16 @@ Reverse the animation. Default is `false`
 state = { reverse: false }
 
 <Animate reverse={state.reverse} />
+```
+
+### `finish`
+
+Finish the animation immediately. Default is `false`
+
+```js
+state = { finish: false }
+
+<Animate finish={state.finish} />
 ```
 
 ### `restart`

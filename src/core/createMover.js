@@ -1,7 +1,6 @@
 // @flow
 
 import invariant from 'invariant'
-import type { AnimationEngine } from '../types'
 
 type moveArgs = number | Function
 
@@ -16,7 +15,7 @@ type moveArgs = number | Function
  * With a callback function that returns an integer:
  * seek(({ progress }) => progress * 10)
  */
-export const createMover = (instance: AnimationEngine): Function => {
+export const createMover = (instance: Object): Function => {
   invariant(
     instance !== undefined || instance !== null || instance === 'object',
     `Invalid timeline instance passed to createMover().`

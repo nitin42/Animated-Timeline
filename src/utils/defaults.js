@@ -1,8 +1,6 @@
 // @flow
 
-import type { AnimationEngine } from '../types'
-
-type dummy = (inst: AnimationEngine) => void
+type dummy = (inst: Object) => void
 
 type defaultInstanceParams = {
   onUpdate: dummy,
@@ -24,7 +22,7 @@ type defaultTweensParams = {
   round: number
 }
 
-const noop = (inst: AnimationEngine): void => {}
+const noop = (inst: Object): void => {}
 
 export const getDefaultInstanceParams = (): defaultInstanceParams => ({
   onUpdate: noop,
