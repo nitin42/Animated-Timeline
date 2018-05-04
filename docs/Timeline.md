@@ -675,15 +675,15 @@ Restart an animation
 createTimeline({ ...props }).restart()
 ```
 
-**`clear()`**
+**`cancel()`**
 
-Clear all the subscription
+cancel the animation
 
 ```js
-createTimeline({ ...props }).clear()
+createTimeline({ ...props }).cancel()
 ```
 
-Use `clear()` to cancel the animaton when updating the state inside the `onUpdate` lifecycle hook.
+Use `cancel()` to cancel the animation when updating the state inside `onUpdate` lifecycle hook.
 
 ## Utilities
 
