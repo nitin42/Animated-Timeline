@@ -33,7 +33,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <AnimateControls />
+        <Staggered />
       </React.Fragment>
     )
   }
