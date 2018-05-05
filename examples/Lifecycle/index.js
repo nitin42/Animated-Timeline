@@ -47,7 +47,6 @@ export class Lifecycle extends React.Component {
   }
 
   componentWillUnmount() {
-    // Cancel the animation and clear all the subscriptions
     t.cancel()
   }
 

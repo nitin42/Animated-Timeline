@@ -4,30 +4,38 @@ import { Animate, helpers } from '../../build/animated-timeline.min.js'
 
 import { boxStyles } from '../styles'
 
+const timingProps = {
+  duration: 2000
+}
+
+const animationProps = {
+  translateX: helpers.transition({ from: 0, to: 200 }),
+  scale: helpers.transition({ from: 2, to: 4 }),
+  rotate: helpers.transition({ from: '360deg', to: '180deg' }),
+  opacity: helpers.transition({ from: 0.2, to: 0.8 })
+}
+
 export class AnimateAdvance extends Component {
   state = { value: 0 }
 
   handleChange = e => this.setState({ value: e.target.value })
 
+  onUpdate = props => {
+    this.state.value = props.progress
+  }
+
+  seekAnimation = props => props.duration - this.state.value * 20
+
   render() {
     return (
       <div>
         <Animate
-          timingProps={{
-            duration: 2000
-          }}
-          animationProps={{
-            translateX: helpers.transition({ from: 0, to: 200 }),
-            scale: helpers.transition({ from: 2, to: 4 }),
-            rotate: helpers.transition({ from: '360deg', to: '180deg' }),
-            opacity: helpers.transition({ from: 0.2, to: 0.8 })
-          }}
+          timingProps={timingProps}
+          animationProps={animationProps}
           lifecycle={{
-            onUpdate: ({ progress }) => {
-              this.state.value = progress
-            }
+            onUpdate: this.onUpdate
           }}
-          seekAnimation={({ duration }) => duration - this.state.value * 20}
+          seekAnimation={this.seekAnimation}
         >
           <div style={boxStyles} />
         </Animate>

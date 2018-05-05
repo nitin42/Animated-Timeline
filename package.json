@@ -1,6 +1,6 @@
 {
   "name": "animated-timeline",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Timeline based animations in React",
   "main": "build/animated-timeline.min.js",
   "files": [

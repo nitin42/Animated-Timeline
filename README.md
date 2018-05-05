@@ -236,11 +236,15 @@ class SpringSystem extends React.Component {
   <img src="./media/sequence.gif" />
 </p>
 
+[![Edit 6j08xylw7n](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/6j08xylw7n)
+
 ### Timing based animations
 
 <p align="center">
   <img src="./media/timing.gif" />
 </p>
+
+[![Edit 92lm0xrl44](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/92lm0xrl44)
 
 ### Staggered animation
 
@@ -248,11 +252,15 @@ class SpringSystem extends React.Component {
   <img src="./media/staggered.gif" />
 </p>
 
+[![Edit 743n1z9826](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/743n1z9826)
+
 ### Keyframes
 
 <p align="center">
   <img src="./media/keyframes.gif" />
 </p>
+
+[![Edit 92lm0xrl44](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/92lm0xrl44)
 
 ### Changing the animation position
 
@@ -262,11 +270,15 @@ You can also change the animation position along its timeline with an input valu
   <img src="./media/mover.gif" />
 </p>
 
+[![Edit kkjn9jq6k7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/kkjn9jq6k7)
+
 ### Spring based animations
 
 <p align="center">
   <img src="./media/spring.gif" />
 </p>
+
+[![Edit 75l1z6jzq](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/75l1z6jzq)
 
 ### More examples
 
