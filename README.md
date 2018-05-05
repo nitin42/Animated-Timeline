@@ -34,7 +34,7 @@
 
 ## Another animation library ?
 
-Nope! Though you can use it as a library, the main goal of this project is to provide -
+Nope! Though you can use it as a library. The main goal of this project is to provide -
 
 * utilities to create animation tools
 
