@@ -245,7 +245,7 @@ class SpringSystem extends React.Component {
 ### Staggered animation
 
 <p align="center">
-  <img src="./media/Staggered.gif" />
+  <img src="./media/staggered.gif" />
 </p>
 
 ### Keyframes
