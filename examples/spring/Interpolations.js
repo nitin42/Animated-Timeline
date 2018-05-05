@@ -16,8 +16,8 @@ export class SpringInterpolate extends React.Component {
     s.animate({
       property: 'border-radius',
       map: {
-        input: [0, 1],
-        output: ['1px', '40px']
+        inputRange: [0, 1],
+        outputRange: ['1px', '40px']
       },
       interpolation: (style, value, options) =>
         this.handleInterpolations(value, options),

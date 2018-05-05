@@ -15,8 +15,8 @@ export class SpringControls extends React.Component {
     s.animate({
       property: 'translateX',
       map: {
-        input: [0, 1],
-        output: ['0px', '30px']
+        inputRange: [0, 1],
+        outputRange: ['0px', '30px']
       }
     })
   }

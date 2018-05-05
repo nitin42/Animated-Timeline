@@ -52,8 +52,8 @@ To animate an element using spring physics, use the `animate` method. The `anima
 Spring().animate({
   property: string, // transform or css property
   map: {
-    input: [A, B],
-    output: [C, D]
+    inputRange: [A, B],
+    outputRange: [C, D]
   },
   blend: {
     colors: [hex1, hex2],
@@ -74,8 +74,8 @@ class App extends React.Component {
     s.animate({
       property: 'scale',
       map: {
-        input: [0, 1],
-        output: [1, 2]
+        inputRange: [0, 1],
+        outputRange: [1, 2]
       }
     })
   }
@@ -101,18 +101,18 @@ Spring().animate({ property: 'scale' })
 
 **`map`**
 
-An object with two properties, `input` and `output`.
+An object with two properties, `inputRange` and `outputRange`.
 
-`input` accepts an array of values which will be handled via `setValue(input_value)` method and `output` accepts an array of values which determine the output value of the property.
+`inputRange` accepts input ranges which will be handled via `setValue(input_range_value)` method and `outputRange` accepts output ranges which determine the output value of the property.
 
 For example -
 
 ```js
 const s = Spring()
 
-s.animate({ property: 'scale', map: { input: [0, 1], output: [1, 2] } })
+s.animate({ property: 'scale', map: { inputRange: [0, 1], outputRange: [1, 2] } })
 
-s.setValue(1) // input value 1. This will map to output value 2
+s.setValue(1) // Set the input value 1. This will map to output value 2
 ```
 
 So the value of property `scale` in this case will be `2`.
@@ -157,8 +157,8 @@ class App extends React.Component {
     s.animate({
       property: 'border-radius',
       map: {
-        input: [0, 1],
-        output: ['1px', '40px']
+        inputRange: [0, 1],
+        outputRange: ['1px', '40px']
       },
       interpolation: (style, value, options) =>
         this.handleInterpolations(value, options)
@@ -341,8 +341,8 @@ function applyInterpolation(value, options) {
 s.animate({
   property: 'scale',
   map: {
-    input: [0, 1],
-    output: [1, 2]
+    inputRange: [0, 1],
+    outputRange: [1, 2]
   },
   interpolation: (style, value, options) => applyInterpolation(value, options)
 })
@@ -366,8 +366,8 @@ function applyInterpolation(value, options) {
 s.animate({
   property: 'scale',
   map: {
-    input: [0, 1],
-    output: [1, 2]
+    inputRange: [0, 1],
+    outputRange: [1, 2]
   },
   interpolation: (style, value, options) => applyInterpolation(value, options)
 })

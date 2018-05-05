@@ -11,8 +11,8 @@ export class SpringSystem extends React.Component {
     s.animate({
       property: 'scale',
       map: {
-        input: [0, 1],
-        output: [1, 1.5]
+        inputRange: [0, 1],
+        outputRange: [1, 1.5]
       }
     })
   }

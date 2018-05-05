@@ -20,16 +20,16 @@ export class SpringMultiple extends React.Component {
         el: this.one.current,
         property: 'scale',
         map: {
-          input: [0, 1],
-          output: [1, 1.5]
+          inputRange: [0, 1],
+          outputRange: [1, 1.5]
         }
       })
       .animate({
         el: this.two.current,
         property: 'rotate',
         map: {
-          input: [0, 1],
-          output: ['180deg', '360deg']
+          inputRange: [0, 1],
+          outputRange: ['180deg', '360deg']
         }
       })
   }

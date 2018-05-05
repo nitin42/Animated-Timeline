@@ -238,7 +238,7 @@ export function Spring(options: springOptions): SPRING {
   spring.animate = ({
     el, // Can be ref or selector (id or classname). Use this property only when chaining .animate({}) calls (in other cases, you'll be relying on data binding)
     property, // Property to be animated
-    map = { input: [0, 1], output: [1, 1.5] },
+    map = { inputRange: [0, 1], outputRange: [1, 1.5] },
     blend = { colors: ['#183a72', '#85c497'], range: [] },
     interpolation = (style, value, options) => {},
     shouldOscillate = true // Flag to toggle oscillations in-between
@@ -247,8 +247,8 @@ export function Spring(options: springOptions): SPRING {
     // $FlowFixMe
     property: any,
     map?: {
-      input: Array<number>, // Input ranges
-      output: Array<any> // Output ranges
+      inputRange: Array<number>, // Input ranges
+      outputRange: Array<any> // Output ranges
     },
     blend?: {
       colors: Array<any>, // Input color hex codes
@@ -305,7 +305,7 @@ export function Spring(options: springOptions): SPRING {
     // The values are derived from the options (map or blend)
     setInitialStyles(element, {
       property,
-      value: isColorProperty(property) ? blend.colors[0] : map.output[0],
+      value: isColorProperty(property) ? blend.colors[0] : map.outputRange[0],
       type
     })
 
@@ -327,19 +327,19 @@ export function Spring(options: springOptions): SPRING {
 
         if (!isColorProperty(property)) {
           // For transforms, layout and other props
-          const { input, output } = map
+          const { inputRange, outputRange } = map
 
           // Get the unit from the value
           const unit =
-            parseValue(output[0])[2] || parseValue(output[1])[2] || ''
+            parseValue(outputRange[0])[2] || parseValue(outputRange[1])[2] || ''
 
           // Output ranges
-          const t1 = Number(parseValue(output[0])[1]) || 1
+          const t1 = Number(parseValue(outputRange[0])[1]) || 1
 
-          const t2 = Number(parseValue(output[1])[1]) || 1.5
+          const t2 = Number(parseValue(outputRange[1])[1]) || 1.5
 
           // Map the values from input range to output range
-          val = String(springMap(val, input[0], input[1], t1, t2)).concat(unit)
+          val = String(springMap(val, inputRange[0], inputRange[1], t1, t2)).concat(unit)
         } else if (isColorProperty(property)) {
           // For color props only
           const { colors, range } = blend
