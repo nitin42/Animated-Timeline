@@ -2,7 +2,11 @@ import React from 'react'
 
 import { boxStyles } from '../styles'
 
-import { createTimeline, helpers, createMover } from '../../build/animated-timeline.min.js'
+import {
+  createTimeline,
+  helpers,
+  createMover
+} from '../../build/animated-timeline.min.js'
 
 const t = createTimeline({
   speed: 1,
@@ -25,7 +29,7 @@ export class SeekBasic extends React.Component {
     })
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       value: e.target.value
     })

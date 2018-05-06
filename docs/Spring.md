@@ -251,19 +251,19 @@ Check out [this](../examples/spring/Controls
 
 ### Utilities
 
-**`infinite(startValue, endValue, duration)`**
+**`Spring().infinite(startValue, endValue, duration)`**
 
 Run infinite iterations of spring animation. Accepts a start value to start the animation from, an end value to terminate the animation at and a duration value. Check out [this](../examples/spring/Callback.js) example.
 
-**`setValueVelocity({ value: some_value, velocity: some_velocity_value })`**
+**`Spring().setValueVelocity({ value: some_value, velocity: some_velocity_value })`**
 
-Sets both, value and velocity, and starts the animation.
+Sets both, the value and velocity, and starts the animation.
 
-**`remove()`**
+**`Spring().remove()`**
 
 Clears all the subscriptions and deregister the spring.
 
-**`exceeded()`**
+**`Spring().exceeded()`**
 
 Returns true or false. It determines whether the spring exceeded the input value passed to `setValue` or not.
 
@@ -293,7 +293,7 @@ Returns an object (given below) which describes the current state of a spring.
 }
 ```
 
-**`oncancel`**
+**`Spring().oncancel`**
 
 Returns a promise which gets resolved when the animation is cancelled. Check out [this](../examples/spring/SpringPromise.js) example
 
@@ -301,7 +301,7 @@ Returns a promise which gets resolved when the animation is cancelled. Check out
 
 Spring callback functions are invoked during different phases of animation.
 
-**`onStart`**
+**`Spring().onStart`**
 
 invoked when the animation starts
 
@@ -309,7 +309,7 @@ invoked when the animation starts
 Spring().onStart = props => console.log('Animation started...')
 ```
 
-**`onRest`**
+**`Spring().onRest`**
 
 invoked when the spring is at rest.
 

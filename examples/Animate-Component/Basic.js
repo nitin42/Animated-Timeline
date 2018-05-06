@@ -25,9 +25,7 @@ export class AnimateBasic extends Component {
   render() {
     return (
       <div style={{ margin: '0 auto', width: '50%' }}>
-        <Animate
-          timingProps={timingProps}
-          animationProps={animationProps}>
+        <Animate timingProps={timingProps} animationProps={animationProps}>
           <div style={styles} />
         </Animate>
       </div>

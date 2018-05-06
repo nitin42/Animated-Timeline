@@ -39,7 +39,7 @@ export class ChangeSpeed extends React.Component {
 
     // Change the speed after 3s
     setTimeout(() => {
-      t.getAnimations().forEach((animation) => {
+      t.getAnimations().forEach(animation => {
         animation.setSpeed(0.65)
       })
     }, 3000)

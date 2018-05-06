@@ -150,7 +150,6 @@ const createElement = (
     }
 
     addRef = target => {
-      // When using refs, access the node using .target property.
       this.target = target
     }
 
