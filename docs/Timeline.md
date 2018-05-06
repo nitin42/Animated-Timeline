@@ -1,6 +1,6 @@
 # Timeline API
 
-Using the `Timeline` API, you can create interactive animations using loops, callbacks, promises, variables, timer APIs and animation lifecycle hooks.
+Using the `Timeline` API, you can create interactive animations with loops, callbacks, promises, variables, timer APIs and animation lifecycle hooks.
 
 To animate an element using the `Timeline` API, you will need to specify properties for **timing model** like `duration`, `delay`, `iterations` and **animation model** like `transform`, `color`, `opacity` etc. You can read more about the timing and animation properties [here.](./properties.md)
 
@@ -397,7 +397,7 @@ The callback function passed to `seekAnimation` receives the following propertie
 
 ### Animation lifecycle
 
-Animation lifecycle hooks gets executed during different phases of an animation.They are accessible directly via the timeline instance.
+Animation lifecycle hooks gets executed during different phases of an animation. They are accessible directly via the timeline instance.
 
 **`onStart`**
 
@@ -547,7 +547,7 @@ t.oncancel('.one').then(res => console.log(res))
 
 **`getAnimations()`**
 
-In some cases, you might want to alter the timing model i.e the timing properties. For example - changing the speed of an animation after 3 seconds or changing the duration. In those cases, you will be using `getAnimations()` method.
+You can also alter the timing model i.e the timing properties. For example - changing the speed of an animation after 3 seconds or changing the duration. In those cases, you will be using `getAnimations()` method.
 
 `getAnimations()` is accessible via the timeline instance. It returns an array of running animations.
 
@@ -686,8 +686,6 @@ createTimeline({ ...props }).cancel()
 Use `cancel()` to cancel the animation when updating the state inside `onUpdate` lifecycle hook.
 
 ## Utilities
-
-Some utility functions which are accessible via the timeline instance.
 
 **`getAnimationTime()`**
 
