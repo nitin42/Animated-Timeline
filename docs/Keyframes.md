@@ -1,6 +1,6 @@
 # Keyframes
 
-Define keyframes for a property (css or transform) using the constructor function `Keyframes`. The object created by `Keyframes` has a property (one and only) called `frames`.
+Define keyframes for a property (css or transform) using the constructor function `Keyframes`. The object created by `Keyframes` has a property called `frames`.
 
 ## Example
 
