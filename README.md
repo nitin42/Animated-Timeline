@@ -365,4 +365,8 @@ You can set a value for a property with or without any unit such as `px`, `em`, 
 
 * [ ] timing model based on scroll position and gestures ?
 
+* [ ] Synchronize engine time with speed coefficient
+
+* [ ] Refactor tween data structure for more flexibility
+
 * [x] Use data binding
